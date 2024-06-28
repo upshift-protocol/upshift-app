@@ -4,7 +4,7 @@ Earn yields from real institutional loans via a crypto protocol. Users contribut
 
 ### Requirements
 
-- Node.js and npm
+- Node.js and PNPM
 
 ### Getting started
 
