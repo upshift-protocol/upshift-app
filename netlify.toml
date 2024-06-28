@@ -1,6 +1,6 @@
 [build]
   publish = "out"
-  command = "CI=pnpm run build"
+  command = "CI= npm run build"
 
 [build.environment]
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
