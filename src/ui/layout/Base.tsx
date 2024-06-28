@@ -1,18 +1,19 @@
 import appConfig from '@/config/app';
-import type { IChildren, ITailwindClass } from '@/utils/types';
+import type { IChildren } from '@/utils/types';
 
 import { Header } from './Header';
 import { Meta } from './Meta';
+import { CSSProperties } from 'react';
 
 type IBase = IChildren & {
-  className?: ITailwindClass;
+  style?: CSSProperties;
   title?: string;
   description?: string;
 };
 
-const Base = ({ children, className, title, description }: IBase) => {
+const Base = ({ children, style, title, description }: IBase) => {
   return (
-    <div className={className}>
+    <div style={style}>
       <Meta
         title={title ?? appConfig.title}
         description={description ?? appConfig.description}
