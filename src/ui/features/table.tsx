@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, FormControl, Input, InputLabel, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
+import Modal from '../components/modal';
 
 interface Column {
   id: string;
@@ -118,8 +119,20 @@ export function EarnTable() {
                         alignItems="center"
                         justifyContent="end"
                       >
-                        <Button variant="outlined">Deposit</Button>
-                        <Button variant="outlined">Withdraw</Button>
+                        <Modal title='Deposit' buttonProps={{ children: "Deposit", variant: "outlined" }}>
+                          <Stack gap={2}>
+                          <TextField id="outlined-basic" label="Amount In" variant="outlined" />
+                          <TextField id="outlined-basic" label="Amount Out" disabled variant="outlined" />
+                          <Button size="large" variant="contained">Submit Transaction</Button>
+                            </Stack>
+                        </Modal>
+                        <Modal title="Withdraw" buttonProps={{ children: "Withdraw", variant: "outlined" }}>
+                        <Stack spacing={2} position="relative">
+                          <TextField id="outlined-basic" label="Amount In" variant="outlined" />
+                          <TextField id="outlined-basic" label="Amount Out" variant="outlined" disabled />
+                          <Button style={{ marginTop: "1rem" }} size="large" variant="contained">Submit Transaction</Button>
+                            </Stack>
+                        </Modal>
                       </Stack>
                     </TableCell>
                   </TableRow>

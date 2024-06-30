@@ -9,3 +9,5 @@ export type INavItem = {
 export type IChildren = {
   children: ReactNode;
 }
+
+export type ITheme = 'light' | 'dark';

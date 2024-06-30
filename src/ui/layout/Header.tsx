@@ -1,9 +1,13 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
 
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants';
+import { useThemeMode } from '@/stores/theme';
+import { ThemeSwitch } from '../components/theme-switch';
 
-const Header = () => (
+const Header = () => {
+  const { isDark, toggleTheme } = useThemeMode();
+  return (
   <header>
     <Box sx={{ flexGrow: 1, mb: '1rem' }}>
       <AppBar
@@ -30,13 +34,17 @@ const Header = () => (
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             {appConfig.site_name}
           </Typography>
-          <Button variant="outlined" color="inherit" size="large">
-            Connect Wallet
-          </Button>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <ThemeSwitch checked={isDark} onChange={toggleTheme} />
+            <Button variant="outlined" color="inherit" size="large">
+              Connect Wallet
+            </Button>
+          </Stack>
         </Toolbar>
       </AppBar>
     </Box>
   </header>
-);
+)
+}
 
 export { Header };

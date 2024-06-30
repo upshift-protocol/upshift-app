@@ -1,4 +1,4 @@
-# Lazarev Earn App
+# Earn App
 
 Earn yields from real institutional loans via a crypto protocol. Users contribute to a decentralized pool on the blockchain, funding business loans and earning returns through smart contracts. Democratizing high-yield investments traditionally limited to financial institutions.
 
