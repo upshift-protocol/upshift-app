@@ -41,8 +41,8 @@ export const ConnectWallet = () => {
     <Modal
       title="Connect Wallet"
       buttonProps={{
-        variant: 'outlined',
-        color: 'inherit',
+        variant: address ? 'contained' : 'outlined',
+        color: address ? 'primary' : 'inherit',
         size: 'large',
         children: renderChildren(),
         onClick: address ? () => disconnect() : undefined,
@@ -50,27 +50,29 @@ export const ConnectWallet = () => {
       closeWhen={!!address}
     >
       <List>
-        {connectors.map((connector) => (
-          <ListItem key={`connector-${connector.uid}`}>
-            <Button
-              onClick={(e) => handleConnect(e, connector.id)}
-              disabled={connectPending || disconnectPending}
-              fullWidth
-              size="large"
-              style={{ justifyContent: 'start' }}
-              startIcon={
-                <Image
-                  src={renderIcon(connector)}
-                  height={32}
-                  width={32}
-                  alt={connector.name}
-                />
-              }
-            >
-              {connector.name}
-            </Button>
-          </ListItem>
-        ))}
+        {connectors
+          .filter((c) => c.id !== 'injected')
+          .map((connector) => (
+            <ListItem key={`connector-${connector.uid}`}>
+              <Button
+                onClick={(e) => handleConnect(e, connector.id)}
+                disabled={connectPending || disconnectPending}
+                fullWidth
+                size="large"
+                style={{ justifyContent: 'start' }}
+                startIcon={
+                  <Image
+                    src={renderIcon(connector)}
+                    height={32}
+                    width={32}
+                    alt={connector.name}
+                  />
+                }
+              >
+                {connector.name}
+              </Button>
+            </ListItem>
+          ))}
       </List>
     </Modal>
   );

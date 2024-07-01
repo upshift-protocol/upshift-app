@@ -1,5 +1,6 @@
 import { blueGrey, blue, red, teal } from '@mui/material/colors';
-import { ThemeOptions, createTheme } from '@mui/material/styles';
+import type { ThemeOptions } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { roboto } from './font';
 
 const baseTheme: ThemeOptions = {
@@ -13,9 +14,18 @@ const baseTheme: ThemeOptions = {
     },
   },
   components: {
-    MuiButton: {},
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          boxShadow: 'none',
+          ':hover': {
+            boxShadow: 'none',
+          },
+        },
+      },
+    },
   },
-}
+};
 
 export const lightTheme = createTheme({
   ...baseTheme,
