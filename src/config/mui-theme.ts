@@ -1,4 +1,4 @@
-import { blueGrey, blue, red, lightBlue, cyan, indigo, purple, teal, green, lime, lightGreen } from '@mui/material/colors';
+import { blueGrey, blue, red, teal } from '@mui/material/colors';
 import { ThemeOptions, createTheme } from '@mui/material/styles';
 import { roboto } from './font';
 

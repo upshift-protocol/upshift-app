@@ -1,4 +1,9 @@
-import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants';

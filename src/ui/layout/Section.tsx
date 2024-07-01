@@ -1,4 +1,7 @@
-import { Box, Stack, styled, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import {styled} from '@mui/material/styles';
 import type { ReactNode } from 'react';
 
 import { STYLE_VARS } from '@/utils/constants';

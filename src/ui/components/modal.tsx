@@ -5,7 +5,8 @@ import MuiModal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Card, Stack } from '@mui/material';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
 import { TfiClose } from "react-icons/tfi"
 
 const style = {
