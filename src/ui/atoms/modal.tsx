@@ -19,7 +19,7 @@ const style = {
   boxShadow: 12,
 };
 
-export default function Modal({
+export default function ModalAtom({
   buttonProps,
   children,
   title,

@@ -1,7 +1,10 @@
 import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { IColumn } from '@/utils/types';
-import { RTable } from '../components/table';
+import { Stack } from '@mui/material';
+import TableMolecule from '../molecules/table';
+import DepositModalMolecule from '../molecules/deposit-modal';
+import WithdrawModalMolecule from '../molecules/withdraw-modal';
 
 const columns: readonly IColumn[] = [
   { id: 'name', value: 'Name', minWidth: 150 },
@@ -27,14 +30,31 @@ const columns: readonly IColumn[] = [
   },
 ];
 
-export function EarnTable() {
-  const { data } = useFetcher({
+export default function PoolsTableOrganism() {
+  const { data, isLoading } = useFetcher({
     queryKey: ['lending-pools'],
-    initialData: [],
   }) as UseQueryResult<any>;
 
   console.log('rows:', data);
   console.log('columns:', columns);
 
-  return <RTable columns={columns} data={data} uidKey="address" />;
+  return (
+    <TableMolecule
+      columns={columns}
+      data={data}
+      uidKey="address"
+      loading={isLoading}
+      action={
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="end"
+        >
+          <DepositModalMolecule />
+          <WithdrawModalMolecule />
+        </Stack>
+      }
+    />
+  );
 }

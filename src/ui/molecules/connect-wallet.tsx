@@ -9,9 +9,9 @@ import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
 import { truncate } from '@/utils/helpers';
 import React from 'react';
-import Modal from '../components/modal';
+import Modal from '../atoms/modal';
 
-const ConnectWallet = () => {
+const ConnectWalletMolecule = () => {
   const { connectors, connectAsync, isPending: connectPending } = useConnect();
   const { disconnect, isPending: disconnectPending } = useDisconnect();
   const { address } = useAccount();
@@ -87,4 +87,4 @@ const ConnectWallet = () => {
   );
 };
 
-export default ConnectWallet;
+export default ConnectWalletMolecule;

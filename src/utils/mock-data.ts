@@ -4,6 +4,8 @@ const MOCK_POOLS = [
     decimals: 6,
     symbol: 'LP-AUG-USDC',
     name: 'August Credit Pool - USDC',
+    apy: 0,
+    collateral: ['USDC'],
     asset: {
       symbol: 'USDC',
       decimals: 6,

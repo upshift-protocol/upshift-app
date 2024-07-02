@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 import { NAV_ITEMS } from '@/utils/constants';
 
-import { Section } from './Section';
+import Section from './section';
 
-const Footer = () => (
+const FooterSkeleton = () => (
   <footer>
     <Section>
       <div>
@@ -64,4 +64,4 @@ const Footer = () => (
   </footer>
 );
 
-export { Footer };
+export default FooterSkeleton;

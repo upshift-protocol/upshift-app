@@ -1,9 +1,9 @@
 import appConfig from '@/config/app';
 import type { IChildren } from '@/utils/types';
 
-import { Header } from './Header';
-import { Meta } from './Meta';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import Header from './header';
+import Meta from './meta';
 
 type IBase = IChildren & {
   style?: CSSProperties;
@@ -11,7 +11,7 @@ type IBase = IChildren & {
   description?: string;
 };
 
-const Base = ({ children, style, title, description }: IBase) => {
+const BaseSkeleton = ({ children, style, title, description }: IBase) => {
   return (
     <div style={style}>
       <Meta
@@ -26,4 +26,4 @@ const Base = ({ children, style, title, description }: IBase) => {
   );
 };
 
-export { Base };
+export default BaseSkeleton;

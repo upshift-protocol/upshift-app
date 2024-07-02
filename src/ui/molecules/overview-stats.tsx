@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
-
-import { Stat } from '../components/stat';
+import CustomStat from '../atoms/stat';
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -14,11 +13,21 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export const OverallStats = () => {
+const OverviewStatsMolecule = () => {
   return (
     <ResponsiveStack>
-      <Stat value="$2, 956, 234" unit="Total Deposits" variant="outlined" />
-      <Stat value="$2, 956, 234" unit="Total Borrowed" variant="outlined" />
+      <CustomStat
+        value="$2, 956, 234"
+        unit="Total Deposits"
+        variant="outlined"
+      />
+      <CustomStat
+        value="$2, 956, 234"
+        unit="Total Borrowed"
+        variant="outlined"
+      />
     </ResponsiveStack>
   );
 };
+
+export default OverviewStatsMolecule;

@@ -1,7 +1,7 @@
-import { OverallStats } from '@/ui/features/overall-stats';
-import { EarnTable } from '@/ui/features/earn-table';
-import { Base } from '@/ui/layout/Base';
-import { Section } from '@/ui/layout/Section';
+import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
+import PoolsTableOrganism from '@/ui/organisms/pools-table';
+import Base from '@/ui/skeletons/base';
+import Section from '@/ui/skeletons/section';
 
 const HomePage = () => {
   return (
@@ -10,9 +10,9 @@ const HomePage = () => {
         id="earn-table"
         title="Earn"
         description="Earn yields from real institutional loans via the Lazarev protocol. Democratizing high-yield investments traditionally limited to financial institutions."
-        action={<OverallStats />}
+        action={<OverviewStatsMolecule />}
       >
-        <EarnTable />
+        <PoolsTableOrganism />
       </Section>
     </Base>
   );

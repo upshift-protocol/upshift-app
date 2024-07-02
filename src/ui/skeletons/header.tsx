@@ -10,14 +10,14 @@ import Typography from '@mui/material/Typography';
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
-import { Button } from '@mui/material';
-import { ThemeSwitch } from '../components/theme-switch';
+import Button from '@mui/material/Button';
+import ThemeSwitch from '../atoms/theme-switch';
 
-const DynamicWalletBtn = dynamic(() => import('../features/connect-wallet'), {
+const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: () => <Button variant="outlined">Loading</Button>,
 });
 
-const Header = () => {
+const HeaderSkeleton = () => {
   const { isDark, toggleTheme } = useThemeMode();
   return (
     <header>
@@ -62,4 +62,4 @@ const Header = () => {
   );
 };
 
-export { Header };
+export default HeaderSkeleton;

@@ -6,10 +6,15 @@ type IFetchTypes = 'lending-pools';
 
 interface IUseFetcher extends UndefinedInitialDataOptions {
   queryKey: (IFetchTypes | string)[];
-  initialData: any;
+  initialData?: any;
+  formatter?: (data: any) => any;
 }
 
-export default function useFetcher({ queryKey, ...props }: IUseFetcher) {
+export default function useFetcher({
+  queryKey,
+  formatter,
+  ...props
+}: IUseFetcher) {
   const type = queryKey[0];
   async function determineGetter() {
     switch (type) {
@@ -27,10 +32,17 @@ export default function useFetcher({ queryKey, ...props }: IUseFetcher) {
       }
     }
   }
+
+  const masterGetter = async () => {
+    if (typeof formatter !== 'undefined')
+      return formatter(await determineGetter());
+    return determineGetter();
+  };
+
   const query = useQuery({
     ...props,
     queryKey,
-    queryFn: determineGetter,
+    queryFn: masterGetter,
   });
 
   return query;

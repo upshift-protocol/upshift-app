@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {styled} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 
 import { STYLE_VARS } from '@/utils/constants';
@@ -27,7 +27,7 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const Section = (props: ISectionProps) => {
+const SectionSkeleton = (props: ISectionProps) => {
   return (
     <Box
       id={props?.id ?? props?.title?.toLowerCase().replaceAll(' ', '-')}
@@ -56,4 +56,4 @@ const Section = (props: ISectionProps) => {
   );
 };
 
-export { Section };
+export default SectionSkeleton;

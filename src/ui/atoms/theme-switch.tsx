@@ -1,7 +1,19 @@
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
-export const ThemeSwitch = styled(Switch)(({ theme, checked }) => ({
+export interface IThemeSwitch {
+  value: number | string;
+  unit: string;
+  variant?: 'outlined';
+}
+
+// interface IThemeSwitchOwnerState extends IThemeSwitch {
+//   // …key value pairs for the internal state that you want to style the slot
+//   // but don't want to expose to the users
+// }
+
+const ThemeSwitchAtom = styled(Switch)<any>(({ theme, checked }) => ({
+  // TODO: fix type to not be any
   width: 56,
   height: 32,
   padding: 1,
@@ -51,4 +63,6 @@ export const ThemeSwitch = styled(Switch)(({ theme, checked }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#262a2f' : '#aab4be',
     borderRadius: 24,
   },
-})) as any;
+}));
+
+export default ThemeSwitchAtom;

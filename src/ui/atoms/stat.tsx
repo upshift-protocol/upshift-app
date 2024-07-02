@@ -46,7 +46,7 @@ const StatUnit = styled('div', {
   color: theme.palette.text.secondary,
 }));
 
-export const Stat = React.forwardRef<HTMLDivElement, StatProps>(
+const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
   function Stat(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiStat' });
     const { value, unit, variant, ...other } = props;
@@ -61,3 +61,5 @@ export const Stat = React.forwardRef<HTMLDivElement, StatProps>(
     );
   },
 );
+
+export default StatAtom;
