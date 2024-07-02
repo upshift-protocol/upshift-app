@@ -10,6 +10,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { zeroAddress } from 'viem';
 import Modal from '../components/modal';
 
 interface Column {
@@ -67,6 +69,7 @@ function createData(
 const rows = [createData('August Digital', 123, 1324171354, 3287263, 123123)];
 
 export function EarnTable() {
+  const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -79,6 +82,11 @@ export function EarnTable() {
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleRowClick = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    router.push(`/pools/${zeroAddress}`);
   };
 
   return (
@@ -104,7 +112,14 @@ export function EarnTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.name}
+                    onClick={handleRowClick}
+                    style={{ cursor: 'pointer' }}
+                  >
                     {columns.map((column) => {
                       const value = row[column.id as keyof Data];
                       return (
@@ -122,19 +137,57 @@ export function EarnTable() {
                         alignItems="center"
                         justifyContent="end"
                       >
-                        <Modal title='Deposit' buttonProps={{ children: "Deposit", variant: "outlined" }}>
+                        <Modal
+                          title="Deposit"
+                          buttonProps={{
+                            children: 'Deposit',
+                            variant: 'outlined',
+                          }}
+                        >
                           <Stack gap={2}>
-                          <TextField id="outlined-basic" label="Amount In" variant="outlined" />
-                          <TextField id="outlined-basic" label="Amount Out" disabled variant="outlined" />
-                          <Button size="large" variant="contained">Submit Transaction</Button>
-                            </Stack>
+                            <TextField
+                              id="outlined-basic"
+                              label="Amount In"
+                              variant="outlined"
+                            />
+                            <TextField
+                              id="outlined-basic"
+                              label="Amount Out"
+                              disabled
+                              variant="outlined"
+                            />
+                            <Button size="large" variant="contained">
+                              Submit Transaction
+                            </Button>
+                          </Stack>
                         </Modal>
-                        <Modal title="Withdraw" buttonProps={{ children: "Withdraw", variant: "outlined" }}>
-                        <Stack spacing={2} position="relative">
-                          <TextField id="outlined-basic" label="Amount In" variant="outlined" />
-                          <TextField id="outlined-basic" label="Amount Out" variant="outlined" disabled />
-                          <Button style={{ marginTop: "1rem" }} size="large" variant="contained">Submit Transaction</Button>
-                            </Stack>
+                        <Modal
+                          title="Withdraw"
+                          buttonProps={{
+                            children: 'Withdraw',
+                            variant: 'outlined',
+                          }}
+                        >
+                          <Stack spacing={2} position="relative">
+                            <TextField
+                              id="outlined-basic"
+                              label="Amount In"
+                              variant="outlined"
+                            />
+                            <TextField
+                              id="outlined-basic"
+                              label="Amount Out"
+                              variant="outlined"
+                              disabled
+                            />
+                            <Button
+                              style={{ marginTop: '1rem' }}
+                              size="large"
+                              variant="contained"
+                            >
+                              Submit Transaction
+                            </Button>
+                          </Stack>
                         </Modal>
                       </Stack>
                     </TableCell>

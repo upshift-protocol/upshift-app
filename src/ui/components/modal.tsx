@@ -31,8 +31,14 @@ export default function Modal({
   closeWhen?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = (e?: React.SyntheticEvent) => {
+    e?.stopPropagation();
+    setOpen(true);
+  };
+  const handleClose = (e?: React.SyntheticEvent) => {
+    e?.stopPropagation();
+    setOpen(false);
+  };
 
   React.useEffect(() => {
     if (typeof closeWhen !== 'undefined') {
@@ -49,7 +55,7 @@ export default function Modal({
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
-        onClose={handleClose}
+        onClose={handleClose as () => void}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
         slotProps={{

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
+import Link from 'next/link';
 import { ThemeSwitch } from '../components/theme-switch';
 import { ConnectWallet } from '../features/connect-wallet';
 
@@ -37,7 +38,12 @@ const Header = () => {
             <MenuIcon />
           </IconButton> */}
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              {appConfig.site_name}
+              <Link
+                href="/"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {appConfig.site_name}
+              </Link>
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2}>
               <ThemeSwitch checked={isDark} onChange={toggleTheme} />
