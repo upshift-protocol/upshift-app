@@ -1,3 +1,6 @@
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -7,9 +10,12 @@ import Typography from '@mui/material/Typography';
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
-import Link from 'next/link';
+import { Button } from '@mui/material';
 import { ThemeSwitch } from '../components/theme-switch';
-import { ConnectWallet } from '../features/connect-wallet';
+
+const DynamicWalletBtn = dynamic(() => import('../features/connect-wallet'), {
+  loading: () => <Button variant="outlined">Loading</Button>,
+});
 
 const Header = () => {
   const { isDark, toggleTheme } = useThemeMode();
@@ -47,7 +53,7 @@ const Header = () => {
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2}>
               <ThemeSwitch checked={isDark} onChange={toggleTheme} />
-              <ConnectWallet />
+              <DynamicWalletBtn />
             </Stack>
           </Toolbar>
         </AppBar>

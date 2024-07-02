@@ -11,64 +11,21 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { zeroAddress } from 'viem';
-import Modal from '../components/modal';
+import type { IColumn } from '@/utils/types';
+import { isAddress } from 'viem';
+import Link from 'next/link';
+import { truncate } from '@/utils/helpers';
+import Modal from './modal';
 
-interface Column {
-  id: string;
-  label: string;
-  minWidth?: number;
-  align?: 'right';
-  format?: (value: number) => string;
-}
+type ITableItem = Record<string, string | number>;
 
-const columns: readonly Column[] = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'supply', label: 'Total Supply', minWidth: 100 },
-  {
-    id: 'apy',
-    label: 'Net APY',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'collateral',
-    label: 'Collateral',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'curator',
-    label: 'Curator',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-  },
-];
+type ITable = {
+  columns: readonly IColumn[];
+  data: ITableItem[];
+  uidKey: string;
+};
 
-interface Data {
-  name: string;
-  supply: number;
-  collateral: number;
-  curator: number;
-  apy: number;
-}
-
-function createData(
-  name: string,
-  apy: number,
-  curator: number,
-  collateral: number,
-  supply: number,
-): Data {
-  return { name, supply, collateral, curator, apy };
-}
-
-const rows = [createData('August Digital', 123, 1324171354, 3287263, 123123)];
-
-export function EarnTable() {
+export function RTable({ data, columns, uidKey }: ITable) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -84,10 +41,24 @@ export function EarnTable() {
     setPage(0);
   };
 
-  const handleRowClick = (e: React.SyntheticEvent) => {
+  const handleRowClick = (e: React.SyntheticEvent, index: number) => {
     e.preventDefault();
-    router.push(`/pools/${zeroAddress}`);
+    const uid = data?.[index]?.[uidKey];
+    if (!uid) {
+      console.error('uid not found');
+      return;
+    }
+    router.push(`/pools/${uid}`);
   };
+
+  const renderCell = (value: any) => {
+    if (value?.normalized) return value?.normalized;
+    if (isAddress(value)) return <Link href="#">{truncate(value)}</Link>;
+    return value;
+  };
+
+  console.log('rows:', data);
+  console.log('columns:', columns);
 
   return (
     <Box>
@@ -101,32 +72,32 @@ export function EarnTable() {
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                 >
-                  {column.label}
+                  {column.value}
                 </TableCell>
               ))}
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, i) => {
                 return (
                   <TableRow
                     hover
                     role="checkbox"
                     tabIndex={-1}
                     key={row.name}
-                    onClick={handleRowClick}
+                    onClick={(e) => handleRowClick(e, i)}
                     style={{ cursor: 'pointer' }}
                   >
                     {columns.map((column) => {
-                      const value = row[column.id as keyof Data];
+                      const value = row[column.id as keyof ITableItem];
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
+                            ? column.format(renderCell(value))
+                            : renderCell(value)}
                         </TableCell>
                       );
                     })}
@@ -200,7 +171,7 @@ export function EarnTable() {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={data.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

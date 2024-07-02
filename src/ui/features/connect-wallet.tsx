@@ -8,13 +8,22 @@ import Button from '@mui/material/Button';
 import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
 import { truncate } from '@/utils/helpers';
+import React from 'react';
 import Modal from '../components/modal';
 
-export const ConnectWallet = () => {
+const ConnectWallet = () => {
   const { connectors, connectAsync, isPending: connectPending } = useConnect();
   const { disconnect, isPending: disconnectPending } = useDisconnect();
   const { address } = useAccount();
 
+  // wait for hydration, show loading state
+  const [hydrated, setHydrated] = React.useState(false);
+  React.useEffect(() => {
+    setHydrated(true);
+  }, []);
+  if (!hydrated) return <Button variant="outlined">Connect Wallet</Button>;
+
+  // remaining of functional component
   async function handleConnect(e: SyntheticEvent, id: string) {
     e.preventDefault();
     const foundConnector = connectors.find((c) => c.id === id);
@@ -77,3 +86,5 @@ export const ConnectWallet = () => {
     </Modal>
   );
 };
+
+export default ConnectWallet;

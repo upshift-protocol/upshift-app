@@ -1,3 +1,4 @@
+import MOCK_POOLS from '@/utils/mock-data';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 
@@ -13,13 +14,15 @@ export default function useFetcher({ queryKey, ...props }: IUseFetcher) {
   async function determineGetter() {
     switch (type) {
       case 'lending-pools': {
+        // TODO: temp data
         return new Promise((res) => {
-          setTimeout(() => res(['pool-1']), 2000);
+          setTimeout(() => res(MOCK_POOLS), 2000);
         });
       }
       default: {
+        // TODO: temp data
         return new Promise((res) => {
-          setTimeout(() => res(['pool-1']), 2000);
+          setTimeout(() => res(MOCK_POOLS), 2000);
         });
       }
     }

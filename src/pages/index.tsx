@@ -1,19 +1,9 @@
-import useFetcher from '@/hooks/use-fetcher';
 import { OverallStats } from '@/ui/features/overall-stats';
-import { EarnTable } from '@/ui/features/table';
+import { EarnTable } from '@/ui/features/earn-table';
 import { Base } from '@/ui/layout/Base';
 import { Section } from '@/ui/layout/Section';
 
 const HomePage = () => {
-  const { data, isLoading, isFetched } = useFetcher({
-    queryKey: ['lending-pools'],
-    initialData: [],
-  });
-
-  console.log('data', data);
-  console.log('isLoading', isLoading);
-  console.log('isFetched', isFetched);
-
   return (
     <Base>
       <Section
