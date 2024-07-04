@@ -21,13 +21,13 @@ export default function useFetcher({
       case 'lending-pools': {
         // TODO: temp data
         return new Promise((res) => {
-          setTimeout(() => res(MOCK_POOLS), 2000);
+          setTimeout(() => res(MOCK_POOLS), 1000);
         });
       }
       default: {
         // TODO: temp data
         return new Promise((res) => {
-          setTimeout(() => res(MOCK_POOLS), 2000);
+          setTimeout(() => res(MOCK_POOLS), 1000);
         });
       }
     }

@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 
 import { STYLE_VARS } from '@/utils/constants';
+import type { IBreadCumb } from '@/utils/types';
+import BreadCrumbs from '../atoms/breadcrumbs';
 
 type ISectionProps = {
   title?: string;
@@ -12,6 +14,7 @@ type ISectionProps = {
   children: ReactNode;
   id?: string;
   action?: ReactNode;
+  breadcrumbs?: IBreadCumb[];
 };
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -35,6 +38,15 @@ const SectionSkeleton = (props: ISectionProps) => {
       maxWidth={STYLE_VARS.width}
       mx="auto"
     >
+      {typeof props.breadcrumbs !== 'undefined' &&
+      typeof props.title !== 'undefined' ? (
+        <BreadCrumbs
+          style={{ marginBottom: '1rem' }}
+          crumbs={props.breadcrumbs}
+          currentPage={props.title}
+        />
+      ) : null}
+
       {(props.title || props.description) && (
         <ResponsiveStack>
           <Box>
@@ -44,7 +56,12 @@ const SectionSkeleton = (props: ISectionProps) => {
               </Typography>
             )}
             {props.description && (
-              <Typography variant="body1">{props.description}</Typography>
+              <Typography
+                variant="body1"
+                maxWidth={STYLE_VARS.descriptionWidth}
+              >
+                {props.description}
+              </Typography>
             )}
           </Box>
           {props?.action ? <Box flex="none">{props.action}</Box> : null}

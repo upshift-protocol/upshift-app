@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
 
+export type IHrefTarget = '_blank' | '_self';
+
 export type INavItem = {
   text: string;
   link: string;
-  target: '_blank' | '_self';
+  target: IHrefTarget;
 };
 
 export type IChildren = {
@@ -19,3 +21,15 @@ export interface IColumn {
   align?: 'right';
   format?: (value: number) => string;
 }
+
+export type IBreadCumb = {
+  href: string;
+  text: string;
+  target?: IHrefTarget;
+};
+
+export type IAssetDisplay = {
+  symbol?: string;
+  img?: string;
+  address?: string;
+};

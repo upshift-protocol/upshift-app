@@ -3,6 +3,7 @@ import type { INavItem } from './types';
 export const STYLE_VARS = {
   widthWide: '120rem',
   width: '100rem',
+  descriptionWidth: '800px',
 };
 
 export const LINKS = {
