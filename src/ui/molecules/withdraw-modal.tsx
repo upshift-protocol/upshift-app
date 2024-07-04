@@ -10,6 +10,7 @@ export default function WithdrawModalMolecule() {
       buttonProps={{
         children: 'Withdraw',
         variant: 'outlined',
+        color: 'error',
       }}
     >
       <Stack spacing={2} position="relative">
