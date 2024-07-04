@@ -35,9 +35,6 @@ export default function PoolsTableOrganism() {
     queryKey: ['lending-pools'],
   }) as UseQueryResult<any>;
 
-  console.log('rows:', data);
-  console.log('columns:', columns);
-
   return (
     <TableMolecule
       columns={columns}
