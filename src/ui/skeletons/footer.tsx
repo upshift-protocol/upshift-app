@@ -1,7 +1,7 @@
 import { NAV_ITEMS } from '@/utils/constants';
 
 import Section from './section';
-import LinkAtom from '../atoms/Link';
+import LinkAtom from '../atoms/link';
 
 const FooterSkeleton = () => (
   <footer>

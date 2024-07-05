@@ -16,16 +16,8 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
 const OverviewStatsMolecule = () => {
   return (
     <ResponsiveStack>
-      <CustomStat
-        value="$2, 956, 234"
-        unit="Total Deposits"
-        variant="outlined"
-      />
-      <CustomStat
-        value="$2, 956, 234"
-        unit="Total Borrowed"
-        variant="outlined"
-      />
+      <CustomStat value="$2,956,234" unit="Total Deposits" variant="outlined" />
+      <CustomStat value="$2,956,234" unit="Total Borrowed" variant="outlined" />
     </ResponsiveStack>
   );
 };

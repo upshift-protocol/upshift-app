@@ -4,7 +4,8 @@ import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import LinkAtom from '../atoms/Link';
+import LinkAtom from '../atoms/link';
+import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
   props: (IPool | undefined) & { loading: boolean },
@@ -55,9 +56,9 @@ export default function VaultInfo(
             {props.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <Typography>
-                {props.totalSupply.normalized} {'USDC'} {/* TODO */}{' '}
-              </Typography>
+              <AmountDisplay symbol="USDC">
+                {props.totalSupply.normalized}
+              </AmountDisplay>
             )}
           </Stack>
         </Grid>
@@ -71,7 +72,7 @@ export default function VaultInfo(
             {props.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <Typography>{'0.0%'}</Typography>
+              <AmountDisplay>{'0.0%'}</AmountDisplay>
             )}
           </Stack>
         </Grid>
@@ -85,7 +86,7 @@ export default function VaultInfo(
             {props.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <Typography>{'0.0%'}</Typography>
+              <AmountDisplay>{'0.0%'}</AmountDisplay>
             )}
           </Stack>
         </Grid>
@@ -99,9 +100,9 @@ export default function VaultInfo(
             {props.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <Typography>
-                {props.totalAssets.normalized} {'USDC'} {/* TODO */}
-              </Typography>
+              <AmountDisplay symbol={'USDC'}>
+                {props.totalAssets.normalized}
+              </AmountDisplay>
             )}
           </Stack>
         </Grid>

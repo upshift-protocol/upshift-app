@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-import LinkAtom from './Link';
+import LinkAtom from './link';
 
 export default function AssetDisplay(props: IAssetDisplay) {
   return (

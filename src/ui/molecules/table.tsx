@@ -13,7 +13,7 @@ import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
 import { truncate } from '@/utils/helpers';
 import { Skeleton } from '@mui/material';
-import LinkAtom from '../atoms/Link';
+import LinkAtom from '../atoms/link';
 
 export type ITableType = 'pools' | 'custom';
 

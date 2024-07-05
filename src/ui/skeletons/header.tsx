@@ -11,7 +11,7 @@ import { STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
 import Button from '@mui/material/Button';
 import ThemeSwitch from '../atoms/theme-switch';
-import LinkAtom from '../atoms/Link';
+import LinkAtom from '../atoms/link';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: () => <Button variant="outlined">Loading</Button>,

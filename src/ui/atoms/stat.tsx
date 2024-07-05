@@ -55,7 +55,9 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
 
     return (
       <StatRoot ref={ref} ownerState={ownerState} {...other}>
-        <StatValue ownerState={ownerState}>{value}</StatValue>
+        <StatValue ownerState={ownerState} style={{ fontFamily: 'monospace' }}>
+          {value}
+        </StatValue>
         <StatUnit ownerState={ownerState}>{unit}</StatUnit>
       </StatRoot>
     );

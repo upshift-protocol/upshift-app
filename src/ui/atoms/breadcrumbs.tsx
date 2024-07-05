@@ -1,7 +1,7 @@
 import type { IBreadCumb } from '@/utils/types';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import type { CSSProperties } from 'react';
-import LinkAtom from './Link';
+import LinkAtom from './link';
 
 export default function BreadCrumbs({
   crumbs,
