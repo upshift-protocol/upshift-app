@@ -44,8 +44,8 @@ const PoolPage = () => {
           <Stack direction="column" alignItems={'end'} gap={2}>
             <AssetDisplay />
             <Stack direction={'row'} gap={1}>
-              <DepositModalMolecule />
-              <WithdrawModalMolecule />
+              <DepositModalMolecule {...(pool as IPool)} />
+              <WithdrawModalMolecule {...(pool as IPool)} />
             </Stack>
           </Stack>
         }

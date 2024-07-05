@@ -1,9 +1,10 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import type { IPool } from '@augustdigital/types';
 import ModalAtom from '../atoms/modal';
+import AssetInputMolecule from './asset-input';
 
-export default function DepositModalMolecule() {
+export default function DepositModalMolecule(props?: IPool) {
   return (
     <ModalAtom
       title="Deposit"
@@ -13,13 +14,8 @@ export default function DepositModalMolecule() {
       }}
     >
       <Stack gap={2}>
-        <TextField id="outlined-basic" label="Amount In" variant="outlined" />
-        <TextField
-          id="outlined-basic"
-          label="Amount Out"
-          disabled
-          variant="outlined"
-        />
+        <AssetInputMolecule symbol={'USDC'} type="In" />
+        <AssetInputMolecule symbol={props?.symbol} type="Out" />
         <Button size="large" variant="contained">
           Submit Transaction
         </Button>

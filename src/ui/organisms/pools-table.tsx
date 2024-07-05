@@ -2,6 +2,7 @@ import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { IColumn } from '@/utils/types';
 import Stack from '@mui/material/Stack';
+import type { IPool } from '@augustdigital/types';
 import TableMolecule from '../molecules/table';
 import DepositModalMolecule from '../molecules/deposit-modal';
 import WithdrawModalMolecule from '../molecules/withdraw-modal';
@@ -48,8 +49,8 @@ export default function PoolsTableOrganism() {
           alignItems="center"
           justifyContent="end"
         >
-          <DepositModalMolecule />
-          <WithdrawModalMolecule />
+          <DepositModalMolecule {...(data as IPool)} />
+          <WithdrawModalMolecule {...(data as IPool)} />
         </Stack>
       }
     />
