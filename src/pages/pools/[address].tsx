@@ -8,7 +8,7 @@ import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/vault-allocation';
-import { Stack } from '@mui/material';
+import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/molecules/deposit-modal';
 import WithdrawModalMolecule from '@/ui/molecules/withdraw-modal';
 

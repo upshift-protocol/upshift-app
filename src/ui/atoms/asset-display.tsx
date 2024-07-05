@@ -1,5 +1,7 @@
 import type { IAssetDisplay } from '@/utils/types';
-import { Box, Stack, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import LinkAtom from './Link';
 

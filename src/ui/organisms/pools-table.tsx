@@ -1,7 +1,7 @@
 import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { IColumn } from '@/utils/types';
-import { Stack } from '@mui/material';
+import Stack from '@mui/material/Stack';
 import TableMolecule from '../molecules/table';
 import DepositModalMolecule from '../molecules/deposit-modal';
 import WithdrawModalMolecule from '../molecules/withdraw-modal';

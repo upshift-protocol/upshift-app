@@ -1,6 +1,9 @@
 import { truncate } from '@/utils/helpers';
 import type { IPool } from '@augustdigital/types';
-import { Grid, Skeleton, Stack, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import LinkAtom from '../atoms/Link';
 
 export default function VaultInfo(
