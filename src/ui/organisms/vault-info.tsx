@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import LinkAtom from '../atoms/link';
+import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
