@@ -15,7 +15,7 @@ import WithdrawModalMolecule from '@/ui/molecules/withdraw-modal';
 const PoolPage = () => {
   // const router = useRouter();
   // const poolAddress = router.query.address! as string;
-  const { data } = useFetcher({
+  const { data, isLoading } = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPool[]>;
   const pool = data?.[0];
@@ -33,10 +33,11 @@ const PoolPage = () => {
     <Base>
       <Section
         id="earn-table"
-        title={pool?.name}
+        loading={isLoading}
+        title={pool?.name ?? ' '}
         description={
           (pool as any)?.description ??
-          `The ${pool?.name} vault aims to optimize yields by lending USDC against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
+          `${isLoading ? 'This' : 'The'} ${pool?.name ?? ''} vault aims to optimize yields by lending USDC against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
         }
         breadcrumbs={buildCrumbs()}
         action={
@@ -50,8 +51,8 @@ const PoolPage = () => {
         }
       >
         <Stack direction="column" gap={6} mt={2}>
-          <VaultInfo {...(pool as any)} />
-          <VaultAllocation {...(pool as any)} />
+          <VaultInfo loading={isLoading} {...(pool as any)} />
+          <VaultAllocation loading={isLoading} {...(pool as any)} />
         </Stack>
       </Section>
     </Base>

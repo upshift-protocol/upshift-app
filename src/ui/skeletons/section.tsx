@@ -2,10 +2,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 import { STYLE_VARS } from '@/utils/constants';
 import type { IBreadCumb } from '@/utils/types';
+import { Skeleton } from '@mui/material';
 import BreadCrumbs from '../atoms/breadcrumbs';
 
 type ISectionProps = {
@@ -15,6 +16,7 @@ type ISectionProps = {
   id?: string;
   action?: ReactNode;
   breadcrumbs?: IBreadCumb[];
+  loading?: boolean;
 };
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -51,9 +53,20 @@ const SectionSkeleton = (props: ISectionProps) => {
         <ResponsiveStack>
           <Box>
             {props.title && (
-              <Typography variant="h2" mb={1}>
-                {props.title}
-              </Typography>
+              <Fragment>
+                {props.loading ? (
+                  <Skeleton
+                    variant="text"
+                    style={{ transform: 'none', marginBottom: '1rem' }}
+                    height={36}
+                    width={300}
+                  />
+                ) : (
+                  <Typography variant="h2" mb={1}>
+                    {props.title}
+                  </Typography>
+                )}
+              </Fragment>
             )}
             {props.description && (
               <Typography

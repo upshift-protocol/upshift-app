@@ -1,11 +1,11 @@
 import { truncate } from '@/utils/helpers';
 import type { IPool } from '@augustdigital/types';
-import { Grid, Link, Stack, Typography } from '@mui/material';
+import { Grid, Skeleton, Stack, Typography } from '@mui/material';
+import LinkAtom from '../atoms/Link';
 
-export default function VaultInfo(props: IPool | undefined) {
-  if (typeof props?.address === 'undefined') {
-    return null;
-  }
+export default function VaultInfo(
+  props: (IPool | undefined) & { loading: boolean },
+) {
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>
@@ -17,7 +17,13 @@ export default function VaultInfo(props: IPool | undefined) {
             alignItems="center"
           >
             <Typography>Vault Address</Typography>
-            <Link overflow="hidden">{truncate(props.address, 6)}</Link>
+            {props.loading ? (
+              <Skeleton variant="text" width={150} />
+            ) : (
+              <LinkAtom overflow="hidden">
+                {truncate(props.address, 6)}
+              </LinkAtom>
+            )}
           </Stack>
         </Grid>
         <Grid item xs={6}>
@@ -27,7 +33,13 @@ export default function VaultInfo(props: IPool | undefined) {
             alignItems="center"
           >
             <Typography>Curator</Typography>
-            <Link overflow="hidden">{truncate(props.getLoansOperator, 6)}</Link>
+            {props.loading ? (
+              <Skeleton variant="text" width={150} />
+            ) : (
+              <LinkAtom overflow="hidden">
+                {truncate(props.getLoansOperator, 6)}
+              </LinkAtom>
+            )}
           </Stack>
         </Grid>
         <Grid item xs={6}>
@@ -37,7 +49,13 @@ export default function VaultInfo(props: IPool | undefined) {
             alignItems="center"
           >
             <Typography>Total Supply</Typography>
-            <Typography>{props.totalSupply.normalized}</Typography>
+            {props.loading ? (
+              <Skeleton variant="text" width={100} />
+            ) : (
+              <Typography>
+                {props.totalSupply.normalized} {'USDC'} {/* TODO */}{' '}
+              </Typography>
+            )}
           </Stack>
         </Grid>
         <Grid item xs={6}>
@@ -47,7 +65,11 @@ export default function VaultInfo(props: IPool | undefined) {
             alignItems="center"
           >
             <Typography>Net APY</Typography>
-            <Typography>{'0.0%'}</Typography>
+            {props.loading ? (
+              <Skeleton variant="text" width={75} />
+            ) : (
+              <Typography>{'0.0%'}</Typography>
+            )}
           </Stack>
         </Grid>
         <Grid item xs={6}>
@@ -57,7 +79,11 @@ export default function VaultInfo(props: IPool | undefined) {
             alignItems="center"
           >
             <Typography>Performance Fee</Typography>
-            <Typography>{'0.0%'}</Typography>
+            {props.loading ? (
+              <Skeleton variant="text" width={75} />
+            ) : (
+              <Typography>{'0.0%'}</Typography>
+            )}
           </Stack>
         </Grid>
         <Grid item xs={6}>
@@ -67,9 +93,13 @@ export default function VaultInfo(props: IPool | undefined) {
             alignItems="center"
           >
             <Typography>Liquidity</Typography>
-            <Typography>
-              {props.totalAssets.normalized} {'USDC'} {/* TODO */}
-            </Typography>
+            {props.loading ? (
+              <Skeleton variant="text" width={100} />
+            ) : (
+              <Typography>
+                {props.totalAssets.normalized} {'USDC'} {/* TODO */}
+              </Typography>
+            )}
           </Stack>
         </Grid>
       </Grid>

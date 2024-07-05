@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,6 +11,7 @@ import { STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
 import Button from '@mui/material/Button';
 import ThemeSwitch from '../atoms/theme-switch';
+import LinkAtom from '../atoms/Link';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: () => <Button variant="outlined">Loading</Button>,
@@ -44,12 +44,12 @@ const HeaderSkeleton = () => {
             <MenuIcon />
           </IconButton> */}
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              <Link
+              <LinkAtom
                 href="/"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 {appConfig.site_name}
-              </Link>
+              </LinkAtom>
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2}>
               <ThemeSwitch checked={isDark} onChange={toggleTheme} />

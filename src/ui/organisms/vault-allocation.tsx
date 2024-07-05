@@ -48,15 +48,15 @@ const rows = [
   },
 ];
 
-export default function VaultAllocation(props: IPool | undefined) {
-  if (typeof props?.address === 'undefined') {
-    return null;
-  }
+export default function VaultAllocation(
+  props: (IPool | undefined) & { loading: boolean },
+) {
   return (
     <Stack gap={3} direction="column">
       <Typography variant="h6">Vault Allocation Breakdown</Typography>
 
       <DataGrid
+        loading={props.loading}
         rows={rows}
         columns={columns}
         initialState={{

@@ -1,13 +1,18 @@
 import type { IAssetDisplay } from '@/utils/types';
-import { Box, Link, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import LinkAtom from './Link';
 
 export default function AssetDisplay(props: IAssetDisplay) {
   return (
-    <Link underline="none" color="theme.primary" href={props?.address}>
+    <LinkAtom
+      underline="none"
+      href={props?.address}
+      style={{ color: 'inherit' }}
+    >
       <Box
         style={{
-          padding: '0.4rem 0.75rem',
+          padding: '0.35rem 0.7rem',
           width: 'fit-content',
           cursor: 'pointer',
         }}
@@ -25,6 +30,6 @@ export default function AssetDisplay(props: IAssetDisplay) {
           </Box>
         </Stack>
       </Box>
-    </Link>
+    </LinkAtom>
   );
 }

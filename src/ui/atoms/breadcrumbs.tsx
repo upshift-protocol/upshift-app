@@ -1,7 +1,7 @@
 import type { IBreadCumb } from '@/utils/types';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import type { CSSProperties } from 'react';
+import LinkAtom from './Link';
 
 export default function BreadCrumbs({
   crumbs,
@@ -15,16 +15,16 @@ export default function BreadCrumbs({
   return (
     <Breadcrumbs aria-label="breadcrumb" style={style}>
       {crumbs.map((c, i) => (
-        <Link
+        <LinkAtom
           key={`breadcrumb-${i}`}
           underline="hover"
           href={c.href}
           style={{ opacity: '0.75' }}
         >
           {c.text}
-        </Link>
+        </LinkAtom>
       ))}
-      <Link underline={'none'}>{currentPage}</Link>
+      <LinkAtom underline={'none'}>{currentPage}</LinkAtom>
     </Breadcrumbs>
   );
 }

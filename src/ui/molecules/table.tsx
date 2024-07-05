@@ -11,9 +11,9 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
-import Link from '@mui/material/Link';
 import { truncate } from '@/utils/helpers';
 import { Skeleton } from '@mui/material';
+import LinkAtom from '../atoms/Link';
 
 export type ITableType = 'pools' | 'custom';
 
@@ -66,7 +66,7 @@ export default function TableMolecule({
     };
     const extracted = extractor();
     if (isAddress(extracted)) {
-      return <Link href="#">{truncate(extracted)}</Link>;
+      return <LinkAtom href="#">{truncate(extracted)}</LinkAtom>;
     }
     return extracted;
   };
