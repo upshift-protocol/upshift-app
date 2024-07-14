@@ -11,7 +11,17 @@ import { truncate } from '@/utils/helpers';
 import React from 'react';
 import Modal from '../atoms/modal';
 
-const ConnectWalletMolecule = () => {
+type IConnectWallet = {
+  btnFullWidth?: boolean;
+  variant?: 'contained' | 'text' | 'outlined';
+  color?: 'primary' | 'inherit';
+};
+
+const ConnectWalletMolecule = ({
+  btnFullWidth,
+  variant,
+  color,
+}: IConnectWallet) => {
   const { connectors, connectAsync, isPending: connectPending } = useConnect();
   const { disconnect, isPending: disconnectPending } = useDisconnect();
   const { address } = useAccount();
@@ -50,8 +60,9 @@ const ConnectWalletMolecule = () => {
     <Modal
       title="Connect Wallet"
       buttonProps={{
-        variant: address ? 'contained' : 'outlined',
-        color: address ? 'primary' : 'inherit',
+        fullWidth: btnFullWidth ?? false,
+        variant: variant ?? (address ? 'contained' : 'outlined'),
+        color: color ?? (address ? 'primary' : 'inherit'),
         size: 'large',
         children: renderChildren(),
         onClick: address ? () => disconnect() : undefined,
