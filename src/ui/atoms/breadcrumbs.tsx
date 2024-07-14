@@ -19,12 +19,14 @@ export default function BreadCrumbs({
           key={`breadcrumb-${i}`}
           underline="hover"
           href={c.href}
-          style={{ opacity: '0.75' }}
+          style={{ opacity: '0.8' }}
         >
           {c.text}
         </LinkAtom>
       ))}
-      <LinkAtom underline={'none'}>{currentPage}</LinkAtom>
+      <LinkAtom underline={'none'} style={{ cursor: 'default' }}>
+        {currentPage}
+      </LinkAtom>
     </Breadcrumbs>
   );
 }

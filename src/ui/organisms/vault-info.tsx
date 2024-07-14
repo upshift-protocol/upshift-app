@@ -1,5 +1,5 @@
 import { truncate } from '@/utils/helpers';
-import type { IPool } from '@augustdigital/types';
+import type { IPool } from '@augustdigital/sdk';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';

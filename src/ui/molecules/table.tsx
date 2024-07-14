@@ -6,25 +6,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
 import { truncate } from '@/utils/helpers';
 import { Skeleton } from '@mui/material';
+import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
 
-type ITableItem = Record<string, string | number>;
+type ITableItem = Record<
+  string,
+  string | number | IAddress | INormalizedNumber
+>;
 
 type ITable = {
   columns: readonly IColumn[];
-  data: ITableItem[];
+  data?: ITableItem[];
   uidKey: string;
-  action?: ReactNode;
+  action?: (props: any) => JSX.Element;
   loading?: boolean;
+  type?: ITableType;
 };
 
 export default function TableMolecule({
@@ -33,6 +37,7 @@ export default function TableMolecule({
   uidKey,
   action,
   loading,
+  type = 'custom',
 }: ITable) {
   const router = useRouter();
   const [page, setPage] = useState(0);
@@ -65,7 +70,7 @@ export default function TableMolecule({
       return value;
     };
     const extracted = extractor();
-    if (isAddress(extracted)) {
+    if (typeof extracted === 'string' && isAddress(extracted)) {
       return <LinkAtom href="#">{truncate(extracted)}</LinkAtom>;
     }
     return extracted;
@@ -89,7 +94,7 @@ export default function TableMolecule({
       page * rowsPerPage + rowsPerPage,
     );
     return sliced;
-  }, [JSON.stringify(data), page, rowsPerPage]);
+  }, [data, page, rowsPerPage]);
 
   return (
     <Box>
@@ -106,7 +111,7 @@ export default function TableMolecule({
                   {column.value}
                 </TableCell>
               ))}
-              {action ? <TableCell /> : null}
+              {action || type === 'pools' ? <TableCell /> : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -138,7 +143,7 @@ export default function TableMolecule({
                     );
                   })}
                   {action ? (
-                    <TableCell align={'right'}>{action}</TableCell>
+                    <TableCell align={'right'}>{action(row)}</TableCell>
                   ) : null}
                 </TableRow>
               );
@@ -149,7 +154,7 @@ export default function TableMolecule({
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={data?.length}
+        count={data?.length ?? 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

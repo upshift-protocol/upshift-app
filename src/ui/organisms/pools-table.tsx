@@ -1,8 +1,8 @@
 import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { IColumn } from '@/utils/types';
+import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
-import type { IPool } from '@augustdigital/types';
 import TableMolecule from '../molecules/table';
 import DepositModalMolecule from '../molecules/deposit-modal';
 import WithdrawModalMolecule from '../molecules/withdraw-modal';
@@ -31,6 +31,15 @@ const columns: readonly IColumn[] = [
   },
 ];
 
+function PoolsTableAction(pool: IPoolWithUnderlying) {
+  return (
+    <Stack direction="row" spacing={2} alignItems="center" justifyContent="end">
+      <DepositModalMolecule {...pool} />
+      <WithdrawModalMolecule {...pool} />
+    </Stack>
+  );
+}
+
 export default function PoolsTableOrganism() {
   const { data, isLoading } = useFetcher({
     queryKey: ['lending-pools'],
@@ -42,17 +51,7 @@ export default function PoolsTableOrganism() {
       data={data}
       uidKey="address"
       loading={isLoading}
-      action={
-        <Stack
-          direction="row"
-          spacing={2}
-          alignItems="center"
-          justifyContent="end"
-        >
-          <DepositModalMolecule {...(data as IPool)} />
-          <WithdrawModalMolecule {...(data as IPool)} />
-        </Stack>
-      }
+      action={PoolsTableAction}
     />
   );
 }

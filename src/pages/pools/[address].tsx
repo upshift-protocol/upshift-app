@@ -3,7 +3,7 @@ import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 // import { useRouter } from 'next/router';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { IPool } from '@augustdigital/types';
+import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -17,8 +17,8 @@ const PoolPage = () => {
   // const poolAddress = router.query.address! as string;
   const { data, isLoading } = useFetcher({
     queryKey: ['lending-pools'],
-  }) as UseQueryResult<IPool[]>;
-  const pool = data?.[0];
+  }) as UseQueryResult<IPoolWithUnderlying[]>;
+  const pool = data?.[0] as IPoolWithUnderlying;
 
   function buildCrumbs(): IBreadCumb[] {
     return [
@@ -44,15 +44,15 @@ const PoolPage = () => {
           <Stack direction="column" alignItems={'end'} gap={2}>
             <AssetDisplay />
             <Stack direction={'row'} gap={1}>
-              <DepositModalMolecule {...(pool as IPool)} />
-              <WithdrawModalMolecule {...(pool as IPool)} />
+              <DepositModalMolecule {...pool} />
+              <WithdrawModalMolecule {...pool} />
             </Stack>
           </Stack>
         }
       >
         <Stack direction="column" gap={6} mt={2}>
-          <VaultInfo loading={isLoading} {...(pool as any)} />
-          <VaultAllocation loading={isLoading} {...(pool as any)} />
+          <VaultInfo loading={isLoading} {...pool} />
+          <VaultAllocation loading={isLoading} {...pool} />
         </Stack>
       </Section>
     </Base>

@@ -1,6 +1,7 @@
-import Link from 'next/link';
+import NextLink from 'next/link';
 import MUILink from '@mui/material/Link';
-import type { CSSProperties, ReactNode } from 'react';
+import { forwardRef } from 'react';
+import type { ForwardedRef, CSSProperties, ReactNode } from 'react';
 import type { IHrefTarget } from '@/utils/types';
 
 type ILinkAtom = {
@@ -13,20 +14,22 @@ type ILinkAtom = {
   target?: IHrefTarget;
 };
 
+const LinkBehaviour = forwardRef(function LinkBehaviour(
+  props: any,
+  ref: ForwardedRef<HTMLAnchorElement>,
+) {
+  return <NextLink ref={ref} href={props?.href ?? '/#'} {...props} />;
+});
+
 export default function LinkAtom(props: ILinkAtom) {
   return (
-    <Link
-      href={props.href || '#'}
-      target={props.target}
-      style={{ textDecoration: 'none', ...props.style }}
+    <MUILink
+      overflow={props.overflow}
+      underline={props?.underline}
+      style={props.style}
+      component={LinkBehaviour}
     >
-      <MUILink
-        overflow={props.overflow}
-        underline={props?.underline}
-        style={props.style}
-      >
-        {props.children}
-      </MUILink>
-    </Link>
+      {props.children}
+    </MUILink>
   );
 }
