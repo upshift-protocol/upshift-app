@@ -1,10 +1,11 @@
 import { Stack, styled } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import type { IAddress } from '@augustdigital/sdk';
 import AssetSelectorAtom from '../atoms/asset-selector';
 
 type IAssetInput = {
   chain?: number;
-  address?: string;
+  address?: IAddress;
   value?: string;
   type?: 'In' | 'Out';
 };
@@ -30,7 +31,7 @@ export default function AssetInputMolecule(props: IAssetInput) {
         required={props.type === 'In'}
         value={props.value}
       />
-      <AssetSelectorAtom symbol={props.address} forInput />
+      <AssetSelectorAtom {...props} forInput />
     </Stack>
   );
 }

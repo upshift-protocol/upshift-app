@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
 import { truncate } from '@/utils/helpers';
-import { Skeleton } from '@mui/material';
+import { Skeleton, Stack } from '@mui/material';
 import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import LinkAtom from '../atoms/anchor-link';
 
@@ -70,7 +70,20 @@ export default function TableMolecule({
       return value;
     };
     const extracted = extractor();
-    if (typeof extracted === 'string' && isAddress(extracted)) {
+    if (
+      (typeof extracted === 'string' && isAddress(extracted)) ||
+      (Array.isArray(extracted) && isAddress(extracted?.[0]))
+    ) {
+      if (Array.isArray(extracted))
+        return (
+          <Stack direction="row" justifyContent="end">
+            {extracted.map((e, i) => (
+              <LinkAtom key={`link-${i}-${e}`} href="#">
+                {truncate(e)}
+              </LinkAtom>
+            ))}
+          </Stack>
+        );
       return <LinkAtom href="#">{truncate(extracted)}</LinkAtom>;
     }
     return extracted;

@@ -62,7 +62,7 @@ const SectionSkeleton = (props: ISectionProps) => {
                     width={300}
                   />
                 ) : (
-                  <Typography variant="h2" mb={1}>
+                  <Typography variant="h2" mb={2}>
                     {props.title}
                   </Typography>
                 )}

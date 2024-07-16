@@ -4,6 +4,7 @@ import type { IAssetDisplay } from '@/utils/types';
 import { Box, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Image from 'next/image';
+// import { useState } from 'react';
 
 type IAssetSelector = IAssetDisplay & {
   forInput?: boolean;
@@ -11,6 +12,17 @@ type IAssetSelector = IAssetDisplay & {
 
 export default function AssetSelectorAtom(props: IAssetSelector) {
   const { isDark } = useThemeMode();
+  // const [symbol, setSymbol] = useState<string | undefined>(props.address);
+  // const provider = usePublicClient();
+
+  // useEffect(() => {
+  //   (async () => {
+  //     if (!provider) return;
+  //     const tokenSymbol = await getSymbol(provider as any, props?.address);
+  //     if (tokenSymbol) setSymbol(tokenSymbol);
+  //   })().catch(console.error);
+  // }, [props?.address]);
+
   return (
     <Stack
       direction={'row'}
@@ -33,7 +45,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
       />
       <Box width={STYLE_VARS.assetDivWidth}>
         <Typography variant="body1" noWrap>
-          {props?.symbol ?? 'N/A'}
+          {props.address ?? 'N/A'}
         </Typography>
       </Box>
     </Stack>

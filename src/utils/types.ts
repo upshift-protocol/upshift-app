@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { IAddress } from '@augustdigital/sdk';
 
 export type IHrefTarget = '_blank' | '_self';
 
@@ -31,5 +32,5 @@ export type IBreadCumb = {
 export type IAssetDisplay = {
   symbol?: string;
   img?: string;
-  address?: string;
+  address?: IAddress;
 };

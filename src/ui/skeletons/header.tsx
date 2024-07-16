@@ -24,7 +24,10 @@ const HeaderSkeleton = () => {
       <Box sx={{ flexGrow: 1, mb: '1rem' }}>
         <AppBar
           position="static"
-          color="inherit"
+          color={'inherit'}
+          style={{
+            backgroundColor: isDark ? '#000' : 'inherit',
+          }}
           sx={{ boxShadow: 'none', py: '0.25rem' }}
         >
           <Toolbar
