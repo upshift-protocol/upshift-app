@@ -1,10 +1,12 @@
 import { useThemeMode } from '@/stores/theme';
 import { FALLBACK_TOKEN_IMG, STYLE_VARS } from '@/utils/constants';
 import type { IAssetDisplay } from '@/utils/types';
+import { getSymbol } from '@augustdigital/sdk';
 import { Box, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Image from 'next/image';
-// import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePublicClient } from 'wagmi';
 
 type IAssetSelector = IAssetDisplay & {
   forInput?: boolean;
@@ -12,16 +14,19 @@ type IAssetSelector = IAssetDisplay & {
 
 export default function AssetSelectorAtom(props: IAssetSelector) {
   const { isDark } = useThemeMode();
-  // const [symbol, setSymbol] = useState<string | undefined>(props.address);
-  // const provider = usePublicClient();
+  const [symbol, setSymbol] = useState<string | undefined>(props.address);
+  const provider = usePublicClient();
 
-  // useEffect(() => {
-  //   (async () => {
-  //     if (!provider) return;
-  //     const tokenSymbol = await getSymbol(provider as any, props?.address);
-  //     if (tokenSymbol) setSymbol(tokenSymbol);
-  //   })().catch(console.error);
-  // }, [props?.address]);
+  useEffect(() => {
+    (async () => {
+      if (!(provider && props.address)) return;
+      console.log('Provider:', provider);
+      console.log('Address:', props?.address);
+      const tokenSymbol = await getSymbol(provider as any, props?.address);
+      console.log('tokenSymbol:', tokenSymbol);
+      if (tokenSymbol) setSymbol(tokenSymbol);
+    })().catch(console.error);
+  }, [props?.address]);
 
   return (
     <Stack
@@ -45,7 +50,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
       />
       <Box width={STYLE_VARS.assetDivWidth}>
         <Typography variant="body1" noWrap>
-          {props.address ?? 'N/A'}
+          {symbol ?? 'N/A'}
         </Typography>
       </Box>
     </Stack>

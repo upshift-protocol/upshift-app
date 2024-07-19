@@ -1,4 +1,5 @@
 import { useThemeMode } from '@/stores/theme';
+import type { ITheme } from '@/utils/types';
 import type { IAddress, IPoolAction } from '@augustdigital/sdk';
 import { Stack, styled, Typography } from '@mui/material';
 
@@ -9,12 +10,13 @@ type ITxFees = {
   amount?: string | number;
 };
 
-const StackOutline = styled(Stack)<{ isDark: boolean }>`
+const StackOutline = styled(Stack)<{ thememode: ITheme }>`
   border-radius: 4px;
   padding: 0.5rem 1rem;
   gap: 6px;
   border: 1px solid
-    ${({ isDark }) => (isDark ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)')};
+    ${({ thememode }) =>
+      thememode === 'dark' ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)'};
 `;
 
 const StackRow = styled(Stack)`
@@ -24,13 +26,13 @@ const StackRow = styled(Stack)`
 `;
 
 export default function TxFeesAtom(props: ITxFees) {
-  const { isDark } = useThemeMode();
+  const { theme } = useThemeMode();
 
   function renderList() {
     switch (props.function) {
       case 'claim':
         return (
-          <StackOutline isDark={isDark}>
+          <StackOutline thememode={theme}>
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
@@ -41,7 +43,7 @@ export default function TxFeesAtom(props: ITxFees) {
         );
       case 'withdraw':
         return (
-          <StackOutline isDark={isDark}>
+          <StackOutline thememode={theme}>
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
@@ -52,7 +54,7 @@ export default function TxFeesAtom(props: ITxFees) {
         );
       case 'deposit':
         return (
-          <StackOutline isDark={isDark}>
+          <StackOutline thememode={theme}>
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
@@ -75,7 +77,7 @@ export default function TxFeesAtom(props: ITxFees) {
         );
       default:
         return (
-          <StackOutline isDark={isDark}>
+          <StackOutline thememode={theme}>
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">

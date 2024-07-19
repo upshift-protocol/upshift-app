@@ -33,7 +33,7 @@ Open http://localhost:3000 with your favorite browser to see your project. For y
 │   ├── hooks            # Hooks used throughout the app
 │   ├── pages            # Next JS pages
 │   ├── styles           # All CSS files
-│   ├── ui               # User interfaces components
+│   ├── ui               # Atomically-designed UI components
 │   └── utils            # Utility folder
 ├── ...
 └── tsconfig.json        # TypeScript configuration
@@ -60,7 +60,7 @@ Now, the app is ready to be deployed. All generated files are located at `out` f
 
 ### Contributions
 
-Everyone is welcome to contribute to this project. Feel free to open an issue if you have question or found a bug.
+Everyone is welcome to contribute to this project. Feel free to open an issue if you have question or found a bug. PR's should be made to `main` branch and await approval from team.
 
 ### License
 
