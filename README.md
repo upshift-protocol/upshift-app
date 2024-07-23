@@ -2,12 +2,18 @@
 
 Earn yields from real institutional loans via a crypto protocol. Users contribute to a decentralized pool on the blockchain, funding business loans and earning returns through smart contracts. Democratizing high-yield investments traditionally limited to financial institutions.
 
-### Requirements
+### Getting Started
+
+#### Requirements
 
 - Node.js 
 - PNPM
 
-### Getting started
+#### Environment
+
+- `NEXT_PUBLIC_INFURA_API_KEY`
+
+#### Development
 
 Run the following command on your local environment:
 
@@ -18,7 +24,7 @@ pnpm install
 Then, you can run locally in development mode with live reload:
 
 ```
-pdnpm run dev
+pnpm dev
 ```
 
 Open http://localhost:3000 with your favorite browser to see your project. For your information, Next JS need to take some time to compile the project for your first time.
@@ -44,8 +50,8 @@ Open http://localhost:3000 with your favorite browser to see your project. For y
 You can see the results locally in production mode with:
 
 ```
-$ pnnpm run build
-$ pnnpm run start
+$ pnpm build
+$ pnpm start
 ```
 
 The generated HTML and CSS files are minified (built-in feature from Next js).
@@ -53,7 +59,7 @@ The generated HTML and CSS files are minified (built-in feature from Next js).
 You can create an optimized production build with:
 
 ```
-pnpm run build-prod
+pnpm build-prod
 ```
 
 Now, the app is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
