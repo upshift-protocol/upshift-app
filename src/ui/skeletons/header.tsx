@@ -26,7 +26,8 @@ const HeaderSkeleton = () => {
           position="static"
           color={'inherit'}
           style={{
-            backgroundColor: isDark ? '#000' : 'inherit',
+            backgroundColor: 'inherit',
+            backgroundImage: 'none',
           }}
           sx={{ boxShadow: 'none', py: '0.25rem' }}
         >

@@ -1,6 +1,8 @@
-import { Stack, styled } from '@mui/material';
+import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import type { IAddress } from '@augustdigital/sdk';
+import { useAccount, useBalance } from 'wagmi';
+import { formatUnits } from 'viem';
 import AssetSelectorAtom from '../atoms/asset-selector';
 
 type IAssetInput = {
@@ -8,6 +10,10 @@ type IAssetInput = {
   address?: IAddress;
   value?: string;
   type?: 'In' | 'Out';
+  handleMax?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleInput?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
 };
 
 const StyledTextField = styled(TextField)({
@@ -20,18 +26,60 @@ const StyledTextField = styled(TextField)({
 });
 
 export default function AssetInputMolecule(props: IAssetInput) {
+  const { address } = useAccount();
+
+  const { data: balance } = useBalance({
+    ...props,
+    address,
+    token: props.address,
+  });
+
   return (
-    <Stack direction="row">
-      <StyledTextField
-        id="outlined-basic"
-        label={`Amount ${props.type}`}
-        variant="outlined"
-        type="number"
-        disabled={props.type === 'Out'}
-        required={props.type === 'In'}
-        value={props.value}
-      />
-      <AssetSelectorAtom {...props} forInput />
+    <Stack>
+      {props.type === 'In' && (
+        <Box position="relative">
+          <Typography
+            color="GrayText"
+            fontSize={10}
+            position="absolute"
+            left={14}
+            top={38}
+          >
+            Balance:{' '}
+            {formatUnits(
+              balance?.value || BigInt(0),
+              balance?.decimals || 18,
+            ).slice(0, 8) || '0'}{' '}
+            {balance?.symbol}
+          </Typography>
+        </Box>
+      )}
+      <Stack direction="row">
+        <StyledTextField
+          id="outlined-basic"
+          label={`Amount ${props.type}`}
+          variant="outlined"
+          type="number"
+          disabled={props.type === 'Out' || !address}
+          required={props.type === 'In'}
+          value={props.value}
+          onChange={props.handleInput}
+        />
+        {props.type === 'In' && props.handleMax && (
+          <Box position="relative">
+            <Box position="absolute" left={-72} top={12.5} textAlign={'right'}>
+              <Button
+                size="small"
+                onClick={props.handleMax}
+                disabled={!address}
+              >
+                MAX
+              </Button>
+            </Box>
+          </Box>
+        )}
+        <AssetSelectorAtom {...props} forInput />
+      </Stack>
     </Stack>
   );
 }

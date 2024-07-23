@@ -13,7 +13,12 @@ export default function VaultInfo(
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>
-      <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 3, md: 6 }}>
+      <Grid
+        container
+        rowSpacing={2}
+        columnSpacing={{ xs: 1, sm: 3, md: 6 }}
+        columns={{ xs: 2, sm: 12 }}
+      >
         <Grid item xs={6}>
           <Stack
             direction="row"

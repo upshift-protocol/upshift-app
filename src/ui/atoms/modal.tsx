@@ -24,11 +24,13 @@ export default function ModalAtom({
   children,
   title,
   closeWhen,
+  onClose,
 }: {
   title: string;
   buttonProps: ButtonProps;
   children: React.ReactNode;
   closeWhen?: boolean;
+  onClose?: Function;
 }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = (e?: React.SyntheticEvent) => {
@@ -37,6 +39,7 @@ export default function ModalAtom({
   };
   const handleClose = (e?: React.SyntheticEvent) => {
     e?.stopPropagation();
+    onClose?.();
     setOpen(false);
   };
 
@@ -47,7 +50,7 @@ export default function ModalAtom({
   }, [closeWhen]);
 
   return (
-    <div>
+    <div onClick={(e) => e.stopPropagation()}>
       <Button {...buttonProps} onClick={buttonProps?.onClick ?? handleOpen}>
         {buttonProps.children}
       </Button>

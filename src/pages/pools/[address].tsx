@@ -2,8 +2,7 @@ import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 // import { useRouter } from 'next/router';
-import type { UseQueryResult } from '@tanstack/react-query';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IAddress, IPoolWithUnderlying } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -11,14 +10,18 @@ import VaultAllocation from '@/ui/organisms/vault-allocation';
 import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/molecules/deposit-modal';
 import WithdrawModalMolecule from '@/ui/molecules/withdraw-modal';
+import { useParams } from 'next/navigation';
 
 const PoolPage = () => {
-  // const router = useRouter();
-  // const poolAddress = router.query.address! as string;
-  const { data, isLoading } = useFetcher({
-    queryKey: ['lending-pools'],
-  }) as UseQueryResult<IPoolWithUnderlying[]>;
-  const pool = data?.[0] as IPoolWithUnderlying;
+  const params = useParams();
+
+  const { data, isLoading: poolLoading } = useFetcher({
+    queryKey: ['lending-pool', (params?.address as IAddress)!],
+    disabled: !params?.address,
+  });
+
+  const pool = data as IPoolWithUnderlying;
+  const isLoading = !data || poolLoading;
 
   function buildCrumbs(): IBreadCumb[] {
     return [
