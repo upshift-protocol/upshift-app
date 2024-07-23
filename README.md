@@ -11,6 +11,8 @@ Earn yields from real institutional loans via a crypto protocol. Users contribut
 
 #### Environment Variables
 
+Create a `.env.local` to input the following variables:
+
 - `NEXT_PUBLIC_INFURA_API_KEY`
 
 #### Development
