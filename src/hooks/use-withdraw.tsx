@@ -6,11 +6,7 @@ import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
-import {
-  readContract,
-  simulateContract,
-  waitForTransactionReceipt,
-} from 'viem/actions';
+import { readContract, waitForTransactionReceipt } from 'viem/actions';
 import {
   useAccount,
   usePublicClient,
@@ -26,7 +22,7 @@ type IUseDepositProps = {
   closeModal?: () => void;
 };
 
-export default function useDeposit(props: IUseDepositProps) {
+export default function useWithdraw(props: IUseDepositProps) {
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -57,27 +53,27 @@ export default function useDeposit(props: IUseDepositProps) {
   });
 
   // Functions
-  async function handleDeposit() {
+  async function requestWithdraw() {
     if (!(address && provider)) {
-      console.error('#handleDeposit: no wallet is connected');
+      console.error('#requestWithdraw: no wallet is connected');
       return;
     }
     if (!props.pool) {
-      console.error('#handleDeposit: pool address is undefined');
+      console.error('#requestWithdraw: pool address is undefined');
       return;
     }
     if (!props.asset) {
-      console.error('#handleDeposit: pool asset is undefined');
+      console.error('#requestWithdraw: pool asset is undefined');
       return;
     }
     if (!props.value) {
-      console.error('#handleDeposit: amount input is undefined');
+      console.error('#requestWithdraw: amount input is undefined');
       return;
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
     if (normalized.raw === BigInt(0)) {
-      console.error('#handleDeposit: amount input is zero');
+      console.error('#requestWithdraw: amount input is zero');
       return;
     }
 
@@ -85,56 +81,29 @@ export default function useDeposit(props: IUseDepositProps) {
       setIsLoading(true);
       setError('');
 
-      // TODO: check if allowance already allows this amount
-      // Approve input amount
-      setButton({ text: BUTTON_TEXTS.approving, disabled: true });
-      const approveHash = await signer?.writeContract({
-        account: address,
-        address: props.asset,
-        abi: erc20Abi,
-        functionName: 'approve',
-        args: [props.pool, normalized.raw],
-      });
-      await toast.promise(
-        waitForTransactionReceipt(provider, { hash: approveHash! }),
-        {
-          success: {
-            render: (
-              <Toast
-                msg={`Successfully approved ${normalized.normalized} ${symbol}:`}
-                hash={approveHash!}
-              />
-            ),
-            type: 'success',
-          },
-          error: `Error approving ${normalized.normalized} ${symbol}`,
-          pending: `Submitted approval for ${normalized.normalized} ${symbol}`,
-        },
-      );
-
-      // Deposit input amount
+      // Request withdrawal of input amount
       setButton({ text: BUTTON_TEXTS.submitting, disabled: true });
-      const depositHash = await signer?.writeContract({
+      const redeemHash = await signer?.writeContract({
         account: address,
         address: props.pool,
         abi: ABI_LENDING_POOLS,
-        functionName: 'deposit',
-        args: [normalized.raw, address],
+        functionName: 'requestRedeem',
+        args: [normalized.raw, address, address],
       });
       await toast.promise(
-        waitForTransactionReceipt(provider, { hash: depositHash! }),
+        waitForTransactionReceipt(provider, { hash: redeemHash! }),
         {
           success: {
             render: (
               <Toast
-                msg={`Successfully deposited ${normalized.normalized} ${symbol}:`}
-                hash={depositHash}
+                msg={`Successfully requested ${normalized.normalized} ${symbol} to be withdrawn:`}
+                hash={redeemHash}
               />
             ),
             type: 'success',
           },
-          error: `Error depositing ${normalized.normalized} ${symbol}`,
-          pending: `Submitted deposit for ${normalized.normalized} ${symbol}`,
+          error: `Error requesting a ${normalized.normalized} ${symbol} withdrawal`,
+          pending: `Submitted withdrawal request for ${normalized.normalized} ${symbol}`,
         },
       );
 
@@ -145,8 +114,93 @@ export default function useDeposit(props: IUseDepositProps) {
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
       console.log(
-        '#handleDeposit: successfully executed transaction',
-        depositHash,
+        '#requestWithdraw: successfully executed transaction',
+        redeemHash,
+      );
+    } catch (e) {
+      console.error(e);
+      if (String(e).toLowerCase().includes('user rejected')) {
+        toast.warn('User rejected transaction');
+        setButton({ text: BUTTON_TEXTS.submit, disabled: false });
+      } else {
+        toast.error('Error executing transaction');
+        setButton({ text: BUTTON_TEXTS.error, disabled: true });
+      }
+      if (String(e).includes(':')) {
+        const err = String(e)?.split(':')[0];
+        if (err) setError(err);
+      } else {
+        setError('Error occured while executing transaction');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleWithdraw() {
+    if (!(address && provider)) {
+      console.error('#handleWithdraw: no wallet is connected');
+      return;
+    }
+    if (!props.pool) {
+      console.error('#handleWithdraw: pool address is undefined');
+      return;
+    }
+    if (!props.asset) {
+      console.error('#handleWithdraw: pool asset is undefined');
+      return;
+    }
+    if (!props.value) {
+      console.error('#handleWithdraw: amount input is undefined');
+      return;
+    }
+    const normalized = toNormalizedBn(props.value, decimals);
+
+    if (normalized.raw === BigInt(0)) {
+      console.error('#requestWithdraw: amount input is zero');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError('');
+
+      // Claim of input amount
+      setButton({ text: BUTTON_TEXTS.submitting, disabled: true });
+      const redeemHash = await signer?.writeContract({
+        account: address,
+        address: props.pool,
+        abi: ABI_LENDING_POOLS,
+        functionName: 'claim',
+        // Day, Month, Year, Amount, Address
+        args: [BigInt(0), BigInt(0), BigInt(0), normalized.raw, address],
+      });
+      await toast.promise(
+        waitForTransactionReceipt(provider, { hash: redeemHash! }),
+        {
+          success: {
+            render: (
+              <Toast
+                msg={`Successfully requested ${normalized.normalized} ${symbol} to be withdrawn:`}
+                hash={redeemHash}
+              />
+            ),
+            type: 'success',
+          },
+          error: `Error requesting a ${normalized.normalized} ${symbol} withdrawal`,
+          pending: `Submitted withdrawal request for ${normalized.normalized} ${symbol}`,
+        },
+      );
+
+      // Refetch queries
+      queryClient.refetchQueries();
+
+      // Success states
+      setIsSuccess(true);
+      setButton({ text: BUTTON_TEXTS.success, disabled: true });
+      console.log(
+        '#requestWithdraw: successfully executed transaction',
+        redeemHash,
       );
     } catch (e) {
       console.error(e);
@@ -184,24 +238,16 @@ export default function useDeposit(props: IUseDepositProps) {
     }));
     const normalized = toNormalizedBn(props.value, decimals);
 
-    const { request: approveReq } = await simulateContract(provider, {
-      account: address,
-      address: props.asset,
-      abi: erc20Abi,
-      functionName: 'approve',
-      args: [props.pool, normalized.raw],
-    });
-
     const out = await readContract(provider, {
       account: address,
       address: props.pool,
       abi: ABI_LENDING_POOLS,
-      functionName: 'previewDeposit',
+      functionName: 'previewRedeem',
       args: [normalized.raw],
     });
 
     // TODO: get actual transaction fee
-    const fee = (approveReq?.gas || BigInt(2)) * BigInt(200000);
+    const fee = BigInt(200000);
     setExpected((_prev) => ({
       fee: toNormalizedBn(fee, decimals),
       out: toNormalizedBn(out, decimals),
@@ -249,7 +295,8 @@ export default function useDeposit(props: IUseDepositProps) {
   }, [isSuccess]);
 
   return {
-    handleDeposit,
+    requestWithdraw,
+    handleWithdraw,
     button,
     isLoading,
     error,
