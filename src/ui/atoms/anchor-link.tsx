@@ -18,7 +18,7 @@ const LinkBehaviour = forwardRef(function LinkBehaviour(
   props: any,
   ref: ForwardedRef<HTMLAnchorElement>,
 ) {
-  return <NextLink ref={ref} href={props?.href ?? '/#'} {...props} />;
+  return <NextLink ref={ref} href={props.href || '/#'} {...props} />;
 });
 
 export default function LinkAtom(props: ILinkAtom) {

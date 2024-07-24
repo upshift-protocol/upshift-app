@@ -3,6 +3,8 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as MuiProvider } from '@mui/material/styles';
 import * as mui from '@/config/mui-theme';
+import { ToastContainer } from 'react-toastify';
+import toastifyConfig from '@/config/toastify';
 
 interface ThemeContextValue {
   theme: ITheme;
@@ -48,6 +50,8 @@ const ThemeProvider = ({ children }: IChildren) => {
         <CssBaseline />
         {children}
       </MuiProvider>
+
+      <ToastContainer {...toastifyConfig} theme={isDark ? 'dark' : 'light'} />
     </ThemeContext.Provider>
   );
 };
