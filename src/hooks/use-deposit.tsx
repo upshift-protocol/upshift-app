@@ -1,8 +1,10 @@
 import { queryClient } from '@/config/react-query';
+import Toast from '@/ui/atoms/toast';
 import { BUTTON_TEXTS } from '@/utils/constants';
 import type { IAddress } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import {
@@ -39,6 +41,11 @@ export default function useDeposit(props: IUseDepositProps) {
     abi: erc20Abi,
     functionName: 'decimals',
   });
+  const { data: symbol } = useReadContract({
+    address: props.asset,
+    abi: erc20Abi,
+    functionName: 'symbol',
+  });
 
   // Functions
   async function handleDeposit() {
@@ -58,7 +65,9 @@ export default function useDeposit(props: IUseDepositProps) {
       console.error('#handleDeposit: amount input is undefined');
       return;
     }
-    if (BigInt(props.value) === BigInt(0)) {
+    const normalized = toNormalizedBn(props.value, decimals);
+
+    if (normalized.raw === BigInt(0)) {
       console.error('#handleDeposit: amount input is zero');
       return;
     }
@@ -66,7 +75,6 @@ export default function useDeposit(props: IUseDepositProps) {
     try {
       setIsLoading(true);
       setError('');
-      const normalized = toNormalizedBn(props.value, decimals);
 
       // TODO: check if allowance already allows this amount
       // Approve input amount
@@ -78,7 +86,22 @@ export default function useDeposit(props: IUseDepositProps) {
         functionName: 'approve',
         args: [props.pool, normalized.raw],
       });
-      await waitForTransactionReceipt(provider, { hash: approveHash! });
+      await toast.promise(
+        waitForTransactionReceipt(provider, { hash: approveHash! }),
+        {
+          success: {
+            render: (
+              <Toast
+                msg={`Successfully approved ${normalized.normalized} ${symbol}:`}
+                hash={approveHash!}
+              />
+            ),
+            type: 'success',
+          },
+          error: `Error approving ${normalized.normalized} ${symbol}`,
+          pending: `Submitted approval for ${normalized.normalized} ${symbol}`,
+        },
+      );
 
       // Deposit input amount
       setButton({ text: BUTTON_TEXTS.submitting, disabled: true });
@@ -89,7 +112,22 @@ export default function useDeposit(props: IUseDepositProps) {
         functionName: 'deposit',
         args: [normalized.raw, address],
       });
-      await waitForTransactionReceipt(provider, { hash: depositHash! });
+      await toast.promise(
+        waitForTransactionReceipt(provider, { hash: depositHash! }),
+        {
+          success: {
+            render: (
+              <Toast
+                msg={`Successfully deposited ${normalized.normalized} ${symbol}:`}
+                hash={depositHash}
+              />
+            ),
+            type: 'success',
+          },
+          error: `Error depositing ${normalized.normalized} ${symbol}`,
+          pending: `Submitted deposit for ${normalized.normalized} ${symbol}`,
+        },
+      );
 
       // Refetch queries
       queryClient.refetchQueries();
@@ -97,10 +135,19 @@ export default function useDeposit(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      console.log('#handleDeposit: successfully executed transaction');
+      console.log(
+        '#handleDeposit: successfully executed transaction',
+        depositHash,
+      );
     } catch (e) {
+      if (String(e).toLowerCase().includes('user rejected')) {
+        toast.warn('User rejected transaction');
+        setButton({ text: BUTTON_TEXTS.submit, disabled: false });
+      } else {
+        toast.error('Error executing transaction');
+        setButton({ text: BUTTON_TEXTS.error, disabled: true });
+      }
       console.error(e);
-      setButton({ text: BUTTON_TEXTS.error, disabled: true });
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
         if (err) setError(err);
@@ -122,8 +169,8 @@ export default function useDeposit(props: IUseDepositProps) {
 
   // useEffects
   useEffect(() => {
-    const val = BigInt(props.value || '0');
-    if (val === BigInt(0)) {
+    const val = toNormalizedBn(props.value || '0', decimals);
+    if (val.raw === BigInt(0)) {
       setButton({ text: BUTTON_TEXTS.zero, disabled: true });
     } else {
       setButton({ text: BUTTON_TEXTS.submit, disabled: false });
