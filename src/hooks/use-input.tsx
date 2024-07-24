@@ -1,4 +1,4 @@
-import type { IAddress } from '@augustdigital/sdk';
+import { toNormalizedBn, type IAddress } from '@augustdigital/sdk';
 import { useState } from 'react';
 import { formatUnits } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
@@ -39,5 +39,6 @@ export default function useInput(token?: IAddress) {
     handleInput,
     handleMax,
     clearInput,
+    bnValue: toNormalizedBn(value, data?.decimals).raw,
   };
 }

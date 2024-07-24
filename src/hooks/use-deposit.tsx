@@ -6,7 +6,11 @@ import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
-import { waitForTransactionReceipt } from 'viem/actions';
+import {
+  readContract,
+  simulateContract,
+  waitForTransactionReceipt,
+} from 'viem/actions';
 import {
   useAccount,
   usePublicClient,
@@ -24,6 +28,11 @@ type IUseDepositProps = {
 
 export default function useDeposit(props: IUseDepositProps) {
   // States
+  const [expected, setExpected] = useState({
+    fee: toNormalizedBn(0),
+    out: toNormalizedBn(0),
+    loading: false,
+  });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -82,7 +91,7 @@ export default function useDeposit(props: IUseDepositProps) {
       const approveHash = await signer?.writeContract({
         account: address,
         address: props.asset,
-        abi: ABI_LENDING_POOLS,
+        abi: erc20Abi,
         functionName: 'approve',
         args: [props.pool, normalized.raw],
       });
@@ -159,6 +168,47 @@ export default function useDeposit(props: IUseDepositProps) {
     }
   }
 
+  async function simulate() {
+    if (!props.value) {
+      setExpected((_prev) => ({
+        fee: toNormalizedBn(BigInt(0), decimals),
+        out: toNormalizedBn(BigInt(0), decimals),
+        loading: false,
+      }));
+      return;
+    }
+    if (!(provider && props.asset && props.pool && address)) return;
+    setExpected((_prev) => ({
+      ..._prev,
+      loading: true,
+    }));
+    const normalized = toNormalizedBn(props.value, decimals);
+
+    const { request: approveReq } = await simulateContract(provider, {
+      account: address,
+      address: props.asset,
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [props.pool, normalized.raw],
+    });
+
+    const out = await readContract(provider, {
+      account: address,
+      address: props.pool,
+      abi: ABI_LENDING_POOLS,
+      functionName: 'previewDeposit',
+      args: [normalized.raw],
+    });
+
+    // TODO: get actual transaction fee
+    const fee = (approveReq?.gas || BigInt(2)) * BigInt(200000);
+    setExpected((_prev) => ({
+      fee: toNormalizedBn(fee, decimals),
+      out: toNormalizedBn(out, decimals),
+      loading: false,
+    }));
+  }
+
   function reset() {
     props?.clearInput?.();
     setError('');
@@ -179,6 +229,13 @@ export default function useDeposit(props: IUseDepositProps) {
   }, [props.value]);
 
   useEffect(() => {
+    (async () => {
+      const timeout = setTimeout(() => simulate(), 600);
+      return () => clearTimeout(timeout);
+    })().catch(console.error);
+  }, [props.value]);
+
+  useEffect(() => {
     if (isSuccess) {
       const timeout = setTimeout(() => {
         reset();
@@ -191,11 +248,14 @@ export default function useDeposit(props: IUseDepositProps) {
     return () => {};
   }, [isSuccess]);
 
+  console.log(expected);
+
   return {
     handleDeposit,
     button,
     isLoading,
     error,
     isSuccess,
+    expected,
   };
 }

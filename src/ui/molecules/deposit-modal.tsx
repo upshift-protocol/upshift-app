@@ -11,7 +11,7 @@ export default function DepositModalMolecule(
   props: IPoolWithUnderlying | undefined,
 ) {
   const inInputProps = useInput(props?.underlying?.address);
-  const { handleDeposit, isSuccess, button } = useDeposit({
+  const { handleDeposit, isSuccess, button, expected } = useDeposit({
     ...inInputProps,
     asset: props?.asset,
     pool: props?.address,
@@ -34,11 +34,16 @@ export default function DepositModalMolecule(
           address={props?.underlying?.address}
           type="In"
         />
-        <AssetInputMolecule address={props?.address} type="Out" />
+        <AssetInputMolecule
+          address={props?.address}
+          type="Out"
+          value={expected.out.normalized}
+        />
         <TxFeesAtom
           function="deposit"
           in={props?.underlying?.address}
           out={props?.address}
+          fee={expected.fee.raw}
         />
         <Web3Button
           onClick={handleDeposit}
