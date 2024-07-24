@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
+import useWithdraw from '@/hooks/use-withdraw';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from './asset-input';
 import Web3Button from '../atoms/web3-button';
@@ -8,6 +9,11 @@ import TxFeesAtom from '../atoms/tx-fees';
 
 export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
   const inInputProps = useInput(props?.address);
+  const { requestWithdraw, isSuccess, button, expected } = useWithdraw({
+    ...inInputProps,
+    asset: props?.asset,
+    pool: props?.address,
+  });
 
   return (
     <ModalAtom
@@ -18,6 +24,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
         color: 'error',
       }}
       onClose={inInputProps.clearInput}
+      closeWhen={isSuccess}
     >
       <Stack spacing={2} position="relative">
         <AssetInputMolecule
@@ -25,18 +32,25 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           address={props?.address}
           type="In"
         />
-        <AssetInputMolecule address={props?.underlying?.address} type="Out" />
+        <AssetInputMolecule
+          address={props?.underlying?.address}
+          type="Out"
+          value={expected.out.normalized}
+        />
         <TxFeesAtom
           function="withdraw"
           out={props?.underlying?.address}
           in={props?.address}
+          fee={expected.fee.raw}
         />
         <Web3Button
           style={{ marginTop: '1rem' }}
           size="large"
           variant="contained"
+          onClick={requestWithdraw}
+          disabled={button.disabled}
         >
-          Submit Transaction
+          {button.text}
         </Web3Button>
       </Stack>
     </ModalAtom>

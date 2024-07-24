@@ -1,13 +1,20 @@
 import { useThemeMode } from '@/stores/theme';
 import type { ITheme } from '@/utils/types';
-import type { IAddress, IPoolAction } from '@augustdigital/sdk';
+import {
+  toNormalizedBn,
+  type IAddress,
+  type IPoolAction,
+} from '@augustdigital/sdk';
 import { Stack, styled, Typography } from '@mui/material';
+import { useGasPrice } from 'wagmi';
 
 type ITxFees = {
   function: IPoolAction;
   in?: IAddress;
   out?: IAddress;
   amount?: string | number;
+  contract?: IAddress;
+  fee?: bigint;
 };
 
 const StackOutline = styled(Stack)<{ thememode: ITheme }>`
@@ -28,6 +35,9 @@ const StackRow = styled(Stack)`
 export default function TxFeesAtom(props: ITxFees) {
   const { theme } = useThemeMode();
 
+  const { data: gasPrice } = useGasPrice();
+  const feeTotal = (gasPrice || BigInt(0)) * (props.fee || BigInt(0));
+
   function renderList() {
     switch (props.function) {
       case 'claim':
@@ -36,7 +46,7 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                $0.02
+                {toNormalizedBn(feeTotal)?.normalized || '-'} ETH
               </Typography>
             </StackRow>
           </StackOutline>
@@ -47,7 +57,7 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                $0.02
+                {toNormalizedBn(feeTotal)?.normalized || '-'} ETH
               </Typography>
             </StackRow>
           </StackOutline>
@@ -58,19 +68,19 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                $0.02
+                {toNormalizedBn(feeTotal)?.normalized || '-'} ETH
               </Typography>
             </StackRow>
             <StackRow>
               <Typography variant="body2">Collateral Exposure</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                USDC
+                {'-'}
               </Typography>
             </StackRow>
             <StackRow>
               <Typography variant="body2">Estimated APY</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                2.36%
+                {'-'}
               </Typography>
             </StackRow>
           </StackOutline>
