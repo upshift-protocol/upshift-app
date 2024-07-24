@@ -38,3 +38,13 @@ export const NAV_ITEMS: INavItem[] = [
     target: '_blank',
   },
 ];
+
+export const BUTTON_TEXTS = {
+  zero: 'Input an Amount',
+  submit: 'Submit Transaction',
+  error: 'Error Executing Transaction',
+  success: 'Transaction Complete',
+  submitting: 'Submitting Transaction',
+  approve: 'Approve Input Amount',
+  approving: 'Approving Input Amount',
+};

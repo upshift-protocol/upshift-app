@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
 import { useChainId } from 'wagmi';
 
-type IFetchTypes = 'lending-pools';
+type IFetchTypes = 'lending-pools' | 'lending-pool';
 
 interface IUseFetcher extends UndefinedInitialDataOptions {
   queryKey: (IFetchTypes | string)[];
