@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
+import useDeposit from '@/hooks/use-deposit';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from './asset-input';
 import Web3Button from '../atoms/web3-button';
@@ -10,6 +11,11 @@ export default function DepositModalMolecule(
   props: IPoolWithUnderlying | undefined,
 ) {
   const inInputProps = useInput(props?.underlying?.address);
+  const { handleDeposit, isSuccess, button } = useDeposit({
+    ...inInputProps,
+    asset: props?.asset,
+    pool: props?.address,
+  });
 
   return (
     <ModalAtom
@@ -19,6 +25,8 @@ export default function DepositModalMolecule(
         children: 'Deposit',
         variant: 'outlined',
       }}
+      // TODO: leave modal open for 4 seconds
+      closeWhen={isSuccess}
     >
       <Stack gap={2}>
         <AssetInputMolecule
@@ -32,8 +40,13 @@ export default function DepositModalMolecule(
           in={props?.underlying?.address}
           out={props?.address}
         />
-        <Web3Button size="large" variant="contained">
-          Submit Transaction
+        <Web3Button
+          onClick={handleDeposit}
+          size="large"
+          variant="contained"
+          disabled={button.disabled}
+        >
+          {button.text}
         </Web3Button>
       </Stack>
     </ModalAtom>
