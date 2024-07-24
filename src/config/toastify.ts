@@ -3,7 +3,7 @@ import { Bounce } from 'react-toastify';
 
 const toastifyConfig: ToastContainerProps = {
   position: 'bottom-left',
-  autoClose: 50000,
+  autoClose: 5000,
   hideProgressBar: false,
   newestOnTop: false,
   closeOnClick: false,
