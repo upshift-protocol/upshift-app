@@ -139,7 +139,7 @@ export default function TableMolecule({
                   style={{ cursor: 'pointer' }}
                 >
                   {columns.map((column) => {
-                    const { symbol } = row;
+                    const { underlying } = row;
                     let value = row[column.id as keyof ITableItem];
                     value = extractData(value);
                     value =
@@ -150,7 +150,7 @@ export default function TableMolecule({
                     function renderValue() {
                       // TODO: optimize
                       if (/^\d+(?:\.\d{1,18})?$/.test(String(value))) {
-                        return `${value} ${symbol}`;
+                        return `${value} ${underlying?.symbol}`;
                       }
                       return value || '-';
                     }

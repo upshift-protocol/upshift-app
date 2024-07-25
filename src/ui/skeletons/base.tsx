@@ -5,8 +5,10 @@ import type { CSSProperties } from 'react';
 import NextNProgress from 'nextjs-progressbar';
 import { useThemeMode } from '@/stores/theme';
 import { darkTheme, lightTheme } from '@/config/mui-theme';
+import { Box, Stack } from '@mui/material';
 import Header from './header';
 import Meta from './meta';
+import FooterSkeleton from './footer';
 
 type IBase = IChildren & {
   style?: CSSProperties;
@@ -26,16 +28,27 @@ const BaseSkeleton = ({ children, style, title, description }: IBase) => {
         }
       />
 
-      <div style={style}>
-        <Meta
-          title={title ?? appConfig.title}
-          description={description ?? appConfig.description}
-        />
+      <Meta
+        title={title ?? appConfig.title}
+        description={description ?? appConfig.description}
+      />
 
+      <Box style={style} position={'relative'} minHeight={'100vh'}>
         <Header />
-        <main>{children}</main>
-        {/* <Footer /> */}
-      </div>
+        <Box paddingBottom={'4rem'}>
+          <main>{children}</main>
+        </Box>
+        <Stack
+          height={'4rem'}
+          position={'absolute'}
+          bottom={'0'}
+          width={'100%'}
+          justifyContent={'end'}
+          alignItems={{ xs: 'center', sm: 'inherit' }}
+        >
+          <FooterSkeleton />
+        </Stack>
+      </Box>
     </>
   );
 };
