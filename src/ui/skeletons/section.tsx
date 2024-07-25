@@ -17,6 +17,7 @@ type ISectionProps = {
   action?: ReactNode;
   breadcrumbs?: IBreadCumb[];
   loading?: boolean;
+  noYPadding?: boolean;
 };
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -36,7 +37,7 @@ const SectionSkeleton = (props: ISectionProps) => {
   return (
     <Box
       id={props?.id ?? props?.title?.toLowerCase().replaceAll(' ', '-')}
-      p="2rem"
+      p={props.noYPadding ? '0 2rem' : '2rem'}
       maxWidth={STYLE_VARS.width}
       mx="auto"
     >

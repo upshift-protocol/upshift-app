@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@augustdigital/sdk':
-        specifier: 0.0.9-alpha
-        version: 0.0.9-alpha(bufferutil@4.0.8)
+        specifier: 0.1.0-alpha
+        version: 0.1.0-alpha(bufferutil@4.0.8)
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.11.4(@types/react@18.3.3)(react@18.3.1)
@@ -158,20 +158,20 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@augustdigital/abis@0.0.9-alpha':
-    resolution: {integrity: sha512-mDYJEHkmhW6gEmVFzNyF5JsjKHh9E6kCiwiDoYKOV50oSBZYnHNsoYMXQulKPfZHqg2txJbX9ImhdNVRRdCInA==}
+  '@augustdigital/abis@0.1.0-alpha':
+    resolution: {integrity: sha512-3l4NHQ/xijGxFcMqczurO5ctncX00mN0OzRlQgryXZcmKOsUzCgsqeA71fevKr8Ftvu+Bnxjg2pxrV4shmVUIA==}
 
-  '@augustdigital/pools@0.0.9-alpha':
-    resolution: {integrity: sha512-tsOX1UvwWWVqHCtrm+a5LDU/MIsszuklzyX/HZ2DkTxYrjNSvGv4E0b2WGPSqMIkqOlyfKlSuas5DVFeKB8DOg==}
+  '@augustdigital/pools@0.1.0-alpha':
+    resolution: {integrity: sha512-KzPqihJJaahNfuLj6nzGu4ECLhlygjQMDCkI/Rdgf/tJ0WURQWXHKbalxQEZKkK4uHoxFO0cYsSJyKD671xWQw==}
 
-  '@augustdigital/sdk@0.0.9-alpha':
-    resolution: {integrity: sha512-M5CajtVu/GnRVaodN3tgk6TyUIOL+6KbvNIeWKszWSvhIeWK7d6UDP9vhG304PpYjK47JwM+tT0Vr3BMYpr5VQ==}
+  '@augustdigital/sdk@0.1.0-alpha':
+    resolution: {integrity: sha512-nHcy7h8UuGI9J79ELKhIUJF0Q5t5+8lF+XKdQBenIsTjd6yf9hGWwR9Ek2njtOc0nETz73ulBeLbSulC1Du68Q==}
 
-  '@augustdigital/types@0.0.9-alpha':
-    resolution: {integrity: sha512-L2w95URVQmbMwOxuALlb8sPxk3v0RHHYpnxX5E+yt47r+iHPfoPI2+nMvvp69Mvjz8EgJ62Q/iyrbaqGG/eXSQ==}
+  '@augustdigital/types@0.1.0-alpha':
+    resolution: {integrity: sha512-mIbtC1SunXEypy399miybHDy4hYJWDd6ruPz9VKoX2ehgPiuU0taptmzCTj/SqoK9Y9dQhHG+Rq3MrQFNIB+vw==}
 
-  '@augustdigital/utils@0.0.9-alpha':
-    resolution: {integrity: sha512-hf0qgF5wmXhQ5Z9v5EGQzthveb65EvDeUqgBCnp1cRlF8oM4C/jJaBuxVjRa6kwnNwaEpDkvAz2WdFjM2CPqCw==}
+  '@augustdigital/utils@0.1.0-alpha':
+    resolution: {integrity: sha512-T42vkBGv6qsNqJGAELy7GIPfhMUPEiDY7+sRAEX6gXDXBl29hqImBwOiLsz/EPHH0kxRNRzlgY4V84cl4h//xw==}
 
   '@babel/code-frame@7.24.7':
     resolution: {integrity: sha512-BcYH1CVJBO9tvyIZ2jVeXgSIMvGZ2FDRvDdOIVQyuklNKSsx+eppDEBq/g47Ayw+RqNFE+URvOShmf+f/qwAlA==}
@@ -5777,39 +5777,39 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@augustdigital/abis@0.0.9-alpha': {}
+  '@augustdigital/abis@0.1.0-alpha': {}
 
-  '@augustdigital/pools@0.0.9-alpha(bufferutil@4.0.8)':
+  '@augustdigital/pools@0.1.0-alpha(bufferutil@4.0.8)':
     dependencies:
-      '@augustdigital/abis': 0.0.9-alpha
-      '@augustdigital/types': 0.0.9-alpha(bufferutil@4.0.8)
-      '@augustdigital/utils': 0.0.9-alpha(bufferutil@4.0.8)
+      '@augustdigital/abis': 0.1.0-alpha
+      '@augustdigital/types': 0.1.0-alpha(bufferutil@4.0.8)
+      '@augustdigital/utils': 0.1.0-alpha(bufferutil@4.0.8)
       ethers: 6.13.1(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/sdk@0.0.9-alpha(bufferutil@4.0.8)':
+  '@augustdigital/sdk@0.1.0-alpha(bufferutil@4.0.8)':
     dependencies:
-      '@augustdigital/abis': 0.0.9-alpha
-      '@augustdigital/pools': 0.0.9-alpha(bufferutil@4.0.8)
-      '@augustdigital/types': 0.0.9-alpha(bufferutil@4.0.8)
-      '@augustdigital/utils': 0.0.9-alpha(bufferutil@4.0.8)
+      '@augustdigital/abis': 0.1.0-alpha
+      '@augustdigital/pools': 0.1.0-alpha(bufferutil@4.0.8)
+      '@augustdigital/types': 0.1.0-alpha(bufferutil@4.0.8)
+      '@augustdigital/utils': 0.1.0-alpha(bufferutil@4.0.8)
       ethers: 6.13.1(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/types@0.0.9-alpha(bufferutil@4.0.8)':
+  '@augustdigital/types@0.1.0-alpha(bufferutil@4.0.8)':
     dependencies:
       ethers: 6.13.1(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/utils@0.0.9-alpha(bufferutil@4.0.8)':
+  '@augustdigital/utils@0.1.0-alpha(bufferutil@4.0.8)':
     dependencies:
-      '@augustdigital/types': 0.0.9-alpha(bufferutil@4.0.8)
+      '@augustdigital/types': 0.1.0-alpha(bufferutil@4.0.8)
       ethers: 6.13.1(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
