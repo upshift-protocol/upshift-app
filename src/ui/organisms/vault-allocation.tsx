@@ -1,10 +1,11 @@
-import { truncate } from '@augustdigital/sdk';
+import { explorerLink, truncate } from '@augustdigital/sdk';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from 'react';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import LinkAtom from '../atoms/anchor-link';
 
 export default function VaultAllocation(
@@ -19,7 +20,11 @@ export default function VaultAllocation(
       editable: false,
       renderCell({ value }) {
         if (!value) return '-';
-        return <LinkAtom>{truncate(value)}</LinkAtom>;
+        return (
+          <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
+            {truncate(value)}
+          </LinkAtom>
+        );
       },
     },
     {

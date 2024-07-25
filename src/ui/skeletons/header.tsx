@@ -50,6 +50,7 @@ const HeaderSkeleton = () => {
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               <LinkAtom
                 href="/"
+                target="_self"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 {appConfig.site_name}

@@ -12,7 +12,12 @@ import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
 import { truncate } from '@/utils/helpers';
 import { Skeleton, Stack } from '@mui/material';
-import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import {
+  explorerLink,
+  type IAddress,
+  type INormalizedNumber,
+} from '@augustdigital/sdk';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -78,13 +83,20 @@ export default function TableMolecule({
         return (
           <Stack direction="row" justifyContent="end">
             {extracted.map((e, i) => (
-              <LinkAtom key={`link-${i}-${e}`} href="#">
+              <LinkAtom
+                key={`link-${i}-${e}`}
+                href={explorerLink(e, FALLBACK_CHAINID, 'address')}
+              >
                 {truncate(e)}
               </LinkAtom>
             ))}
           </Stack>
         );
-      return <LinkAtom href="#">{truncate(extracted)}</LinkAtom>;
+      return (
+        <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
+          {truncate(extracted)}
+        </LinkAtom>
+      );
     }
     return extracted;
   };
