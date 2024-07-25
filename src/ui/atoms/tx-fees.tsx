@@ -5,7 +5,8 @@ import {
   type IAddress,
   type IPoolAction,
 } from '@augustdigital/sdk';
-import { Stack, styled, Typography } from '@mui/material';
+import { Skeleton, Stack, styled, Typography } from '@mui/material';
+import { Fragment } from 'react';
 import { useGasPrice } from 'wagmi';
 
 type ITxFees = {
@@ -15,6 +16,7 @@ type ITxFees = {
   amount?: string | number;
   contract?: IAddress;
   fee?: bigint;
+  loading?: boolean;
 };
 
 const StackOutline = styled(Stack)<{ thememode: ITheme }>`
@@ -38,6 +40,19 @@ export default function TxFeesAtom(props: ITxFees) {
   const { data: gasPrice } = useGasPrice();
   const feeTotal = (gasPrice || BigInt(0)) * (props.fee || BigInt(0));
 
+  function renderGasFee() {
+    if (props.loading)
+      return (
+        <Skeleton
+          style={{ display: 'inline-block', transform: 'translateY(2px)' }}
+          width="100px"
+          variant="text"
+          height="14px"
+        />
+      );
+    return <Fragment>{toNormalizedBn(feeTotal)?.normalized || '-'}</Fragment>;
+  }
+
   function renderList() {
     switch (props.function) {
       case 'claim':
@@ -46,7 +61,7 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                {toNormalizedBn(feeTotal)?.normalized || '-'} ETH
+                {renderGasFee()} ETH
               </Typography>
             </StackRow>
           </StackOutline>
@@ -57,7 +72,13 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                {toNormalizedBn(feeTotal)?.normalized || '-'} ETH
+                {renderGasFee()} ETH
+              </Typography>
+            </StackRow>
+            <StackRow>
+              <Typography variant="body2">Unstake Lock Period</Typography>
+              <Typography variant="body2" fontFamily="monospace">
+                24 Hours
               </Typography>
             </StackRow>
           </StackOutline>
@@ -68,7 +89,7 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                {toNormalizedBn(feeTotal)?.normalized || '-'} ETH
+                {renderGasFee()} ETH
               </Typography>
             </StackRow>
             <StackRow>
@@ -91,7 +112,7 @@ export default function TxFeesAtom(props: ITxFees) {
             <StackRow>
               <Typography variant="body2">Gas Fee</Typography>
               <Typography variant="body2" fontFamily="monospace">
-                $0.02
+                {renderGasFee()} ETH
               </Typography>
             </StackRow>
           </StackOutline>

@@ -1,8 +1,16 @@
-import { Box, Button, Stack, styled, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Skeleton,
+  Stack,
+  styled,
+  Typography,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import type { IAddress } from '@augustdigital/sdk';
 import { useAccount, useBalance } from 'wagmi';
 import { formatUnits } from 'viem';
+import { Fragment } from 'react';
 import AssetSelectorAtom from '../atoms/asset-selector';
 
 type IAssetInput = {
@@ -14,6 +22,7 @@ type IAssetInput = {
   handleInput?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  loading?: boolean;
 };
 
 const StyledTextField = styled(TextField)({
@@ -28,11 +37,32 @@ const StyledTextField = styled(TextField)({
 export default function AssetInputMolecule(props: IAssetInput) {
   const { address } = useAccount();
 
-  const { data: balance } = useBalance({
+  const { data: balance, isLoading: balanceLoading } = useBalance({
     ...props,
     address,
     token: props.address,
   });
+
+  function renderBalance() {
+    if (balanceLoading) {
+      return (
+        <Skeleton
+          variant="text"
+          style={{ display: 'inline-block' }}
+          width="60px"
+        />
+      );
+    }
+    return (
+      <Fragment>
+        {formatUnits(
+          balance?.value || BigInt(0),
+          balance?.decimals || 18,
+        ).slice(0, 8) || '0'}{' '}
+        {balance?.symbol}
+      </Fragment>
+    );
+  }
 
   return (
     <Stack>
@@ -45,12 +75,7 @@ export default function AssetInputMolecule(props: IAssetInput) {
             left={14}
             top={38}
           >
-            Balance:{' '}
-            {formatUnits(
-              balance?.value || BigInt(0),
-              balance?.decimals || 18,
-            ).slice(0, 8) || '0'}{' '}
-            {balance?.symbol}
+            Balance: {renderBalance()}
           </Typography>
         </Box>
       )}
@@ -64,7 +89,14 @@ export default function AssetInputMolecule(props: IAssetInput) {
           required={props.type === 'In'}
           value={props.value}
           onChange={props.handleInput}
+          focused={props.loading}
         />
+        {props.loading && (
+          <Skeleton
+            style={{ position: 'absolute', transform: 'translate(14px, 15px)' }}
+            width="120px"
+          />
+        )}
         {props.type === 'In' && props.handleMax && (
           <Box position="relative">
             <Box position="absolute" left={-72} top={12.5} textAlign={'right'}>

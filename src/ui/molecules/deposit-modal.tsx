@@ -20,12 +20,12 @@ export default function DepositModalMolecule(
   return (
     <ModalAtom
       title="Deposit"
-      onClose={inInputProps.clearInput}
       buttonProps={{
         children: 'Deposit',
         variant: 'outlined',
       }}
       // TODO: leave modal open for 4 seconds
+      onClose={inInputProps.clearInput}
       closeWhen={isSuccess}
     >
       <Stack gap={2}>
@@ -37,13 +37,15 @@ export default function DepositModalMolecule(
         <AssetInputMolecule
           address={props?.address}
           type="Out"
-          value={expected.out.normalized}
+          value={expected.loading ? ' ' : expected.out.normalized}
+          loading={expected.loading}
         />
         <TxFeesAtom
           function="deposit"
           in={props?.underlying?.address}
           out={props?.address}
           fee={expected.fee.raw}
+          loading={expected.loading}
         />
         <Web3Button
           onClick={handleDeposit}

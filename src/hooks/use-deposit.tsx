@@ -3,7 +3,7 @@ import Toast from '@/ui/atoms/toast';
 import { BUTTON_TEXTS } from '@/utils/constants';
 import type { IAddress } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
 import {
@@ -178,10 +178,6 @@ export default function useDeposit(props: IUseDepositProps) {
       return;
     }
     if (!(provider && props.asset && props.pool && address)) return;
-    setExpected((_prev) => ({
-      ..._prev,
-      loading: true,
-    }));
     const normalized = toNormalizedBn(props.value, decimals);
 
     const { request: approveReq } = await simulateContract(provider, {
@@ -228,11 +224,15 @@ export default function useDeposit(props: IUseDepositProps) {
     }
   }, [props.value]);
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
-    (async () => {
-      const timeout = setTimeout(() => simulate(), 600);
-      return () => clearTimeout(timeout);
-    })().catch(console.error);
+    clearTimeout(timeoutRef.current);
+    setExpected((_prev) => ({
+      ..._prev,
+      loading: true,
+    }));
+    timeoutRef.current = setTimeout(() => simulate(), 500);
+    return () => clearTimeout(timeoutRef.current);
   }, [props.value]);
 
   useEffect(() => {

@@ -139,18 +139,27 @@ export default function TableMolecule({
                   style={{ cursor: 'pointer' }}
                 >
                   {columns.map((column) => {
+                    const { symbol } = row;
                     let value = row[column.id as keyof ITableItem];
                     value = extractData(value);
                     value =
                       column.format && typeof value === 'number'
                         ? column.format(value)
                         : value;
+
+                    function renderValue() {
+                      // TODO: optimize
+                      if (/^\d+(?:\.\d{1,18})?$/.test(String(value))) {
+                        return `${value} ${symbol}`;
+                      }
+                      return value || '-';
+                    }
                     return (
                       <TableCell key={column.id} align={column.align}>
                         {loading ? (
                           <Skeleton variant="text" height={36} />
                         ) : (
-                          value
+                          renderValue()
                         )}
                       </TableCell>
                     );
