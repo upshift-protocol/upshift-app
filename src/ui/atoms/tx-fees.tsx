@@ -75,6 +75,12 @@ export default function TxFeesAtom(props: ITxFees) {
                 {renderGasFee()} ETH
               </Typography>
             </StackRow>
+            <StackRow>
+              <Typography variant="body2">Unstake Lock Period</Typography>
+              <Typography variant="body2" fontFamily="monospace">
+                24 Hours
+              </Typography>
+            </StackRow>
           </StackOutline>
         );
       case 'deposit':

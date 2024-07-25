@@ -1,10 +1,15 @@
 import { INFURA_API_KEY } from '@/utils/constants';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
-import { getLendingPool, getLendingPools } from '@augustdigital/sdk';
+import {
+  ABI_LENDING_POOLS,
+  getLendingPool,
+  getLendingPools,
+} from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
-import { useChainId } from 'wagmi';
+import { readContract } from 'viem/actions';
+import { useChainId, usePublicClient } from 'wagmi';
 
 type IFetchTypes = 'lending-pools' | 'lending-pool';
 
@@ -20,6 +25,7 @@ export default function useFetcher({
   formatter,
   ...props
 }: IUseFetcher) {
+  const provider = usePublicClient();
   const chain = useChainId();
   const infuraOptions = {
     chainId: chain as IChainId,
@@ -32,11 +38,35 @@ export default function useFetcher({
   async function determineGetter() {
     switch (type) {
       case 'lending-pool': {
-        if (!address || !isAddress(address)) {
+        if (!(address && isAddress(address) && provider)) {
           console.error('Second query key in array must be an address');
           return null;
         }
-        return getLendingPool(address as IAddress, infuraOptions);
+        const pool = await getLendingPool(address as IAddress, infuraOptions);
+        const loansAmount = await readContract(provider, {
+          address: pool.address,
+          abi: ABI_LENDING_POOLS,
+          functionName: 'globalLoansAmount',
+        });
+        let loans: IAddress[] = [];
+        if (loansAmount > BigInt(0)) {
+          loans = await Promise.all(
+            Array(loansAmount).map((i) =>
+              readContract(provider, {
+                address: pool.address,
+                abi: ABI_LENDING_POOLS,
+                functionName: 'loansDeployed',
+                args: [i],
+              }),
+            ),
+          );
+        }
+        // TODO: do something with loan addresses
+        console.log('LOANS:', loansAmount, loans);
+        return {
+          ...pool,
+          loans,
+        };
       }
       case 'lending-pools': {
         return getLendingPools(infuraOptions);
