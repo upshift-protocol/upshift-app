@@ -5,6 +5,7 @@ export interface StatProps {
   value: number | string;
   unit: string;
   variant?: 'outlined';
+  loading?: boolean;
 }
 
 interface StatOwnerState extends StatProps {
@@ -18,6 +19,7 @@ const StatRoot = styled('div', {
 })<{ ownerState: StatOwnerState }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'end',
   gap: theme.spacing(0.5),
   padding: theme.spacing(3, 4),
   backgroundColor: theme.palette.background.paper,
@@ -54,7 +56,12 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
     const ownerState = { ...props, variant };
 
     return (
-      <StatRoot ref={ref} ownerState={ownerState} {...other}>
+      <StatRoot
+        ref={ref}
+        ownerState={ownerState}
+        {...other}
+        style={{ minWidth: '300px' }}
+      >
         <StatValue ownerState={ownerState} style={{ fontFamily: 'monospace' }}>
           {value}
         </StatValue>

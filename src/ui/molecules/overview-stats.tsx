@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import { useMemo } from 'react';
 import CustomStat from '../atoms/stat';
 
@@ -17,16 +17,19 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
 
 const OverviewStatsMolecule = ({
   pools,
+  loading,
 }: {
   pools?: IPoolWithUnderlying[];
+  loading?: boolean;
 }) => {
   const totalSupplied = useMemo(() => {
-    if (!pools?.length) return '0.0 USDC';
-    return pools[0]?.totalSupply.normalized;
-    // return pools?.reduce((curr, acc) => {
-    //   acc += BigInt(curr.totalSupply.raw);
-    //   return acc;
-    // }, BigInt(0));
+    if (!pools?.length) return '0.0';
+    let total = BigInt(0);
+    pools.forEach(({ totalSupply }) => {
+      total += totalSupply.raw;
+    });
+    // TODO: return USD amount
+    return toNormalizedBn(total, 6).normalized;
   }, [pools?.length]);
   return (
     <ResponsiveStack>
@@ -34,8 +37,14 @@ const OverviewStatsMolecule = ({
         value={`${totalSupplied} USDC`}
         unit="Total Deposits"
         variant="outlined"
+        loading={loading}
       />
-      <CustomStat value="0.0 USDC" unit="Total Borrowed" variant="outlined" />
+      <CustomStat
+        loading={loading}
+        value="0.0 USDC"
+        unit="Total Borrowed"
+        variant="outlined"
+      />
     </ResponsiveStack>
   );
 };
