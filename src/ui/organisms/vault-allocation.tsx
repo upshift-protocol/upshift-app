@@ -6,79 +6,81 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from 'react';
 import { FALLBACK_CHAINID } from '@/utils/constants';
+import useLoans from '@/hooks/use-loans';
 import LinkAtom from '../atoms/anchor-link';
+
+const columns: GridColDef<any[number]>[] = [
+  {
+    field: 'address',
+    headerName: 'Loan Address',
+    description: 'The vault address.',
+    minWidth: 200,
+    editable: false,
+    renderCell({ value }) {
+      if (!value) return '-';
+      return (
+        <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
+          {truncate(value)}
+        </LinkAtom>
+      );
+    },
+  },
+  {
+    field: 'allocation',
+    headerName: 'Allocation',
+    description: 'Proportion of the vault supply allocated to this market.',
+    minWidth: 100,
+    editable: true,
+    renderCell({ value }) {
+      if (!value) return '-';
+      return `${value}%`;
+    },
+  },
+  {
+    field: 'supply',
+    headerName: 'Vault Supply',
+    description: 'The amount supplied to the market',
+    type: 'number',
+    minWidth: 200,
+    editable: true,
+    renderCell({ value }) {
+      if (!value) return '-';
+      return `${value} USDC`;
+    },
+  },
+  {
+    field: 'collateral',
+    headerName: 'Collateral',
+    type: 'number',
+    minWidth: 200,
+    editable: true,
+    renderCell({ value }) {
+      if (!value) return '-';
+      return '-';
+    },
+  },
+  {
+    field: 'liquidationLTV',
+    headerName: 'Liquidation LTV',
+    minWidth: 200,
+    type: 'number',
+    description:
+      'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
+    renderCell({ value }) {
+      if (!value) return '-';
+      return `${value}%`;
+    },
+  },
+];
 
 export default function VaultAllocation(
   props: (IPoolWithUnderlying | undefined) & { loading: boolean },
 ) {
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'address',
-      headerName: 'Loan Address',
-      description: 'The vault address.',
-      minWidth: 200,
-      editable: false,
-      renderCell({ value }) {
-        if (!value) return '-';
-        return (
-          <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
-            {truncate(value)}
-          </LinkAtom>
-        );
-      },
-    },
-    {
-      field: 'allocation',
-      headerName: 'Allocation',
-      description: 'Proportion of the vault supply allocated to this market.',
-      minWidth: 100,
-      editable: true,
-      renderCell({ value }) {
-        if (!value) return '-';
-        return `${value}%`;
-      },
-    },
-    {
-      field: 'supply',
-      headerName: 'Vault Supply',
-      description: 'The amount supplied to the market',
-      type: 'number',
-      minWidth: 200,
-      editable: true,
-      renderCell({ value }) {
-        if (!value) return '-';
-        return `${value} USDC`;
-      },
-    },
-    {
-      field: 'collateral',
-      headerName: 'Collateral',
-      type: 'number',
-      minWidth: 200,
-      editable: true,
-      renderCell({ value }) {
-        if (!value) return '-';
-        return '-';
-      },
-    },
-    {
-      field: 'liquidationLTV',
-      headerName: 'Liquidation LTV',
-      minWidth: 200,
-      type: 'number',
-      description:
-        'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
-      renderCell({ value }) {
-        if (!value) return '-';
-        return `${value}%`;
-      },
-    },
-  ];
-
+  useLoans();
   // TODO: deploy a loan and get attributes based on it here
   const rows = useMemo(() => {
     if (!props?.loans?.length) return [];
-    return props?.loans?.map((l, i) => ({
+    const loansWithDataa = props.loans?.map((l, i) => ({
       id: i,
       address: l,
       allocation: '100',
@@ -86,6 +88,7 @@ export default function VaultAllocation(
       collateral: '0.0',
       liquidationLTV: '100',
     }));
+    return loansWithDataa;
   }, [props?.loans]);
 
   return (
