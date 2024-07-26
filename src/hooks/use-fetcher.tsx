@@ -1,10 +1,16 @@
 import { INFURA_API_KEY } from '@/utils/constants';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
-import { getLendingPool, getLendingPools } from '@augustdigital/sdk';
+import {
+  ABI_LENDING_POOLS,
+  getLendingPool,
+  getLendingPools,
+  toNormalizedBn,
+} from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
-import { useChainId, usePublicClient } from 'wagmi';
+import { readContract } from 'viem/actions';
+import { useAccount, useChainId, usePublicClient } from 'wagmi';
 
 type IFetchTypes = 'lending-pools' | 'lending-pool';
 
@@ -20,6 +26,7 @@ export default function useFetcher({
   formatter,
   ...props
 }: IUseFetcher) {
+  const { address: wallet } = useAccount();
   const provider = usePublicClient();
   const chain = useChainId();
   const infuraOptions = {
@@ -41,6 +48,36 @@ export default function useFetcher({
       }
       case 'lending-pools': {
         return getLendingPools(infuraOptions);
+      }
+      case 'my-positions': {
+        const pools = await getLendingPools(infuraOptions);
+        const promises = await Promise.all(
+          pools.map(async (pool) => {
+            let balance = toNormalizedBn(0);
+            if (provider && wallet) {
+              const bal = await readContract(provider, {
+                account: wallet,
+                address: pool.address,
+                abi: ABI_LENDING_POOLS,
+                functionName: 'balanceOf',
+                args: [wallet],
+              });
+              balance = toNormalizedBn(bal, pool.decimals);
+            }
+            return {
+              ...pool,
+              token: pool?.underlying?.symbol,
+              position: pool?.name,
+              apy: '',
+              walletBalance: balance.normalized,
+            };
+          }),
+        );
+        return promises.filter(
+          (promise) =>
+            promise.walletBalance &&
+            BigInt(promise.walletBalance) > BigInt('0'),
+        );
       }
       default: {
         return getLendingPools(infuraOptions);

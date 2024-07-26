@@ -11,8 +11,13 @@ import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
 import { truncate } from '@/utils/helpers';
-import { Skeleton, Stack } from '@mui/material';
-import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import { Skeleton, Stack, Typography } from '@mui/material';
+import {
+  explorerLink,
+  type IAddress,
+  type INormalizedNumber,
+} from '@augustdigital/sdk';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -29,6 +34,8 @@ type ITable = {
   action?: (props: any) => JSX.Element;
   loading?: boolean;
   type?: ITableType;
+  pagination?: boolean;
+  hover?: boolean;
 };
 
 export default function TableMolecule({
@@ -37,6 +44,8 @@ export default function TableMolecule({
   uidKey,
   action,
   loading,
+  pagination = true,
+  hover = true,
   type = 'custom',
 }: ITable) {
   const router = useRouter();
@@ -78,13 +87,20 @@ export default function TableMolecule({
         return (
           <Stack direction="row" justifyContent="end">
             {extracted.map((e, i) => (
-              <LinkAtom key={`link-${i}-${e}`} href="#">
+              <LinkAtom
+                key={`link-${i}-${e}`}
+                href={explorerLink(e, FALLBACK_CHAINID, 'address')}
+              >
                 {truncate(e)}
               </LinkAtom>
             ))}
           </Stack>
         );
-      return <LinkAtom href="#">{truncate(extracted)}</LinkAtom>;
+      return (
+        <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
+          {truncate(extracted)}
+        </LinkAtom>
+      );
     }
     return extracted;
   };
@@ -131,7 +147,7 @@ export default function TableMolecule({
             {rows.map((row, i) => {
               return (
                 <TableRow
-                  hover
+                  hover={hover}
                   role="checkbox"
                   tabIndex={-1}
                   key={row.name}
@@ -173,15 +189,25 @@ export default function TableMolecule({
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data?.length ?? 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {pagination ? (
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data?.length ?? 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      ) : null}
+
+      {!rows.length && (
+        <Stack p={4} justifyContent={'center'} alignItems={'center'}>
+          <Typography fontSize={'14px'} color="GrayText">
+            No positions available
+          </Typography>
+        </Stack>
+      )}
     </Box>
   );
 }

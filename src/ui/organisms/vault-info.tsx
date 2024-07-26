@@ -1,9 +1,10 @@
 import { truncate } from '@/utils/helpers';
-import type { IPool } from '@augustdigital/sdk';
+import { explorerLink, type IPool } from '@augustdigital/sdk';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -26,11 +27,14 @@ export default function VaultInfo(
             alignItems="center"
           >
             <Typography>Vault Address</Typography>
-            {props.loading ? (
+            {props?.loading ? (
               <Skeleton variant="text" width={150} />
             ) : (
-              <LinkAtom overflow="hidden">
-                {truncate(props.address, 6)}
+              <LinkAtom
+                overflow="hidden"
+                href={explorerLink(props?.address, FALLBACK_CHAINID, 'address')}
+              >
+                {truncate(props?.address, 6)}
               </LinkAtom>
             )}
           </Stack>
@@ -42,11 +46,18 @@ export default function VaultInfo(
             alignItems="center"
           >
             <Typography>Curator</Typography>
-            {props.loading ? (
+            {props?.loading ? (
               <Skeleton variant="text" width={150} />
             ) : (
-              <LinkAtom overflow="hidden">
-                {truncate(props.getLoansOperator, 6)}
+              <LinkAtom
+                overflow="hidden"
+                href={explorerLink(
+                  props?.getLoansOperator,
+                  FALLBACK_CHAINID,
+                  'address',
+                )}
+              >
+                {truncate(props?.getLoansOperator, 6)}
               </LinkAtom>
             )}
           </Stack>
@@ -58,11 +69,11 @@ export default function VaultInfo(
             alignItems="center"
           >
             <Typography>Total Supply</Typography>
-            {props.loading ? (
+            {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
               <AmountDisplay symbol="USDC">
-                {props.totalSupply.normalized}
+                {props?.totalSupply?.normalized}
               </AmountDisplay>
             )}
           </Stack>
@@ -74,7 +85,7 @@ export default function VaultInfo(
             alignItems="center"
           >
             <Typography>Net APY</Typography>
-            {props.loading ? (
+            {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
               <AmountDisplay>{'0.0%'}</AmountDisplay>
@@ -88,7 +99,7 @@ export default function VaultInfo(
             alignItems="center"
           >
             <Typography>Performance Fee</Typography>
-            {props.loading ? (
+            {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
               <AmountDisplay>{'0.0%'}</AmountDisplay>
@@ -102,11 +113,11 @@ export default function VaultInfo(
             alignItems="center"
           >
             <Typography>Liquidity</Typography>
-            {props.loading ? (
+            {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
               <AmountDisplay symbol={'USDC'}>
-                {props.totalAssets.normalized}
+                {props?.totalAssets?.normalized}
               </AmountDisplay>
             )}
           </Stack>
