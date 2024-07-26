@@ -29,8 +29,6 @@ const PoolPage = () => {
   const pool = data as IPoolWithUnderlying & { loans: IAddress[] };
   const isLoading = !data || poolLoading;
 
-  console.log('POOL:', pool);
-
   function buildCrumbs(): IBreadCumb[] {
     return [
       {

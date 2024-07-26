@@ -1,9 +1,9 @@
 import type { IColumn } from '@/utils/types';
-import { Box, Stack, Typography } from '@mui/material';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
-import DepositModalMolecule from '../molecules/deposit-modal';
-import WithdrawModalMolecule from '../molecules/withdraw-modal';
+import { Box, Typography } from '@mui/material';
+import type { UseQueryResult } from '@tanstack/react-query';
+import useFetcher from '@/hooks/use-fetcher';
 import TableMolecule from '../molecules/table';
+import PoolActionsMolecule from '../molecules/pool-actions';
 
 const columns: readonly IColumn[] = [
   { id: 'token', value: 'Token', minWidth: 150 },
@@ -24,15 +24,6 @@ const columns: readonly IColumn[] = [
   },
 ];
 
-function PositionsTableAction(pool: IPoolWithUnderlying) {
-  return (
-    <Stack direction="row" spacing={2} alignItems="center" justifyContent="end">
-      <DepositModalMolecule {...pool} />
-      <WithdrawModalMolecule {...pool} />
-    </Stack>
-  );
-}
-
 export default function MyPositionsTableOrganism({
   title,
   data,
@@ -42,6 +33,11 @@ export default function MyPositionsTableOrganism({
   data?: any;
   loading?: boolean;
 }) {
+  const { data: positions, isLoading: positionsLoading } = useFetcher({
+    queryKey: ['my-positions'],
+    enabled: typeof data === 'undefined' && !loading,
+  }) as UseQueryResult<any>;
+
   return (
     <Box>
       {title ? (
@@ -51,10 +47,10 @@ export default function MyPositionsTableOrganism({
       ) : null}
       <TableMolecule
         columns={columns}
-        data={data}
+        data={data ?? positions}
         uidKey="address"
-        loading={loading}
-        action={PositionsTableAction}
+        loading={loading ?? positionsLoading}
+        action={PoolActionsMolecule}
         pagination={false}
       />
     </Box>

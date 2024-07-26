@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 const HomePage = () => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
+
   const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[]>;
