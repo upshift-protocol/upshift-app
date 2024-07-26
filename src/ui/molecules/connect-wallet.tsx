@@ -5,26 +5,40 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
 import { truncate } from '@/utils/helpers';
 import React from 'react';
+import { Link, Typography } from '@mui/material';
 import Modal from '../atoms/modal';
+
+const TERMS_OF_SERVICE_URL =
+  'https://docs.augustdigital.io/legal/legal-notices/terms-of-service';
+const PRIVACY_POLICY_URL =
+  'https://docs.augustdigital.io/legal/legal-notices/privacy-policy';
 
 type IConnectWallet = {
   btnFullWidth?: boolean;
   variant?: 'contained' | 'text' | 'outlined';
   color?: 'primary' | 'inherit';
+  onClose?: (() => void) | undefined;
 };
 
 const ConnectWalletMolecule = ({
   btnFullWidth,
   variant,
   color,
+  onClose,
 }: IConnectWallet) => {
   const { connectors, connectAsync, isPending: connectPending } = useConnect();
   const { disconnect, isPending: disconnectPending } = useDisconnect();
   const { address } = useAccount();
+  const [selectedConnector, setSelectedConnector] =
+    React.useState<Connector | null>(null);
+  const [agreeToTerms, setAgreeToTerms] = React.useState(false);
 
   // wait for hydration, show loading state
   const [hydrated, setHydrated] = React.useState(false);
@@ -33,13 +47,14 @@ const ConnectWalletMolecule = ({
   }, []);
   if (!hydrated) return <Button variant="outlined">Connect Wallet</Button>;
 
-  // remaining of functional component
-  async function handleConnect(e: SyntheticEvent, id: string) {
+  async function handleConnect(e: SyntheticEvent) {
     e.preventDefault();
-    const foundConnector = connectors.find((c) => c.id === id);
-    if (foundConnector) {
+    if (selectedConnector) {
       try {
-        await connectAsync({ connector: foundConnector });
+        await connectAsync({ connector: selectedConnector });
+        if (onClose) {
+          onClose();
+        }
       } catch (error) {
         console.error('user rejected request:', error);
       }
@@ -75,11 +90,26 @@ const ConnectWalletMolecule = ({
           .map((connector) => (
             <ListItem key={`connector-${connector.uid}`}>
               <Button
-                onClick={(e) => handleConnect(e, connector.id)}
+                onClick={() => setSelectedConnector(connector)}
                 disabled={connectPending || disconnectPending}
                 fullWidth
-                size="large"
-                style={{ justifyContent: 'start' }}
+                size="medium"
+                variant={
+                  selectedConnector?.id === connector.id
+                    ? 'contained'
+                    : 'outlined'
+                }
+                // color={selectedConnector?.id === connector.id ? 'primary' : 'default'}
+                style={{
+                  justifyContent: 'start',
+                  ...(selectedConnector?.id !== connector.id
+                    ? {
+                        '&:hover': {
+                          backgroundColor: '#e0e0e0',
+                        },
+                      }
+                    : {}),
+                }}
                 startIcon={
                   <Image
                     src={renderIcon(connector)}
@@ -93,6 +123,48 @@ const ConnectWalletMolecule = ({
               </Button>
             </ListItem>
           ))}
+        <ListItem>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={agreeToTerms}
+                onChange={(e) => setAgreeToTerms(e.target.checked)}
+                name="agreeToTerms"
+                color="primary"
+              />
+            }
+            label={
+              <Typography fontSize={'0.875rem'}>
+                I have read and accept{' '}
+                <Link target="_blank" href={TERMS_OF_SERVICE_URL}>
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link target="_blank" href={PRIVACY_POLICY_URL}>
+                  Privacy Notice
+                </Link>
+              </Typography>
+            }
+          />
+        </ListItem>
+        <ListItem>
+          <Button
+            onClick={handleConnect}
+            disabled={
+              !selectedConnector ||
+              !agreeToTerms ||
+              connectPending ||
+              disconnectPending
+            }
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            startIcon={connectPending ? <CircularProgress size={24} /> : null}
+          >
+            {connectPending ? 'Connecting...' : 'Connect'}
+          </Button>
+        </ListItem>
       </List>
     </Modal>
   );
