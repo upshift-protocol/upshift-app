@@ -8,6 +8,7 @@ import {
 } from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { isAddress } from 'viem';
 import { readContract } from 'viem/actions';
 import { useAccount, useChainId, usePublicClient } from 'wagmi';
@@ -73,11 +74,13 @@ export default function useFetcher({
             };
           }),
         );
-        return promises.filter(
+        // TODO: optimize to not use JS number class
+        const filtered = promises.filter(
           (promise) =>
             promise.walletBalance &&
-            BigInt(promise.walletBalance) > BigInt('0'),
+            Number(promise.walletBalance) > Number('0'),
         );
+        return filtered;
       }
       default: {
         return getLendingPools(infuraOptions);
@@ -96,6 +99,11 @@ export default function useFetcher({
     queryKey,
     queryFn: masterGetter,
   });
+
+  // TODO: not working
+  useEffect(() => {
+    (async () => wallet && (await query?.refetch()))().catch(console.error);
+  }, [wallet, provider]);
 
   return query;
 }

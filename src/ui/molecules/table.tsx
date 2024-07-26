@@ -18,6 +18,7 @@ import {
   type INormalizedNumber,
 } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants';
+import { useAccount } from 'wagmi';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -48,6 +49,7 @@ export default function TableMolecule({
   hover = true,
   type = 'custom',
 }: ITable) {
+  const { address } = useAccount();
   const router = useRouter();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -109,7 +111,7 @@ export default function TableMolecule({
     if (loading) {
       const mockOb = columns.reduce(
         (acc, curr) => {
-          acc[curr.id] = 'loading';
+          acc[curr.id] = '-';
           return acc;
         },
         {} as Record<string, string>,
@@ -123,7 +125,7 @@ export default function TableMolecule({
       page * rowsPerPage + rowsPerPage,
     );
     return sliced;
-  }, [data, page, rowsPerPage]);
+  }, [data, page, rowsPerPage, address]);
 
   return (
     <Box>
@@ -150,7 +152,7 @@ export default function TableMolecule({
                   hover={hover}
                   role="checkbox"
                   tabIndex={-1}
-                  key={row.name}
+                  key={`row-${row.name || row.id}-${i}`}
                   onClick={(e) => handleRowClick(e, i)}
                   style={{ cursor: 'pointer' }}
                 >
@@ -166,9 +168,13 @@ export default function TableMolecule({
                     function renderValue() {
                       // TODO: optimize
                       if (/^\d+(?:\.\d{1,18})?$/.test(String(value))) {
-                        return `${value} ${underlying?.symbol}`;
+                        return (
+                          <Typography fontFamily={'monospace'}>
+                            {value} {underlying?.symbol}
+                          </Typography>
+                        );
                       }
-                      return value || '-';
+                      return <Typography>{value || '-'}</Typography>;
                     }
                     return (
                       <TableCell key={column.id} align={column.align}>
