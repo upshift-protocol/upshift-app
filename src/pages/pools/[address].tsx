@@ -11,6 +11,8 @@ import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/molecules/deposit-modal';
 import WithdrawModalMolecule from '@/ui/molecules/withdraw-modal';
 import { useParams } from 'next/navigation';
+import type { UseQueryResult } from '@tanstack/react-query';
+import MyPositionsTableOrganism from '@/ui/organisms/positions-table';
 
 const PoolPage = () => {
   const params = useParams();
@@ -19,6 +21,10 @@ const PoolPage = () => {
     queryKey: ['lending-pool', (params?.address as IAddress)!],
     disabled: !params?.address,
   });
+
+  const { data: positions, isLoading: positionsLoading } = useFetcher({
+    queryKey: ['my-positions'],
+  }) as UseQueryResult<any>;
 
   const pool = data as IPoolWithUnderlying & { loans: IAddress[] };
   const isLoading = !data || poolLoading;
@@ -55,9 +61,16 @@ const PoolPage = () => {
           </Stack>
         }
       >
-        <Stack direction="column" gap={6} mt={2}>
-          <VaultInfo loading={isLoading} {...pool} />
-          <VaultAllocation loading={isLoading} {...pool} />
+        <Stack gap={3}>
+          <Stack direction="column" gap={6} mt={2}>
+            <VaultInfo loading={isLoading} {...pool} />
+            <VaultAllocation loading={isLoading} {...pool} />
+          </Stack>
+          <MyPositionsTableOrganism
+            title="My Positions"
+            data={positions}
+            loading={positionsLoading}
+          />
         </Stack>
       </Section>
     </Base>

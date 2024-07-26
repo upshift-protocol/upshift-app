@@ -1,14 +1,13 @@
 import type { IColumn } from '@/utils/types';
+import { Box, Stack, Typography } from '@mui/material';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
-import Stack from '@mui/material/Stack';
-import { Box, Typography } from '@mui/material';
-import TableMolecule from '../molecules/table';
 import DepositModalMolecule from '../molecules/deposit-modal';
 import WithdrawModalMolecule from '../molecules/withdraw-modal';
+import TableMolecule from '../molecules/table';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 150 },
-  { id: 'totalSupply', value: 'Total Supply', align: 'right', minWidth: 150 },
+  { id: 'token', value: 'Token', minWidth: 150 },
+  { id: 'position', value: 'Position', align: 'right', minWidth: 150 },
   {
     id: 'apy',
     value: 'Net APY',
@@ -17,20 +16,15 @@ const columns: readonly IColumn[] = [
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: 'collateral',
-    value: 'Collateral',
+    id: 'walletBalance',
+    value: 'Supplied',
     minWidth: 100,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
-  {
-    id: 'getLoansOperator',
-    value: 'Curator',
-    minWidth: 100,
-  },
 ];
 
-function PoolsTableAction(pool: IPoolWithUnderlying) {
+function PositionsTableAction(pool: IPoolWithUnderlying) {
   return (
     <Stack direction="row" spacing={2} alignItems="center" justifyContent="end">
       <DepositModalMolecule {...pool} />
@@ -39,7 +33,7 @@ function PoolsTableAction(pool: IPoolWithUnderlying) {
   );
 }
 
-export default function PoolsTableOrganism({
+export default function MyPositionsTableOrganism({
   title,
   data,
   loading,
@@ -60,7 +54,8 @@ export default function PoolsTableOrganism({
         data={data}
         uidKey="address"
         loading={loading}
-        action={PoolsTableAction}
+        action={PositionsTableAction}
+        pagination={false}
       />
     </Box>
   );

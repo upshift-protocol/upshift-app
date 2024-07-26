@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
 import { truncate } from '@/utils/helpers';
-import { Skeleton, Stack } from '@mui/material';
+import { Skeleton, Stack, Typography } from '@mui/material';
 import {
   explorerLink,
   type IAddress,
@@ -34,6 +34,8 @@ type ITable = {
   action?: (props: any) => JSX.Element;
   loading?: boolean;
   type?: ITableType;
+  pagination?: boolean;
+  hover?: boolean;
 };
 
 export default function TableMolecule({
@@ -42,6 +44,8 @@ export default function TableMolecule({
   uidKey,
   action,
   loading,
+  pagination = true,
+  hover = true,
   type = 'custom',
 }: ITable) {
   const router = useRouter();
@@ -143,7 +147,7 @@ export default function TableMolecule({
             {rows.map((row, i) => {
               return (
                 <TableRow
-                  hover
+                  hover={hover}
                   role="checkbox"
                   tabIndex={-1}
                   key={row.name}
@@ -185,15 +189,25 @@ export default function TableMolecule({
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data?.length ?? 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {pagination ? (
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data?.length ?? 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      ) : null}
+
+      {!rows.length && (
+        <Stack p={4} justifyContent={'center'} alignItems={'center'}>
+          <Typography fontSize={'14px'} color="GrayText">
+            No positions available
+          </Typography>
+        </Stack>
+      )}
     </Box>
   );
 }
