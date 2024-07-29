@@ -45,7 +45,7 @@ export default function VaultInfo(
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography>Curator</Typography>
+            <Typography>Strategist</Typography>
             {props?.loading ? (
               <Skeleton variant="text" width={150} />
             ) : (

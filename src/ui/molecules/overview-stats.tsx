@@ -20,7 +20,7 @@ const OverviewStatsMolecule = ({
   loading,
 }: {
   pools?: IPoolWithUnderlying[];
-  loading?: boolean;
+  loading?: number;
 }) => {
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';

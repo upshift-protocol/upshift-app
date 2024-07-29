@@ -85,32 +85,40 @@ export default function useDeposit(props: IUseDepositProps) {
       setIsLoading(true);
       setError('');
 
-      // TODO: check if allowance already allows this amount
-      // Approve input amount
-      setButton({ text: BUTTON_TEXTS.approving, disabled: true });
-      const approveHash = await signer?.writeContract({
-        account: address,
+      const allowance = await readContract(provider ?? signer, {
         address: props.asset,
+        account: address,
         abi: erc20Abi,
-        functionName: 'approve',
-        args: [props.pool, normalized.raw],
+        functionName: 'allowance',
+        args: [address, props.pool],
       });
-      await toast.promise(
-        waitForTransactionReceipt(provider, { hash: approveHash! }),
-        {
-          success: {
-            render: (
-              <Toast
-                msg={`Successfully approved ${normalized.normalized} ${symbol}:`}
-                hash={approveHash!}
-              />
-            ),
-            type: 'success',
+      if (allowance < normalized.raw) {
+        // Approve input amount
+        setButton({ text: BUTTON_TEXTS.approving, disabled: true });
+        const approveHash = await signer?.writeContract({
+          account: address,
+          address: props.asset,
+          abi: erc20Abi,
+          functionName: 'approve',
+          args: [props.pool, normalized.raw],
+        });
+        await toast.promise(
+          waitForTransactionReceipt(provider, { hash: approveHash! }),
+          {
+            success: {
+              render: (
+                <Toast
+                  msg={`Successfully approved ${normalized.normalized} ${symbol}:`}
+                  hash={approveHash!}
+                />
+              ),
+              type: 'success',
+            },
+            error: `Error approving ${normalized.normalized} ${symbol}`,
+            pending: `Submitted approval for ${normalized.normalized} ${symbol}`,
           },
-          error: `Error approving ${normalized.normalized} ${symbol}`,
-          pending: `Submitted approval for ${normalized.normalized} ${symbol}`,
-        },
-      );
+        );
+      }
 
       // Deposit input amount
       setButton({ text: BUTTON_TEXTS.submitting, disabled: true });
@@ -215,13 +223,29 @@ export default function useDeposit(props: IUseDepositProps) {
 
   // useEffects
   useEffect(() => {
-    const val = toNormalizedBn(props.value || '0', decimals);
-    if (val.raw === BigInt(0)) {
-      setButton({ text: BUTTON_TEXTS.zero, disabled: true });
-    } else {
-      setButton({ text: BUTTON_TEXTS.submit, disabled: false });
-      setError('');
-    }
+    (async () => {
+      const val = toNormalizedBn(props.value || '0', decimals);
+      if (val.raw === BigInt(0)) {
+        setButton({ text: BUTTON_TEXTS.zero, disabled: true });
+      } else {
+        let allowance = BigInt(0);
+        if (provider && address && props.asset && props.pool) {
+          allowance = await readContract(provider, {
+            address: props.asset,
+            account: address,
+            abi: erc20Abi,
+            functionName: 'allowance',
+            args: [address, props.pool],
+          });
+        }
+        if (allowance < val.raw) {
+          setButton({ text: BUTTON_TEXTS.approve, disabled: false });
+        } else {
+          setButton({ text: BUTTON_TEXTS.submit, disabled: false });
+        }
+        setError('');
+      }
+    })().catch(console.error);
   }, [props.value]);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();

@@ -38,14 +38,14 @@ export default function DepositModalMolecule(
           address={props?.address}
           type="Out"
           value={expected.loading ? ' ' : expected.out.normalized}
-          loading={expected.loading}
+          loading={+expected.loading}
         />
         <TxFeesAtom
           function="deposit"
           in={props?.underlying?.address}
           out={props?.address}
           fee={expected.fee.raw}
-          loading={expected.loading}
+          loading={+expected.loading}
         />
         <Web3Button
           onClick={handleDeposit}

@@ -1,10 +1,10 @@
 import type { IColumn } from '@/utils/types';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
-import Stack from '@mui/material/Stack';
 import { Box, Typography } from '@mui/material';
+import type { UseQueryResult } from '@tanstack/react-query';
+import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import useFetcher from '@/hooks/use-fetcher';
+import PoolActionsMolecule from '../molecules/pool-actions';
 import TableMolecule from '../molecules/table';
-import DepositModalMolecule from '../molecules/deposit-modal';
-import WithdrawModalMolecule from '../molecules/withdraw-modal';
 
 const columns: readonly IColumn[] = [
   { id: 'name', value: 'Name', minWidth: 150 },
@@ -25,19 +25,10 @@ const columns: readonly IColumn[] = [
   },
   {
     id: 'getLoansOperator',
-    value: 'Curator',
+    value: 'Strategist',
     minWidth: 100,
   },
 ];
-
-function PoolsTableAction(pool: IPoolWithUnderlying) {
-  return (
-    <Stack direction="row" spacing={2} alignItems="center" justifyContent="end">
-      <DepositModalMolecule {...pool} />
-      <WithdrawModalMolecule {...pool} />
-    </Stack>
-  );
-}
 
 export default function PoolsTableOrganism({
   title,
@@ -46,8 +37,13 @@ export default function PoolsTableOrganism({
 }: {
   title?: string;
   data?: any;
-  loading?: boolean;
+  loading?: number;
 }) {
+  const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
+    queryKey: ['lending-pools'],
+    enabled: typeof data === 'undefined' && !loading,
+  }) as UseQueryResult<IPoolWithUnderlying[]>;
+
   return (
     <Box>
       {title ? (
@@ -57,10 +53,10 @@ export default function PoolsTableOrganism({
       ) : null}
       <TableMolecule
         columns={columns}
-        data={data}
+        data={data ?? allPools}
         uidKey="address"
-        loading={loading}
-        action={PoolsTableAction}
+        loading={loading ?? +allPoolsLoading}
+        action={(rowData) => PoolActionsMolecule({ pool: rowData })}
       />
     </Box>
   );

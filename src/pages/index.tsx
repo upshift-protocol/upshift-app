@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 const HomePage = () => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
+
   const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[]>;
@@ -31,9 +32,9 @@ const HomePage = () => {
       <Section
         id="earn-table"
         title="Earn"
-        description="Earn yields from real institutional loans via the Lazarev protocol. Democratizing high-yield investments traditionally limited to financial institutions."
+        description="Earn yields from real institutional loans via the Olympia protocol. Democratizing high-yield investments traditionally limited to financial institutions."
         action={
-          <OverviewStatsMolecule loading={allPoolsLoading} pools={allPools} />
+          <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
       >
         <Stack gap={3}>
@@ -41,13 +42,13 @@ const HomePage = () => {
             <MyPositionsTableOrganism
               title="My Positions"
               data={positions}
-              loading={positionsLoading}
+              loading={+positionsLoading}
             />
           </Collapse>
           <PoolsTableOrganism
             title="All Pools"
             data={allPools}
-            loading={allPoolsLoading}
+            loading={+allPoolsLoading}
           />
         </Stack>
       </Section>

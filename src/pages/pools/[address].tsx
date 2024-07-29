@@ -29,8 +29,6 @@ const PoolPage = () => {
   const pool = data as IPoolWithUnderlying & { loans: IAddress[] };
   const isLoading = !data || poolLoading;
 
-  console.log('POOL:', pool);
-
   function buildCrumbs(): IBreadCumb[] {
     return [
       {
@@ -44,7 +42,7 @@ const PoolPage = () => {
     <Base>
       <Section
         id="earn-table"
-        loading={isLoading}
+        loading={+isLoading}
         title={pool?.name ?? ' '}
         description={
           (pool as any)?.description ??
@@ -69,7 +67,7 @@ const PoolPage = () => {
           <MyPositionsTableOrganism
             title="My Positions"
             data={positions}
-            loading={positionsLoading}
+            loading={+positionsLoading}
           />
         </Stack>
       </Section>
