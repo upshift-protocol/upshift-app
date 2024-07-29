@@ -56,7 +56,7 @@ export default function PoolsTableOrganism({
         data={data ?? allPools}
         uidKey="address"
         loading={loading ?? +allPoolsLoading}
-        action={PoolActionsMolecule}
+        action={(rowData) => PoolActionsMolecule({ pool: rowData })}
       />
     </Box>
   );

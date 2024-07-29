@@ -91,12 +91,12 @@ export default function AssetInputMolecule(props: IAssetInput) {
           onChange={props.handleInput}
           focused={!!props.loading}
         />
-        {props.loading && (
+        {props.loading ? (
           <Skeleton
             style={{ position: 'absolute', transform: 'translate(14px, 15px)' }}
             width="120px"
           />
-        )}
+        ) : null}
         {props.type === 'In' && props.handleMax && (
           <Box position="relative">
             <Box position="absolute" left={-72} top={12.5} textAlign={'right'}>

@@ -50,7 +50,7 @@ export default function MyPositionsTableOrganism({
         data={data ?? positions}
         uidKey="address"
         loading={loading ?? +positionsLoading}
-        action={PoolActionsMolecule}
+        action={(rowData) => PoolActionsMolecule({ pool: rowData })}
         pagination={false}
       />
     </Box>
