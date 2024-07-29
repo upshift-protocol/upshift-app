@@ -32,7 +32,7 @@ const HomePage = () => {
       <Section
         id="earn-table"
         title="Earn"
-        description="Earn yields from real institutional loans via the Lazarev protocol. Democratizing high-yield investments traditionally limited to financial institutions."
+        description="Earn yields from real institutional loans via the Olympia protocol. Democratizing high-yield investments traditionally limited to financial institutions."
         action={
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }

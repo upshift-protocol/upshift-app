@@ -25,7 +25,7 @@ const columns: readonly IColumn[] = [
   },
   {
     id: 'getLoansOperator',
-    value: 'Curator',
+    value: 'Strategist',
     minWidth: 100,
   },
 ];
