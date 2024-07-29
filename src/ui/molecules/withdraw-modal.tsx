@@ -36,14 +36,14 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           address={props?.underlying?.address}
           type="Out"
           value={expected.loading ? ' ' : expected.out.normalized}
-          loading={expected.loading}
+          loading={+expected.loading}
         />
         <TxFeesAtom
           function="withdraw"
           out={props?.underlying?.address}
           in={props?.address}
           fee={expected.fee.raw}
-          loading={expected.loading}
+          loading={+expected.loading}
         />
         <Web3Button
           style={{ marginTop: '1rem' }}

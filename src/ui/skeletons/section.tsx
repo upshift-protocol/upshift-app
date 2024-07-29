@@ -16,7 +16,7 @@ type ISectionProps = {
   id?: string;
   action?: ReactNode;
   breadcrumbs?: IBreadCumb[];
-  loading?: boolean;
+  loading?: number;
   noYPadding?: boolean;
 };
 

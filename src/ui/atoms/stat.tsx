@@ -1,3 +1,4 @@
+import { Skeleton } from '@mui/material';
 import { styled, useThemeProps } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -5,7 +6,7 @@ export interface StatProps {
   value: number | string;
   unit: string;
   variant?: 'outlined';
-  loading?: boolean;
+  loading?: number;
 }
 
 interface StatOwnerState extends StatProps {
@@ -62,9 +63,21 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
         {...other}
         style={{ minWidth: '300px' }}
       >
-        <StatValue ownerState={ownerState} style={{ fontFamily: 'monospace' }}>
-          {value}
-        </StatValue>
+        {props.loading ? (
+          <Skeleton
+            variant="rounded"
+            width="100%"
+            height="36px"
+            style={{ marginBottom: '6px' }}
+          />
+        ) : (
+          <StatValue
+            ownerState={ownerState}
+            style={{ fontFamily: 'monospace' }}
+          >
+            {value}
+          </StatValue>
+        )}
         <StatUnit ownerState={ownerState}>{unit}</StatUnit>
       </StatRoot>
     );

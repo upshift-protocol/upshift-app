@@ -31,7 +31,7 @@ export default function MyPositionsTableOrganism({
 }: {
   title?: string;
   data?: any;
-  loading?: boolean;
+  loading?: number;
 }) {
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
@@ -49,7 +49,7 @@ export default function MyPositionsTableOrganism({
         columns={columns}
         data={data ?? positions}
         uidKey="address"
-        loading={loading ?? positionsLoading}
+        loading={loading ?? +positionsLoading}
         action={PoolActionsMolecule}
         pagination={false}
       />

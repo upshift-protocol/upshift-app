@@ -37,7 +37,7 @@ export default function PoolsTableOrganism({
 }: {
   title?: string;
   data?: any;
-  loading?: boolean;
+  loading?: number;
 }) {
   const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
     queryKey: ['lending-pools'],
@@ -55,7 +55,7 @@ export default function PoolsTableOrganism({
         columns={columns}
         data={data ?? allPools}
         uidKey="address"
-        loading={loading ?? allPoolsLoading}
+        loading={loading ?? +allPoolsLoading}
         action={PoolActionsMolecule}
       />
     </Box>

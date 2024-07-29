@@ -16,7 +16,7 @@ type ITxFees = {
   amount?: string | number;
   contract?: IAddress;
   fee?: bigint;
-  loading?: boolean;
+  loading?: number;
 };
 
 const StackOutline = styled(Stack)<{ thememode: ITheme }>`

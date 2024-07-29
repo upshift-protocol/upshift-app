@@ -33,7 +33,7 @@ type ITable = {
   data?: ITableItem[];
   uidKey: string;
   action?: (props: any) => JSX.Element;
-  loading?: boolean;
+  loading?: number;
   type?: ITableType;
   pagination?: boolean;
   hover?: boolean;
