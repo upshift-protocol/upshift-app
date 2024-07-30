@@ -1,6 +1,6 @@
 import { INFURA_API_KEY } from '@/utils/constants';
-import { fromUnixTime } from '@/utils/helpers/time';
-import type { IAddress, IChainId } from '@augustdigital/sdk';
+import { getAvailableRedemptions } from '@/utils/helpers/actions';
+import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
 import {
   ABI_LENDING_POOLS,
   getLendingPool,
@@ -56,62 +56,50 @@ export default function useFetcher({
         const promises = await Promise.all(
           pools.map(async (pool) => {
             let balance = toNormalizedBn(0);
-            const availableRedemptions = [];
             if (provider && wallet) {
+              const args = {
+                account: wallet,
+                address: pool.address,
+                abi: ABI_LENDING_POOLS,
+              };
               const [bal, ...rest] = await Promise.all([
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'balanceOf',
                   args: [wallet],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'getWithdrawalEpoch',
                   args: [],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'liquidationHour',
                   args: [],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'maxRedeem',
                   args: [wallet],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'lagDuration',
                   args: [],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'getBurnableAmountByReceiver',
                   args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'getClaimableAmountByReceiver',
                   args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
                 }),
                 readContract(provider, {
-                  account: wallet,
-                  address: pool.address,
-                  abi: ABI_LENDING_POOLS,
+                  ...args,
                   functionName: 'getScheduledTransactionsByDate',
                   args: [BigInt(2024), BigInt(7), BigInt(31)],
                 }),
@@ -125,36 +113,41 @@ export default function useFetcher({
               console.log('getClaimableAmountByReceiver:', rest?.[5]);
               console.log('getScheduledTransactionsByDate:', rest?.[6]);
 
-              if (rest?.[6]?.length) {
-                const unixTimestamps = rest[6];
-
-                availableRedemptions.push(
-                  [
-                    ...unixTimestamps.filter(
-                      (bnUnix) => bnUnix > BigInt(0) && bnUnix,
-                    ),
-                  ].map((unix) => fromUnixTime(Number(unix))),
-                );
-              }
+              // TODO: optimize with viem and remove ethers library once latest loan is deployed
               balance = toNormalizedBn(bal, pool.decimals);
             }
-            console.log('availableRedemptions:', availableRedemptions);
+
+            const availableRedemptions = await getAvailableRedemptions(
+              pool.address,
+              wallet,
+            );
+
+            function renderStatus() {
+              if (availableRedemptions.length) return 'REDEEM';
+              if (balance.raw > BigInt(0)) return 'STAKED';
+              return 'PENDING';
+            }
             return {
               ...pool,
               token: pool?.underlying?.symbol,
               position: pool?.name,
               apy: '',
-              status: 'PENDING',
+              status: renderStatus(),
               availableRedemptions,
+              redeemable: toNormalizedBn(
+                availableRedemptions.reduce(
+                  (acc, curr) => acc + (curr.amount as INormalizedNumber).raw,
+                  BigInt(0),
+                ),
+                pool.decimals,
+              ),
               walletBalance: balance.normalized,
             };
           }),
         );
         // TODO: optimize to not use JS number class
         const filtered = promises.filter(
-          (promise) =>
-            promise.walletBalance &&
-            Number(promise.walletBalance) > Number('0'),
+          (promise) => promise.status !== 'PENDING',
         );
         return filtered;
       }

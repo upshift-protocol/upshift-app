@@ -21,6 +21,7 @@ type IUseDepositProps = {
   clearInput?: () => void;
   pool?: IAddress;
   closeModal?: () => void;
+  redemptions?: any; // TODO: add type interface
 };
 
 export default function useWithdraw(props: IUseDepositProps) {
@@ -174,6 +175,17 @@ export default function useWithdraw(props: IUseDepositProps) {
       return;
     }
 
+    const foundRedemption = props.redemptions?.find(
+      (redemption: any) => redemption.amount.raw === normalized.raw,
+    );
+    if (!foundRedemption) {
+      console.error(
+        '#requestWithdraw: could not find redemption in',
+        props?.redemptions,
+      );
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError('');
@@ -185,8 +197,14 @@ export default function useWithdraw(props: IUseDepositProps) {
         address: props.pool,
         abi: ABI_LENDING_POOLS,
         functionName: 'claim',
-        // Day, Month, Year, Amount, Address
-        args: [BigInt(0), BigInt(0), BigInt(0), normalized.raw, address],
+        // Year, Month, Day, Amount, Address
+        args: [
+          foundRedemption.year.raw,
+          foundRedemption.month.raw,
+          foundRedemption.day.raw,
+          normalized.raw,
+          address,
+        ],
       });
       await toast.promise(
         waitForTransactionReceipt(provider, { hash: redeemHash! }),

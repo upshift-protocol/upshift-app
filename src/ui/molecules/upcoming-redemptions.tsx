@@ -1,20 +1,20 @@
-import { toNormalizedBn, type IAddress } from '@augustdigital/sdk';
 import { Skeleton, Stack, Typography } from '@mui/material';
-import { useGasPrice } from 'wagmi';
+import type { INormalizedNumber } from '@augustdigital/sdk';
 import BoxedListAtom from '../atoms/boxed-list';
 
 type IUpcomingRedemptions = {
-  contract?: IAddress;
+  redemptions?: {
+    date: Date;
+    amount: INormalizedNumber;
+  }[];
   loading?: boolean;
+  asset?: string;
 };
 
 export default function UpcomingRedemptionsMolecule(
   props: IUpcomingRedemptions,
 ) {
-  const { data: gasPrice } = useGasPrice();
-  const feeTotal = (gasPrice || BigInt(0)) * BigInt(0);
-
-  function renderValue(value?: string | bigint) {
+  function renderValue(value?: string) {
     if (props.loading)
       return (
         <Skeleton
@@ -30,19 +30,19 @@ export default function UpcomingRedemptionsMolecule(
   function renderList() {
     return (
       <BoxedListAtom
-        items={[
-          {
-            label: 'Gas Fee',
-            value: `${renderValue(toNormalizedBn(feeTotal)?.normalized)}} ETH`,
-          },
-        ]}
+        items={
+          props?.redemptions?.map((redemption) => ({
+            value: `${renderValue(redemption.amount.normalized)} ${props?.asset || ''}`,
+            label: `${renderValue(redemption.date.toLocaleDateString())}`,
+          })) ?? []
+        }
       />
     );
   }
 
   return (
     <Stack gap={1}>
-      <Typography variant="body2">Upcoming Redemptions</Typography>
+      <Typography variant="body2">Available Redemptions</Typography>
       {renderList()}
     </Stack>
   );

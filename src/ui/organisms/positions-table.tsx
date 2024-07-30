@@ -36,6 +36,13 @@ const columns: readonly IColumn[] = [
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
+  {
+    id: 'redeemable',
+    value: 'Redeemable',
+    minWidth: 100,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
 ];
 
 export default function MyPositionsTableOrganism({
@@ -52,6 +59,8 @@ export default function MyPositionsTableOrganism({
     enabled: typeof data === 'undefined' && !loading,
   }) as UseQueryResult<any>;
 
+  console.log('POSITIONS:', positions);
+
   return (
     <Box>
       {title ? (
@@ -64,7 +73,7 @@ export default function MyPositionsTableOrganism({
         data={data ?? positions}
         uidKey="address"
         loading={loading ?? +positionsLoading}
-        action={(rowData) => PoolActionsMolecule({ pool: rowData })}
+        action={(rowData: any) => PoolActionsMolecule({ pool: rowData })}
         pagination={false}
       />
     </Box>

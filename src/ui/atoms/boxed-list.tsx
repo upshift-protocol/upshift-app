@@ -3,7 +3,7 @@ import type { ITheme } from '@/utils/types';
 import { Stack, styled, Typography } from '@mui/material';
 
 type IBoxedListItem = {
-  label: string;
+  label: string | JSX.Element | number;
   value: string | JSX.Element | number;
 };
 
