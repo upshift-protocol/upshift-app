@@ -35,6 +35,7 @@
             "endOfLine": "auto",
           },
         ],
+        "no-nested-ternary": "warn",
         "no-console": "off",
         "import/order": "warn",
         "import/no-extraneous-dependencies": "off",

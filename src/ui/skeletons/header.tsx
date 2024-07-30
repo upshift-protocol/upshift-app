@@ -19,6 +19,7 @@ const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
 
 const HeaderSkeleton = () => {
   const { isDark, toggleTheme } = useThemeMode();
+
   return (
     <header>
       <Box sx={{ flexGrow: 1, mb: '1rem' }}>

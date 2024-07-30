@@ -66,6 +66,7 @@ export default function ModalAtom({
             timeout: 500,
           },
         }}
+        sx={{ zIndex: 88 }}
       >
         <Fade in={open}>
           <Box sx={style}>
