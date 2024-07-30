@@ -1,31 +1,35 @@
-"use client";
+'use client';
 
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { useSwitchChain } from "wagmi";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import CircularProgress from "@mui/material/CircularProgress";
-import Image from "next/image";
-import type { SyntheticEvent } from "react";
-import { truncate } from "@/utils/helpers";
-import React from "react";
-import { Link, Typography } from "@mui/material";
-import Modal from "../atoms/modal";
-import { arbitrum } from "wagmi/chains";
-import { useChainId } from "wagmi";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useSwitchChain,
+  useChainId,
+} from 'wagmi';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import CircularProgress from '@mui/material/CircularProgress';
+import Image from 'next/image';
+import type { SyntheticEvent } from 'react';
+import { truncate } from '@/utils/helpers';
+import React from 'react';
+import { Link, Typography } from '@mui/material';
+import { arbitrum } from 'wagmi/chains';
+import Modal from '../atoms/modal';
 
 const TERMS_OF_SERVICE_URL =
-  "https://docs.augustdigital.io/legal/legal-notices/terms-of-service";
+  'https://docs.augustdigital.io/legal/legal-notices/terms-of-service';
 const PRIVACY_POLICY_URL =
-  "https://docs.augustdigital.io/legal/legal-notices/privacy-policy";
+  'https://docs.augustdigital.io/legal/legal-notices/privacy-policy';
 
 type IConnectWallet = {
   btnFullWidth?: boolean;
-  variant?: "contained" | "text" | "outlined";
-  color?: "primary" | "inherit";
+  variant?: 'contained' | 'text' | 'outlined';
+  color?: 'primary' | 'inherit';
   onClose?: (() => void) | undefined;
 };
 
@@ -36,20 +40,20 @@ interface Connector {
 
 const connectorsList: Connector[] = [
   {
-    name: "Metamask",
-    id: "io.metamask",
+    name: 'Metamask',
+    id: 'io.metamask',
   },
   {
-    name: "Wallet Connect",
-    id: "walletConnect",
+    name: 'Wallet Connect',
+    id: 'walletConnect',
   },
   {
-    name: "Ledger",
-    id: "ledger",
+    name: 'Ledger',
+    id: 'ledger',
   },
   {
-    name: "Coinbase Wallet",
-    id: "coinbaseWalletSDK",
+    name: 'Coinbase Wallet',
+    id: 'coinbaseWalletSDK',
   },
 ];
 
@@ -80,7 +84,7 @@ const ConnectWalletMolecule = ({
     e.preventDefault();
     if (selectedConnector) {
       const selectedWallet = connectors.find(
-        ({ id }) => id === selectedConnector?.id
+        ({ id }) => id === selectedConnector?.id,
       );
       try {
         if (selectedWallet) {
@@ -95,7 +99,7 @@ const ConnectWalletMolecule = ({
           }
         }
       } catch (error) {
-        console.error("user rejected request:", error);
+        console.error('user rejected request:', error);
       }
     }
   }
@@ -106,7 +110,7 @@ const ConnectWalletMolecule = ({
 
   function renderChildren() {
     if (address) return truncate(address);
-    return "Connect Wallet";
+    return 'Connect Wallet';
   }
 
   return (
@@ -114,9 +118,9 @@ const ConnectWalletMolecule = ({
       title="Connect Wallet"
       buttonProps={{
         fullWidth: btnFullWidth ?? false,
-        variant: variant ?? (address ? "contained" : "outlined"),
-        color: color ?? (address ? "primary" : "inherit"),
-        size: "large",
+        variant: variant ?? (address ? 'contained' : 'outlined'),
+        color: color ?? (address ? 'primary' : 'inherit'),
+        size: 'large',
         children: renderChildren(),
         onClick: address ? () => disconnect() : undefined,
       }}
@@ -124,7 +128,7 @@ const ConnectWalletMolecule = ({
     >
       <List>
         {connectorsList
-          .filter((c) => c.id !== "injected")
+          .filter((c) => c.id !== 'injected')
           .map((connector, index) => (
             <ListItem key={`connector-${index}`}>
               <Button
@@ -134,15 +138,15 @@ const ConnectWalletMolecule = ({
                 size="medium"
                 variant={
                   selectedConnector?.id === connector.id
-                    ? "contained"
-                    : "outlined"
+                    ? 'contained'
+                    : 'outlined'
                 }
                 style={{
-                  justifyContent: "start",
+                  justifyContent: 'start',
                   ...(selectedConnector?.id !== connector.id
                     ? {
-                        "&:hover": {
-                          backgroundColor: "#e0e0e0",
+                        '&:hover': {
+                          backgroundColor: '#e0e0e0',
                         },
                       }
                     : {}),
@@ -171,12 +175,12 @@ const ConnectWalletMolecule = ({
               />
             }
             label={
-              <Typography fontSize={"0.875rem"}>
-                I have read and accept{" "}
+              <Typography fontSize={'0.875rem'}>
+                I have read and accept{' '}
                 <Link target="_blank" href={TERMS_OF_SERVICE_URL}>
                   Terms of Service
-                </Link>{" "}
-                and{" "}
+                </Link>{' '}
+                and{' '}
                 <Link target="_blank" href={PRIVACY_POLICY_URL}>
                   Privacy Notice
                 </Link>
@@ -199,7 +203,7 @@ const ConnectWalletMolecule = ({
             color="primary"
             startIcon={connectPending ? <CircularProgress size={24} /> : null}
           >
-            {connectPending ? "Connecting..." : "Connect"}
+            {connectPending ? 'Connecting...' : 'Connect'}
           </Button>
         </ListItem>
       </List>
