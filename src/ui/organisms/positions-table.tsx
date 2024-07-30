@@ -16,15 +16,18 @@ const columns: readonly IColumn[] = [
       children: {
         props: { children },
       },
-    }: any) => (
-      <TableCell>
-        <Chip
-          label={String(children)}
-          color={renderVariant(children)}
-          variant="outlined"
-        />
-      </TableCell>
-    ),
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <Chip
+            label={String(children)}
+            color={renderVariant(children)}
+            variant="outlined"
+          />
+        </TableCell>
+      );
+    },
   },
   { id: 'position', value: 'Position', align: 'right', minWidth: 150 },
   {
