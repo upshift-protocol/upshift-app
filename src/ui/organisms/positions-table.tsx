@@ -59,8 +59,6 @@ export default function MyPositionsTableOrganism({
     enabled: typeof data === 'undefined' && !loading,
   }) as UseQueryResult<any>;
 
-  console.log('POSITIONS:', positions);
-
   return (
     <Box>
       {title ? (
@@ -71,7 +69,7 @@ export default function MyPositionsTableOrganism({
       <TableMolecule
         columns={columns}
         data={data ?? positions}
-        uidKey="address"
+        uidKey="position"
         loading={loading ?? +positionsLoading}
         action={(rowData: any) => PoolActionsMolecule({ pool: rowData })}
         pagination={false}
