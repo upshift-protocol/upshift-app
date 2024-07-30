@@ -1,4 +1,5 @@
 import { INFURA_API_KEY } from '@/utils/constants';
+import { fromUnixTime } from '@/utils/helpers/time';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import {
   ABI_LENDING_POOLS,
@@ -55,21 +56,96 @@ export default function useFetcher({
         const promises = await Promise.all(
           pools.map(async (pool) => {
             let balance = toNormalizedBn(0);
+            const availableRedemptions = [];
             if (provider && wallet) {
-              const bal = await readContract(provider, {
-                account: wallet,
-                address: pool.address,
-                abi: ABI_LENDING_POOLS,
-                functionName: 'balanceOf',
-                args: [wallet],
-              });
+              const [bal, ...rest] = await Promise.all([
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'balanceOf',
+                  args: [wallet],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'getWithdrawalEpoch',
+                  args: [],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'liquidationHour',
+                  args: [],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'maxRedeem',
+                  args: [wallet],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'lagDuration',
+                  args: [],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'getBurnableAmountByReceiver',
+                  args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'getClaimableAmountByReceiver',
+                  args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
+                }),
+                readContract(provider, {
+                  account: wallet,
+                  address: pool.address,
+                  abi: ABI_LENDING_POOLS,
+                  functionName: 'getScheduledTransactionsByDate',
+                  args: [BigInt(2024), BigInt(7), BigInt(31)],
+                }),
+              ]);
+              console.log('');
+              console.log('getWithdrawalEpoch:', rest?.[0]);
+              console.log('liquidationHour:', rest?.[1]);
+              console.log('maxRedeem:', rest?.[2]);
+              console.log('lagDuration:', rest?.[3]);
+              console.log('getBurnableAmountByReceiver:', rest?.[4]);
+              console.log('getClaimableAmountByReceiver:', rest?.[5]);
+              console.log('getScheduledTransactionsByDate:', rest?.[6]);
+
+              if (rest?.[6]?.length) {
+                const unixTimestamps = rest[6];
+
+                availableRedemptions.push(
+                  [
+                    ...unixTimestamps.filter(
+                      (bnUnix) => bnUnix > BigInt(0) && bnUnix,
+                    ),
+                  ].map((unix) => fromUnixTime(Number(unix))),
+                );
+              }
               balance = toNormalizedBn(bal, pool.decimals);
             }
+            console.log('availableRedemptions:', availableRedemptions);
             return {
               ...pool,
               token: pool?.underlying?.symbol,
               position: pool?.name,
               apy: '',
+              status: 'PENDING',
+              availableRedemptions,
               walletBalance: balance.normalized,
             };
           }),

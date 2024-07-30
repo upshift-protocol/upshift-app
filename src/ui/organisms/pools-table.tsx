@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useFetcher from '@/hooks/use-fetcher';
-import PoolActionsMolecule from '../molecules/pool-actions';
+import PoolActionsMolecule from './pool-actions';
 import TableMolecule from '../molecules/table';
 
 const columns: readonly IColumn[] = [

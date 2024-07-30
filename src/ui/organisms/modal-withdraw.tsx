@@ -3,13 +3,14 @@ import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useWithdraw from '@/hooks/use-withdraw';
 import ModalAtom from '../atoms/modal';
-import AssetInputMolecule from './asset-input';
+import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
-import TxFeesAtom from '../atoms/tx-fees';
+import TxFeesAtom from '../molecules/tx-fees';
+import UpcomingRedemptionsMolecule from '../molecules/upcoming-redemptions';
 
 export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
   const inInputProps = useInput(props?.address);
-  const { requestWithdraw, isSuccess, button, expected } = useWithdraw({
+  const { requestWithdraw, isSuccess, button, expected, pool } = useWithdraw({
     ...inInputProps,
     asset: props?.asset,
     pool: props?.address,
@@ -38,12 +39,14 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           value={expected.loading ? ' ' : expected.out.normalized}
           loading={+expected.loading}
         />
+        <UpcomingRedemptionsMolecule />
         <TxFeesAtom
           function="withdraw"
           out={props?.underlying?.address}
           in={props?.address}
           fee={expected.fee.raw}
           loading={+expected.loading}
+          pool={pool}
         />
         <Web3Button
           style={{ marginTop: '1rem' }}

@@ -38,3 +38,7 @@ export const BUTTON_TEXTS = {
   approve: 'Approve Input Amount',
   approving: 'Approving Input Amount',
 };
+
+export const TIMES = {
+  load: 200, // 200ms used for mocking api calls
+};

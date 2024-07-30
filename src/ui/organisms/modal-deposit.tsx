@@ -3,9 +3,9 @@ import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useDeposit from '@/hooks/use-deposit';
 import ModalAtom from '../atoms/modal';
-import AssetInputMolecule from './asset-input';
+import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
-import TxFeesAtom from '../atoms/tx-fees';
+import TxFeesAtom from '../molecules/tx-fees';
 
 export default function DepositModalMolecule(
   props: IPoolWithUnderlying | undefined,

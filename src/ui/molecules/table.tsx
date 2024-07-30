@@ -177,7 +177,11 @@ export default function TableMolecule({
                       return <Typography>{value || '-'}</Typography>;
                     }
                     return (
-                      <TableCell key={column.id} align={column.align}>
+                      <TableCell
+                        component={column?.component}
+                        key={column.id}
+                        align={column.align}
+                      >
                         {loading ? (
                           <Skeleton variant="text" height={36} />
                         ) : (

@@ -1,7 +1,7 @@
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Stack } from '@mui/material';
-import DepositModalMolecule from './deposit-modal';
-import WithdrawModalMolecule from './withdraw-modal';
+import DepositModalMolecule from './modal-deposit';
+import WithdrawModalMolecule from './modal-withdraw';
 
 export default function PoolActionsMolecule({
   pool,
