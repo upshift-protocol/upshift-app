@@ -2,6 +2,7 @@ import type { IColumn } from '@/utils/types';
 import { Box, Chip, TableCell, Typography } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
+import { renderVariant } from '@/utils/helpers/ui';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './pool-actions';
 
@@ -17,7 +18,11 @@ const columns: readonly IColumn[] = [
       },
     }: any) => (
       <TableCell>
-        <Chip label={String(children)} color="primary" variant="outlined" />
+        <Chip
+          label={String(children)}
+          color={renderVariant(children)}
+          variant="outlined"
+        />
       </TableCell>
     ),
   },
@@ -69,7 +74,7 @@ export default function MyPositionsTableOrganism({
       <TableMolecule
         columns={columns}
         data={data ?? positions}
-        uidKey="position"
+        uidKey="address"
         loading={loading ?? +positionsLoading}
         action={(rowData: any) => PoolActionsMolecule({ pool: rowData })}
         pagination={false}

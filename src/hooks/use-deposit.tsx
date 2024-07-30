@@ -1,6 +1,7 @@
 import { queryClient } from '@/config/react-query';
 import Toast from '@/ui/atoms/toast';
-import { BUTTON_TEXTS, TIMES } from '@/utils/constants';
+import { TIMES } from '@/utils/constants/time';
+import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import type { IAddress } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';

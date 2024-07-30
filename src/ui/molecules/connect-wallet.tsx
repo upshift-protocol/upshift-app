@@ -7,7 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
-import { truncate } from '@/utils/helpers';
+import { truncate } from '@/utils/helpers/string';
 import React from 'react';
 import Modal from '../atoms/modal';
 

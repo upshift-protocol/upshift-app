@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
-import { FALLBACK_CHAINID, INFURA_API_KEY } from '../constants';
+import { FALLBACK_CHAINID, INFURA_API_KEY } from '../constants/web3';
 
 // TODO: optimize with viem and remove ethers library once latest loan is deployed
 export async function getAvailableRedemptions(

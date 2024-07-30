@@ -201,3 +201,7 @@ export const secondsInMonth = secondsInYear / 12;
  * @summary Seconds in 1 quarter.
  */
 export const secondsInQuarter = secondsInMonth * 3;
+
+export const TIMES = {
+  load: 200, // 200ms used for mocking api calls
+};

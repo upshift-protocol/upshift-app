@@ -1,4 +1,4 @@
-import { INFURA_API_KEY } from '@/utils/constants';
+import { INFURA_API_KEY } from '@/utils/constants/web3';
 import { getAvailableRedemptions } from '@/utils/helpers/actions';
 import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
 import {

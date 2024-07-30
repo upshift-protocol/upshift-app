@@ -10,14 +10,14 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
-import { truncate } from '@/utils/helpers';
+import { truncate } from '@/utils/helpers/string';
 import { Skeleton, Stack, Typography } from '@mui/material';
 import {
   explorerLink,
   type IAddress,
   type INormalizedNumber,
 } from '@augustdigital/sdk';
-import { FALLBACK_CHAINID } from '@/utils/constants';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount } from 'wagmi';
 import LinkAtom from '../atoms/anchor-link';
 
