@@ -32,6 +32,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      ethers:
+        specifier: ^6.13.2
+        version: 6.13.2(bufferutil@4.0.8)
       next:
         specifier: ^14.1.0
         version: 14.2.4(@babel/core@7.24.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2976,8 +2979,8 @@ packages:
   ethereum-cryptography@2.2.1:
     resolution: {integrity: sha512-r/W8lkHSiTLxUxW8Rf3u4HGB0xQweG2RyETjywylKZSzLWoWAijRz8WCuOtJ6wah+avllXBqZuk29HCCvhEIRg==}
 
-  ethers@6.13.1:
-    resolution: {integrity: sha512-hdJ2HOxg/xx97Lm9HdCWk949BfYqYWpyw4//78SiwOLgASyfrNszfMUNB2joKjvGUdwhHfaiMMFFwacVVoLR9A==}
+  ethers@6.13.2:
+    resolution: {integrity: sha512-9VkriTTed+/27BGuY1s0hf441kqwHJ1wtN2edksEtiRvXx+soxRX3iSXTfFqq2+YwrOqbDoTHjIhQnjJRlzKmg==}
     engines: {node: '>=14.0.0'}
 
   event-target-shim@5.0.1:
@@ -5784,7 +5787,7 @@ snapshots:
       '@augustdigital/abis': 0.1.0-alpha
       '@augustdigital/types': 0.1.0-alpha(bufferutil@4.0.8)
       '@augustdigital/utils': 0.1.0-alpha(bufferutil@4.0.8)
-      ethers: 6.13.1(bufferutil@4.0.8)
+      ethers: 6.13.2(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -5795,14 +5798,14 @@ snapshots:
       '@augustdigital/pools': 0.1.0-alpha(bufferutil@4.0.8)
       '@augustdigital/types': 0.1.0-alpha(bufferutil@4.0.8)
       '@augustdigital/utils': 0.1.0-alpha(bufferutil@4.0.8)
-      ethers: 6.13.1(bufferutil@4.0.8)
+      ethers: 6.13.2(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
   '@augustdigital/types@0.1.0-alpha(bufferutil@4.0.8)':
     dependencies:
-      ethers: 6.13.1(bufferutil@4.0.8)
+      ethers: 6.13.2(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -5810,7 +5813,7 @@ snapshots:
   '@augustdigital/utils@0.1.0-alpha(bufferutil@4.0.8)':
     dependencies:
       '@augustdigital/types': 0.1.0-alpha(bufferutil@4.0.8)
-      ethers: 6.13.1(bufferutil@4.0.8)
+      ethers: 6.13.2(bufferutil@4.0.8)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -7792,7 +7795,7 @@ snapshots:
 
   '@scure/bip32@1.4.0':
     dependencies:
-      '@noble/curves': 1.4.0
+      '@noble/curves': 1.4.2
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.7
 
@@ -9698,7 +9701,7 @@ snapshots:
       '@scure/bip32': 1.4.0
       '@scure/bip39': 1.3.0
 
-  ethers@6.13.1(bufferutil@4.0.8):
+  ethers@6.13.2(bufferutil@4.0.8):
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.2.0

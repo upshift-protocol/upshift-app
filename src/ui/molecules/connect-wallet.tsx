@@ -15,7 +15,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
-import { truncate } from '@/utils/helpers';
+import { truncate } from '@/utils/helpers/string';
 import React from 'react';
 import { Link, Typography } from '@mui/material';
 import { arbitrum } from 'wagmi/chains';

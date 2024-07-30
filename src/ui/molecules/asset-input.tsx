@@ -22,7 +22,7 @@ type IAssetInput = {
   handleInput?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
-  loading?: boolean;
+  loading?: number;
 };
 
 const StyledTextField = styled(TextField)({
@@ -89,14 +89,14 @@ export default function AssetInputMolecule(props: IAssetInput) {
           required={props.type === 'In'}
           value={props.value}
           onChange={props.handleInput}
-          focused={props.loading}
+          focused={!!props.loading}
         />
-        {props.loading && (
+        {props.loading ? (
           <Skeleton
             style={{ position: 'absolute', transform: 'translate(14px, 15px)' }}
             width="120px"
           />
-        )}
+        ) : null}
         {props.type === 'In' && props.handleMax && (
           <Box position="relative">
             <Box position="absolute" left={-72} top={12.5} textAlign={'right'}>

@@ -10,9 +10,15 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress } from 'viem';
-import { truncate } from '@/utils/helpers';
-import { Skeleton, Stack } from '@mui/material';
-import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import { truncate } from '@/utils/helpers/string';
+import { Skeleton, Stack, Typography } from '@mui/material';
+import {
+  explorerLink,
+  type IAddress,
+  type INormalizedNumber,
+} from '@augustdigital/sdk';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { useAccount } from 'wagmi';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -27,8 +33,10 @@ type ITable = {
   data?: ITableItem[];
   uidKey: string;
   action?: (props: any) => JSX.Element;
-  loading?: boolean;
+  loading?: number;
   type?: ITableType;
+  pagination?: boolean;
+  hover?: boolean;
 };
 
 export default function TableMolecule({
@@ -37,8 +45,11 @@ export default function TableMolecule({
   uidKey,
   action,
   loading,
+  pagination = true,
+  hover = true,
   type = 'custom',
 }: ITable) {
+  const { address } = useAccount();
   const router = useRouter();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -78,13 +89,20 @@ export default function TableMolecule({
         return (
           <Stack direction="row" justifyContent="end">
             {extracted.map((e, i) => (
-              <LinkAtom key={`link-${i}-${e}`} href="#">
+              <LinkAtom
+                key={`link-${i}-${e}`}
+                href={explorerLink(e, FALLBACK_CHAINID, 'address')}
+              >
                 {truncate(e)}
               </LinkAtom>
             ))}
           </Stack>
         );
-      return <LinkAtom href="#">{truncate(extracted)}</LinkAtom>;
+      return (
+        <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
+          {truncate(extracted)}
+        </LinkAtom>
+      );
     }
     return extracted;
   };
@@ -93,7 +111,7 @@ export default function TableMolecule({
     if (loading) {
       const mockOb = columns.reduce(
         (acc, curr) => {
-          acc[curr.id] = 'loading';
+          acc[curr.id] = '-';
           return acc;
         },
         {} as Record<string, string>,
@@ -107,7 +125,7 @@ export default function TableMolecule({
       page * rowsPerPage + rowsPerPage,
     );
     return sliced;
-  }, [data, page, rowsPerPage]);
+  }, [data, page, rowsPerPage, address]);
 
   return (
     <Box>
@@ -131,10 +149,10 @@ export default function TableMolecule({
             {rows.map((row, i) => {
               return (
                 <TableRow
-                  hover
+                  hover={hover}
                   role="checkbox"
                   tabIndex={-1}
-                  key={row.name}
+                  key={`row-${row.name || row.id}-${i}`}
                   onClick={(e) => handleRowClick(e, i)}
                   style={{ cursor: 'pointer' }}
                 >
@@ -150,12 +168,20 @@ export default function TableMolecule({
                     function renderValue() {
                       // TODO: optimize
                       if (/^\d+(?:\.\d{1,18})?$/.test(String(value))) {
-                        return `${value} ${underlying?.symbol}`;
+                        return (
+                          <Typography fontFamily={'monospace'}>
+                            {value} {underlying?.symbol}
+                          </Typography>
+                        );
                       }
-                      return value || '-';
+                      return <Typography>{value || '-'}</Typography>;
                     }
                     return (
-                      <TableCell key={column.id} align={column.align}>
+                      <TableCell
+                        component={column?.component}
+                        key={column.id}
+                        align={column.align}
+                      >
                         {loading ? (
                           <Skeleton variant="text" height={36} />
                         ) : (
@@ -173,15 +199,25 @@ export default function TableMolecule({
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data?.length ?? 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {pagination ? (
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data?.length ?? 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      ) : null}
+
+      {!rows.length && (
+        <Stack p={4} justifyContent={'center'} alignItems={'center'}>
+          <Typography fontSize={'14px'} color="GrayText">
+            No positions available
+          </Typography>
+        </Stack>
+      )}
     </Box>
   );
 }

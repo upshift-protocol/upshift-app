@@ -8,9 +8,11 @@ import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/vault-allocation';
 import Stack from '@mui/material/Stack';
-import DepositModalMolecule from '@/ui/molecules/deposit-modal';
-import WithdrawModalMolecule from '@/ui/molecules/withdraw-modal';
+import DepositModalMolecule from '@/ui/organisms/modal-deposit';
+import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
 import { useParams } from 'next/navigation';
+import type { UseQueryResult } from '@tanstack/react-query';
+import MyPositionsTableOrganism from '@/ui/organisms/positions-table';
 
 const PoolPage = () => {
   const params = useParams();
@@ -20,10 +22,12 @@ const PoolPage = () => {
     disabled: !params?.address,
   });
 
+  const { data: positions, isLoading: positionsLoading } = useFetcher({
+    queryKey: ['my-positions'],
+  }) as UseQueryResult<any>;
+
   const pool = data as IPoolWithUnderlying & { loans: IAddress[] };
   const isLoading = !data || poolLoading;
-
-  console.log('POOL:', pool);
 
   function buildCrumbs(): IBreadCumb[] {
     return [
@@ -38,7 +42,7 @@ const PoolPage = () => {
     <Base>
       <Section
         id="earn-table"
-        loading={isLoading}
+        loading={+isLoading}
         title={pool?.name ?? ' '}
         description={
           (pool as any)?.description ??
@@ -55,9 +59,16 @@ const PoolPage = () => {
           </Stack>
         }
       >
-        <Stack direction="column" gap={6} mt={2}>
-          <VaultInfo loading={isLoading} {...pool} />
-          <VaultAllocation loading={isLoading} {...pool} />
+        <Stack gap={3}>
+          <Stack direction="column" gap={6} mt={2}>
+            <VaultInfo loading={isLoading} {...pool} />
+            <VaultAllocation loading={isLoading} {...pool} />
+          </Stack>
+          <MyPositionsTableOrganism
+            title="My Positions"
+            data={positions}
+            loading={+positionsLoading}
+          />
         </Stack>
       </Section>
     </Base>

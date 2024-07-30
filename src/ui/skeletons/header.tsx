@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
 import appConfig from '@/config/app';
-import { STYLE_VARS } from '@/utils/constants';
+import { STYLE_VARS } from '@/utils/constants/ui';
 import { useThemeMode } from '@/stores/theme';
 import Button from '@mui/material/Button';
 import ThemeSwitch from '../atoms/theme-switch';
@@ -51,6 +51,7 @@ const HeaderSkeleton = () => {
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               <LinkAtom
                 href="/"
+                target="_self"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 {appConfig.site_name}

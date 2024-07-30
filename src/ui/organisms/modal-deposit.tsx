@@ -1,15 +1,17 @@
 import Stack from '@mui/material/Stack';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
-import useWithdraw from '@/hooks/use-withdraw';
+import useDeposit from '@/hooks/use-deposit';
 import ModalAtom from '../atoms/modal';
-import AssetInputMolecule from './asset-input';
+import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
-import TxFeesAtom from '../atoms/tx-fees';
+import TxFeesAtom from '../molecules/tx-fees';
 
-export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
-  const inInputProps = useInput(props?.address);
-  const { requestWithdraw, isSuccess, button, expected } = useWithdraw({
+export default function DepositModalMolecule(
+  props: IPoolWithUnderlying | undefined,
+) {
+  const inInputProps = useInput(props?.underlying?.address);
+  const { handleDeposit, isSuccess, button, expected } = useDeposit({
     ...inInputProps,
     asset: props?.asset,
     pool: props?.address,
@@ -17,39 +19,38 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
 
   return (
     <ModalAtom
-      title="Withdraw"
+      title="Deposit"
       buttonProps={{
-        children: 'Withdraw',
+        children: 'Deposit',
         variant: 'outlined',
-        color: 'error',
       }}
+      // TODO: leave modal open for 4 seconds
       onClose={inInputProps.clearInput}
       closeWhen={isSuccess}
     >
-      <Stack spacing={2} position="relative">
+      <Stack gap={2}>
         <AssetInputMolecule
           {...inInputProps}
-          address={props?.address}
+          address={props?.underlying?.address}
           type="In"
         />
         <AssetInputMolecule
-          address={props?.underlying?.address}
+          address={props?.address}
           type="Out"
           value={expected.loading ? ' ' : expected.out.normalized}
-          loading={expected.loading}
+          loading={+expected.loading}
         />
         <TxFeesAtom
-          function="withdraw"
-          out={props?.underlying?.address}
-          in={props?.address}
+          function="deposit"
+          in={props?.underlying?.address}
+          out={props?.address}
           fee={expected.fee.raw}
-          loading={expected.loading}
+          loading={+expected.loading}
         />
         <Web3Button
-          style={{ marginTop: '1rem' }}
+          onClick={handleDeposit}
           size="large"
           variant="contained"
-          onClick={requestWithdraw}
           disabled={button.disabled}
         >
           {button.text}

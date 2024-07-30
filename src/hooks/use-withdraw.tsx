@@ -1,6 +1,7 @@
 import { queryClient } from '@/config/react-query';
 import Toast from '@/ui/atoms/toast';
-import { BUTTON_TEXTS } from '@/utils/constants';
+import { BUTTON_TEXTS } from '@/utils/constants/ui';
+import { TIMES } from '@/utils/constants/time';
 import type { IAddress } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
@@ -11,6 +12,7 @@ import {
   useAccount,
   usePublicClient,
   useReadContract,
+  useReadContracts,
   useWalletClient,
 } from 'wagmi';
 
@@ -20,6 +22,7 @@ type IUseDepositProps = {
   clearInput?: () => void;
   pool?: IAddress;
   closeModal?: () => void;
+  redemptions?: any; // TODO: add type interface
 };
 
 export default function useWithdraw(props: IUseDepositProps) {
@@ -46,11 +49,23 @@ export default function useWithdraw(props: IUseDepositProps) {
     abi: erc20Abi,
     functionName: 'decimals',
   });
-  const { data: symbol } = useReadContract({
-    address: props.asset,
-    abi: erc20Abi,
-    functionName: 'symbol',
+
+  const { data: poolMetaData, isLoading: poolMetaLoading } = useReadContracts({
+    contracts: [
+      {
+        address: props.asset,
+        abi: erc20Abi,
+        functionName: 'symbol',
+      },
+      {
+        address: props.pool,
+        abi: ABI_LENDING_POOLS,
+        functionName: 'lagDuration',
+      },
+    ],
   });
+  const symbol = poolMetaData?.[0]?.result;
+  const lockTime = poolMetaData?.[1]?.result;
 
   // Functions
   async function requestWithdraw() {
@@ -161,6 +176,17 @@ export default function useWithdraw(props: IUseDepositProps) {
       return;
     }
 
+    const foundRedemption = props.redemptions?.find(
+      (redemption: any) => redemption.amount.raw === normalized.raw,
+    );
+    if (!foundRedemption) {
+      console.error(
+        '#requestWithdraw: could not find redemption in',
+        props?.redemptions,
+      );
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError('');
@@ -172,8 +198,14 @@ export default function useWithdraw(props: IUseDepositProps) {
         address: props.pool,
         abi: ABI_LENDING_POOLS,
         functionName: 'claim',
-        // Day, Month, Year, Amount, Address
-        args: [BigInt(0), BigInt(0), BigInt(0), normalized.raw, address],
+        // Year, Month, Day, Amount, Address
+        args: [
+          foundRedemption.year.raw,
+          foundRedemption.month.raw,
+          foundRedemption.day.raw,
+          normalized.raw,
+          address,
+        ],
       });
       await toast.promise(
         waitForTransactionReceipt(provider, { hash: redeemHash! }),
@@ -277,7 +309,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       ..._prev,
       loading: true,
     }));
-    timeoutRef.current = setTimeout(() => simulate(), 500);
+    timeoutRef.current = setTimeout(() => simulate(), TIMES.load);
     return () => clearTimeout(timeoutRef.current);
   }, [props.value]);
 
@@ -302,5 +334,9 @@ export default function useWithdraw(props: IUseDepositProps) {
     error,
     isSuccess,
     expected,
+    pool: {
+      lockTime: toNormalizedBn(lockTime || 0, 0),
+      loading: poolMetaLoading,
+    },
   };
 }

@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { Fragment, type ReactNode } from 'react';
 
-import { STYLE_VARS } from '@/utils/constants';
+import { STYLE_VARS } from '@/utils/constants/ui';
 import type { IBreadCumb } from '@/utils/types';
 import { Skeleton } from '@mui/material';
 import BreadCrumbs from '../atoms/breadcrumbs';
@@ -16,7 +16,7 @@ type ISectionProps = {
   id?: string;
   action?: ReactNode;
   breadcrumbs?: IBreadCumb[];
-  loading?: boolean;
+  loading?: number;
   noYPadding?: boolean;
 };
 
