@@ -1,5 +1,6 @@
 'use client';
 
+import type { Connector } from 'wagmi';
 import {
   useAccount,
   useConnect,
@@ -17,14 +18,11 @@ import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
 import { truncate } from '@/utils/helpers/string';
 import React from 'react';
-import { Link, Typography } from '@mui/material';
+import { Chip, Link, Stack, Typography } from '@mui/material';
 import { arbitrum } from 'wagmi/chains';
+import { LINKS } from '@/utils/constants/links';
+import { useThemeMode } from '@/stores/theme';
 import Modal from '../atoms/modal';
-
-const TERMS_OF_SERVICE_URL =
-  'https://docs.augustdigital.io/legal/legal-notices/terms-of-service';
-const PRIVACY_POLICY_URL =
-  'https://docs.augustdigital.io/legal/legal-notices/privacy-policy';
 
 type IConnectWallet = {
   btnFullWidth?: boolean;
@@ -33,12 +31,7 @@ type IConnectWallet = {
   onClose?: (() => void) | undefined;
 };
 
-interface Connector {
-  name: string;
-  id: string;
-}
-
-const connectorsList: Connector[] = [
+const connectorsList: Partial<Connector>[] = [
   {
     name: 'Metamask',
     id: 'io.metamask',
@@ -46,10 +39,6 @@ const connectorsList: Connector[] = [
   {
     name: 'Wallet Connect',
     id: 'walletConnect',
-  },
-  {
-    name: 'Ledger',
-    id: 'ledger',
   },
   {
     name: 'Coinbase Wallet',
@@ -63,6 +52,7 @@ const ConnectWalletMolecule = ({
   color,
   onClose,
 }: IConnectWallet) => {
+  const { isDark } = useThemeMode();
   const { connectors, connectAsync, isPending: connectPending } = useConnect();
   const { disconnect, isPending: disconnectPending } = useDisconnect();
   const { address } = useAccount();
@@ -70,7 +60,7 @@ const ConnectWalletMolecule = ({
   const { switchChain } = useSwitchChain();
 
   const [selectedConnector, setSelectedConnector] =
-    React.useState<Connector | null>(null);
+    React.useState<Partial<Connector> | null>(null);
   const [agreeToTerms, setAgreeToTerms] = React.useState(false);
 
   // wait for hydration, show loading state
@@ -94,17 +84,20 @@ const ConnectWalletMolecule = ({
           if (onClose) {
             onClose();
           }
-          if (chainId !== arbitrum.id) {
-            await switchChain({ chainId: arbitrum.id });
-          }
         }
       } catch (error) {
         console.error('user rejected request:', error);
+      } finally {
+        if (chainId !== arbitrum.id) {
+          switchChain({ chainId: arbitrum.id });
+        }
+        setSelectedConnector(null);
       }
     }
   }
 
-  function renderIcon(connector: Connector) {
+  function renderIcon(connector: Partial<Connector>) {
+    if (connector?.icon) return connector?.icon;
     return `/wallets/${connector.id?.toLowerCase()}.svg`;
   }
 
@@ -112,6 +105,9 @@ const ConnectWalletMolecule = ({
     if (address) return truncate(address);
     return 'Connect Wallet';
   }
+
+  console.log('CONNECTORS:', connectors);
+  console.log('SELECTED:', selectedConnector);
 
   return (
     <Modal
@@ -127,6 +123,7 @@ const ConnectWalletMolecule = ({
       closeWhen={!!address}
     >
       <List>
+        {/* Default connectors */}
         {connectorsList
           .filter((c) => c.id !== 'injected')
           .map((connector, index) => (
@@ -135,36 +132,52 @@ const ConnectWalletMolecule = ({
                 onClick={() => setSelectedConnector(connector)}
                 disabled={connectPending || disconnectPending}
                 fullWidth
-                size="medium"
-                variant={
-                  selectedConnector?.id === connector.id
-                    ? 'contained'
-                    : 'outlined'
-                }
+                size="large"
+                variant={'outlined'}
                 style={{
                   justifyContent: 'start',
-                  ...(selectedConnector?.id !== connector.id
-                    ? {
-                        '&:hover': {
-                          backgroundColor: '#e0e0e0',
-                        },
-                      }
-                    : {}),
                 }}
                 startIcon={
                   <Image
                     src={renderIcon(connector)}
-                    height={32}
-                    width={32}
-                    alt={connector.name}
+                    height={28}
+                    width={28}
+                    alt={connector.name || connector.id || 'wallet connector'}
                   />
                 }
               >
-                {connector.name}
+                <Stack
+                  direction="row"
+                  justifyContent={'space-between'}
+                  width="100%"
+                >
+                  <Typography
+                    variant="button"
+                    color={
+                      selectedConnector?.id === connector?.id
+                        ? 'primary'
+                        : isDark
+                          ? 'white'
+                          : '#212121'
+                    }
+                  >
+                    {connector.name}
+                  </Typography>
+                  {selectedConnector?.id === connector?.id ? (
+                    <Chip
+                      label="Selected"
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      style={{ fontSize: '12px', justifySelf: 'flex-end' }}
+                    />
+                  ) : null}
+                </Stack>
               </Button>
             </ListItem>
           ))}
-        <ListItem>
+
+        <ListItem style={{ padding: '0 1.5rem', paddingTop: '0.5rem' }}>
           <FormControlLabel
             control={
               <Checkbox
@@ -175,13 +188,13 @@ const ConnectWalletMolecule = ({
               />
             }
             label={
-              <Typography fontSize={'0.875rem'}>
+              <Typography variant="body2">
                 I have read and accept{' '}
-                <Link target="_blank" href={TERMS_OF_SERVICE_URL}>
+                <Link target="_blank" href={LINKS.terms_of_service}>
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link target="_blank" href={PRIVACY_POLICY_URL}>
+                <Link target="_blank" href={LINKS.privacy_policy}>
                   Privacy Notice
                 </Link>
               </Typography>
