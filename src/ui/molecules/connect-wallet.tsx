@@ -83,14 +83,16 @@ const ConnectWalletMolecule = ({
         ({ id }) => id === selectedConnector?.id
       );
       try {
-        await connectAsync({
-          connector: selectedWallet,
-        });
-        if (onClose) {
-          onClose();
-        }
-        if (chainId !== arbitrum.id) {
-          await switchChain({ chainId: arbitrum.id });
+        if (selectedWallet) {
+          await connectAsync({
+            connector: selectedWallet,
+          });
+          if (onClose) {
+            onClose();
+          }
+          if (chainId !== arbitrum.id) {
+            await switchChain({ chainId: arbitrum.id });
+          }
         }
       } catch (error) {
         console.error("user rejected request:", error);
