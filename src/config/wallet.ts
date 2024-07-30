@@ -1,4 +1,4 @@
-import { NETWORK } from '@/utils/constants';
+import { NETWORK } from '@/utils/constants/web3';
 import { http, createConfig } from 'wagmi';
 import { arbitrum, localhost } from 'wagmi/chains';
 import { injected, walletConnect } from 'wagmi/connectors';

@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from 'react';
-import { FALLBACK_CHAINID } from '@/utils/constants';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import useLoans from '@/hooks/use-loans';
 import LinkAtom from '../atoms/anchor-link';
 

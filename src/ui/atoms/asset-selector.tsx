@@ -1,5 +1,6 @@
 import { useThemeMode } from '@/stores/theme';
-import { FALLBACK_TOKEN_IMG, STYLE_VARS } from '@/utils/constants';
+import { FALLBACK_TOKEN_IMG } from '@/utils/constants/web3';
+import { STYLE_VARS } from '@/utils/constants/ui';
 import type { IAssetDisplay } from '@/utils/types';
 import { Box, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';

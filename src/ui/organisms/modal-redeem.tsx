@@ -1,56 +1,55 @@
 import Stack from '@mui/material/Stack';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
-import useInput from '@/hooks/use-input';
 import useWithdraw from '@/hooks/use-withdraw';
 import ModalAtom from '../atoms/modal';
-import AssetInputMolecule from './asset-input';
+import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
-import TxFeesAtom from '../atoms/tx-fees';
+import TxFeesAtom from '../molecules/tx-fees';
+import UpcomingRedemptionsMolecule from '../molecules/upcoming-redemptions';
 
-export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
-  const inInputProps = useInput(props?.address);
-  const { requestWithdraw, isSuccess, button, expected } = useWithdraw({
-    ...inInputProps,
+export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
+  const { handleWithdraw, isSuccess, button, expected, pool } = useWithdraw({
     asset: props?.asset,
     pool: props?.address,
+    value: (props as any)?.redeemable?.normalized, // TODO: add type interface
+    redemptions: (props as any)?.availableRedemptions,
   });
 
   return (
     <ModalAtom
-      title="Withdraw"
+      title="Redeem"
       buttonProps={{
-        children: 'Withdraw',
+        children: 'Redeem',
         variant: 'outlined',
-        color: 'error',
+        color: 'warning',
       }}
-      onClose={inInputProps.clearInput}
       closeWhen={isSuccess}
     >
       <Stack spacing={2} position="relative">
         <AssetInputMolecule
-          {...inInputProps}
           address={props?.address}
-          type="In"
-        />
-        <AssetInputMolecule
-          address={props?.underlying?.address}
           type="Out"
-          value={expected.loading ? ' ' : expected.out.normalized}
-          loading={+expected.loading}
+          value={(props as any)?.redeemable?.normalized}
+        />
+        <UpcomingRedemptionsMolecule
+          redemptions={(props as any)?.availableRedemptions}
+          loading={pool?.loading}
+          asset={props?.symbol}
         />
         <TxFeesAtom
-          function="withdraw"
+          function="claim"
           out={props?.underlying?.address}
           in={props?.address}
           fee={expected.fee.raw}
           loading={+expected.loading}
+          pool={pool}
         />
         <Web3Button
           style={{ marginTop: '1rem' }}
           size="large"
           variant="contained"
-          onClick={requestWithdraw}
-          disabled={button.disabled}
+          onClick={handleWithdraw}
+          disabled={button.disabled || pool?.loading}
         >
           {button.text}
         </Web3Button>

@@ -1,10 +1,10 @@
-import { truncate } from '@/utils/helpers';
+import { truncate } from '@/utils/helpers/string';
 import { explorerLink, type IPool } from '@augustdigital/sdk';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { FALLBACK_CHAINID } from '@/utils/constants';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 

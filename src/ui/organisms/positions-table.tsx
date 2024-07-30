@@ -1,12 +1,31 @@
 import type { IColumn } from '@/utils/types';
-import { Box, Typography } from '@mui/material';
+import { Box, Chip, TableCell, Typography } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
+import { renderVariant } from '@/utils/helpers/ui';
 import TableMolecule from '../molecules/table';
-import PoolActionsMolecule from '../molecules/pool-actions';
+import PoolActionsMolecule from './pool-actions';
 
 const columns: readonly IColumn[] = [
   { id: 'token', value: 'Token', minWidth: 150 },
+  {
+    id: 'status',
+    value: 'Status',
+    minWidth: 150,
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => (
+      <TableCell>
+        <Chip
+          label={String(children)}
+          color={renderVariant(children)}
+          variant="outlined"
+        />
+      </TableCell>
+    ),
+  },
   { id: 'position', value: 'Position', align: 'right', minWidth: 150 },
   {
     id: 'apy',
@@ -18,6 +37,13 @@ const columns: readonly IColumn[] = [
   {
     id: 'walletBalance',
     value: 'Supplied',
+    minWidth: 100,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
+  {
+    id: 'redeemable',
+    value: 'Redeemable',
     minWidth: 100,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
@@ -50,7 +76,7 @@ export default function MyPositionsTableOrganism({
         data={data ?? positions}
         uidKey="address"
         loading={loading ?? +positionsLoading}
-        action={(rowData) => PoolActionsMolecule({ pool: rowData })}
+        action={(rowData: any) => PoolActionsMolecule({ pool: rowData })}
         pagination={false}
       />
     </Box>

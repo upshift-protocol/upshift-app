@@ -1,5 +1,6 @@
-import { INFURA_API_KEY } from '@/utils/constants';
-import type { IAddress, IChainId } from '@augustdigital/sdk';
+import { INFURA_API_KEY } from '@/utils/constants/web3';
+import { getAvailableRedemptions } from '@/utils/helpers/actions';
+import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
 import {
   ABI_LENDING_POOLS,
   getLendingPool,
@@ -56,29 +57,97 @@ export default function useFetcher({
           pools.map(async (pool) => {
             let balance = toNormalizedBn(0);
             if (provider && wallet) {
-              const bal = await readContract(provider, {
+              const args = {
                 account: wallet,
                 address: pool.address,
                 abi: ABI_LENDING_POOLS,
-                functionName: 'balanceOf',
-                args: [wallet],
-              });
+              };
+              const [bal, ...rest] = await Promise.all([
+                readContract(provider, {
+                  ...args,
+                  functionName: 'balanceOf',
+                  args: [wallet],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'getWithdrawalEpoch',
+                  args: [],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'liquidationHour',
+                  args: [],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'maxRedeem',
+                  args: [wallet],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'lagDuration',
+                  args: [],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'getBurnableAmountByReceiver',
+                  args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'getClaimableAmountByReceiver',
+                  args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
+                }),
+                readContract(provider, {
+                  ...args,
+                  functionName: 'getScheduledTransactionsByDate',
+                  args: [BigInt(2024), BigInt(7), BigInt(31)],
+                }),
+              ]);
+              console.log('');
+              console.log('getWithdrawalEpoch:', rest?.[0]);
+              console.log('liquidationHour:', rest?.[1]);
+              console.log('maxRedeem:', rest?.[2]);
+              console.log('lagDuration:', rest?.[3]);
+              console.log('getBurnableAmountByReceiver:', rest?.[4]);
+              console.log('getClaimableAmountByReceiver:', rest?.[5]);
+              console.log('getScheduledTransactionsByDate:', rest?.[6]);
+
+              // TODO: optimize with viem and remove ethers library once latest loan is deployed
               balance = toNormalizedBn(bal, pool.decimals);
+            }
+
+            const availableRedemptions = await getAvailableRedemptions(
+              pool.address,
+              wallet,
+            );
+
+            function renderStatus() {
+              if (availableRedemptions.length) return 'REDEEM';
+              if (balance.raw > BigInt(0)) return 'STAKED';
+              return 'PENDING';
             }
             return {
               ...pool,
               token: pool?.underlying?.symbol,
               position: pool?.name,
               apy: '',
+              status: renderStatus(),
+              availableRedemptions,
+              redeemable: toNormalizedBn(
+                availableRedemptions.reduce(
+                  (acc, curr) => acc + (curr.amount as INormalizedNumber).raw,
+                  BigInt(0),
+                ),
+                pool.decimals,
+              ),
               walletBalance: balance.normalized,
             };
           }),
         );
         // TODO: optimize to not use JS number class
         const filtered = promises.filter(
-          (promise) =>
-            promise.walletBalance &&
-            Number(promise.walletBalance) > Number('0'),
+          (promise) => promise.status !== 'PENDING',
         );
         return filtered;
       }
