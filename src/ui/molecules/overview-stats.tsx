@@ -34,14 +34,14 @@ const OverviewStatsMolecule = ({
   return (
     <ResponsiveStack>
       <CustomStat
-        value={`${totalSupplied} USDC`}
+        value={`${totalSupplied} rsETH`}
         unit="Total Deposits"
         variant="outlined"
         loading={loading}
       />
       <CustomStat
         loading={loading}
-        value="0.0 USDC"
+        value="0.0 rsETH"
         unit="Total Borrowed"
         variant="outlined"
       />

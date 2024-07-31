@@ -14,3 +14,6 @@ export const STYLE_VARS = {
   descriptionWidth: '800px',
   assetDivWidth: '60px',
 };
+
+export const FALLBACK_TOKEN_IMG =
+  'https://etherscan.io/images/main/empty-token.png';

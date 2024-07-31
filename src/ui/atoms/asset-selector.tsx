@@ -1,12 +1,9 @@
 import { useThemeMode } from '@/stores/theme';
-import { FALLBACK_TOKEN_IMG } from '@/utils/constants/web3';
-import { STYLE_VARS } from '@/utils/constants/ui';
 import type { IAssetDisplay } from '@/utils/types';
-import { Box, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import Image from 'next/image';
 import { erc20Abi } from 'viem';
 import { useReadContract } from 'wagmi';
+import AssetDisplay from './asset-display';
 
 type IAssetSelector = IAssetDisplay & {
   forInput?: boolean;
@@ -15,7 +12,7 @@ type IAssetSelector = IAssetDisplay & {
 export default function AssetSelectorAtom(props: IAssetSelector) {
   const { isDark } = useThemeMode();
 
-  const { data } = useReadContract({
+  const { data: symbol } = useReadContract({
     address: props.address,
     abi: erc20Abi,
     functionName: 'symbol',
@@ -35,22 +32,13 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
         borderBottomRightRadius: props.forInput ? '4px' : undefined,
       }}
     >
-      <Image
-        src={
-          props?.img ??
-          `/assets/${data?.toLowerCase()}.svg` ??
-          FALLBACK_TOKEN_IMG
-        }
-        alt={props?.symbol ?? 'etherscan generic token'}
-        height={24}
-        width={24}
-        style={{ borderRadius: '50%' }}
+      <AssetDisplay
+        address={props.address}
+        img={props.img || `/assets/tokens/${props.symbol ?? symbol}.png`}
+        symbol={props.symbol ?? symbol}
+        truncate
+        imgFallback
       />
-      <Box width={STYLE_VARS.assetDivWidth}>
-        <Typography variant="body1" noWrap>
-          {props.symbol ?? data ?? 'N/A'}
-        </Typography>
-      </Box>
     </Stack>
   );
 }

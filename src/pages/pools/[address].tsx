@@ -1,8 +1,7 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-// import { useRouter } from 'next/router';
-import type { IAddress, IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IAddress } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -17,17 +16,16 @@ import MyPositionsTableOrganism from '@/ui/organisms/positions-table';
 const PoolPage = () => {
   const params = useParams();
 
-  const { data, isLoading: poolLoading } = useFetcher({
+  const { data: pool, isLoading: poolLoading } = useFetcher({
     queryKey: ['lending-pool', (params?.address as IAddress)!],
     disabled: !params?.address,
-  });
+  }) as UseQueryResult<any>;
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
   }) as UseQueryResult<any>;
 
-  const pool = data as IPoolWithUnderlying & { loans: IAddress[] };
-  const isLoading = !data || poolLoading;
+  const isLoading = !pool || poolLoading;
 
   function buildCrumbs(): IBreadCumb[] {
     return [
@@ -46,12 +44,17 @@ const PoolPage = () => {
         title={pool?.name ?? ' '}
         description={
           (pool as any)?.description ??
-          `${isLoading ? 'This' : 'The'} ${pool?.name ?? ''} vault aims to optimize yields by lending USDC against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
+          `${isLoading ? 'This' : 'The'} ${pool?.name ?? ''} vault aims to optimize yields by lending rsETH against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
         }
         breadcrumbs={buildCrumbs()}
         action={
           <Stack direction="column" alignItems={'end'} gap={2}>
-            <AssetDisplay />
+            <AssetDisplay
+              symbol={pool?.underlying?.symbol}
+              img={`/assets/tokens/${pool?.underlying?.symbol}.png`}
+              variant="glass"
+              address={pool?.underlying?.address}
+            />
             <Stack direction={'row'} gap={1}>
               <DepositModalMolecule {...pool} />
               <WithdrawModalMolecule {...pool} />
