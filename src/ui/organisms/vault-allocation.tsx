@@ -45,7 +45,7 @@ const columns: GridColDef<any[number]>[] = [
     editable: true,
     renderCell({ value }) {
       if (!value) return '-';
-      return `${value} USDC`;
+      return `${value} rsETH`;
     },
   },
   {

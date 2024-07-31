@@ -22,6 +22,7 @@ export default function LinkAtom(props: ILinkAtom) {
       href={props.href}
       target={props.target || '_blank'}
       component={Link}
+      rel={!props.target ? 'noreferrer' : undefined}
     >
       {props.children}
     </MUILink>

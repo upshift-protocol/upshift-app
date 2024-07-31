@@ -1,7 +1,7 @@
 import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
 import { Typography } from '@mui/material';
-import Link from 'next/link';
+import LinkAtom from './anchor-link';
 
 type IToast = {
   type?: 'tx';
@@ -15,9 +15,9 @@ export default function Toast({ hash, msg, chain = 42161 }: IToast) {
     return (
       <Typography>
         {msg}{' '}
-        <Link target="_blank" href={explorerLink(hash, chain, 'tx')}>
+        <LinkAtom href={explorerLink(hash, chain, 'tx')}>
           {truncate(hash)}
-        </Link>
+        </LinkAtom>
       </Typography>
     );
   }

@@ -39,4 +39,8 @@ export type IAssetDisplay = {
   symbol?: string;
   img?: string;
   address?: IAddress;
+  variant?: 'glass' | 'default';
+  imgSize?: number;
+  truncate?: boolean;
+  imgFallback?: boolean;
 };

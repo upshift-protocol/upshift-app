@@ -24,7 +24,7 @@ const columns: readonly IColumn[] = [
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: 'getLoansOperator',
+    id: 'loansOperator',
     value: 'Strategist',
     minWidth: 100,
   },

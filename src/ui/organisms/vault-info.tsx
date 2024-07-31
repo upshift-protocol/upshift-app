@@ -52,12 +52,12 @@ export default function VaultInfo(
               <LinkAtom
                 overflow="hidden"
                 href={explorerLink(
-                  props?.getLoansOperator,
+                  props?.loansOperator,
                   FALLBACK_CHAINID,
                   'address',
                 )}
               >
-                {truncate(props?.getLoansOperator, 6)}
+                {truncate(props?.loansOperator, 6)}
               </LinkAtom>
             )}
           </Stack>
@@ -72,7 +72,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <AmountDisplay symbol="USDC">
+              <AmountDisplay symbol="rsETH">
                 {props?.totalSupply?.normalized}
               </AmountDisplay>
             )}
@@ -116,7 +116,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <AmountDisplay symbol={'USDC'}>
+              <AmountDisplay symbol={'rsETH'}>
                 {props?.totalAssets?.normalized}
               </AmountDisplay>
             )}

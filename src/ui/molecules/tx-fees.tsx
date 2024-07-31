@@ -37,6 +37,7 @@ export default function TxFeesAtom(props: ITxFees) {
             />
           );
         if (value && typeof value === 'string') {
+          if (value === '0') return 'Immediately';
           return `${secondsToHours(value)} hours`;
         }
         return 'Error getting lock period';
