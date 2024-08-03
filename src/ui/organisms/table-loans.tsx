@@ -4,17 +4,29 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from 'react';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import useLoans from '@/hooks/use-loans';
+import { zeroAddress } from 'viem';
 import LinkAtom from '../atoms/anchor-link';
+import AmountDisplay from '../atoms/amount-display';
+
+// const readFunctions = [
+//   'currentApr',
+//   'collateralToken',
+//   'effectiveLoanAmount',
+//   'loanAmountInPrincipalTokens',
+//   'principalAmount',
+//   'principalRepaid',
+//   'principalToken',
+//   'loanState',
+// ];
 
 const columns: GridColDef<any[number]>[] = [
   {
     field: 'address',
     headerName: 'Loan Address',
     description: 'The vault address.',
-    minWidth: 200,
+    flex: 2,
     editable: false,
     renderCell({ value }) {
       if (!value) return '-';
@@ -26,10 +38,26 @@ const columns: GridColDef<any[number]>[] = [
     },
   },
   {
+    field: 'collateral',
+    headerName: 'Collateral',
+    flex: 2,
+    editable: true,
+    renderCell({ value }) {
+      if (!value) return '-';
+      if (value === zeroAddress) return 'ETH';
+      return (
+        <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
+          {truncate(value)}
+        </LinkAtom>
+      );
+    },
+  },
+  {
     field: 'allocation',
     headerName: 'Allocation',
     description: 'Proportion of the vault supply allocated to this market.',
-    minWidth: 100,
+    flex: 1,
+    type: 'number',
     editable: true,
     renderCell({ value }) {
       if (!value) return '-';
@@ -41,28 +69,34 @@ const columns: GridColDef<any[number]>[] = [
     headerName: 'Vault Supply',
     description: 'The amount supplied to the market',
     type: 'number',
-    minWidth: 200,
+    flex: 2,
     editable: true,
     renderCell({ value }) {
       if (!value) return '-';
-      return `${value} rsETH`;
+      return (
+        <Stack alignItems="end" justifyContent="center" height="100%">
+          <AmountDisplay symbol={'rsETH'} round size="14px">
+            {value}
+          </AmountDisplay>
+        </Stack>
+      );
     },
   },
   {
-    field: 'collateral',
-    headerName: 'Collateral',
+    field: 'currentApr',
+    headerName: 'APR',
+    flex: 1,
     type: 'number',
-    minWidth: 200,
-    editable: true,
+    description: 'The borrowing interest rate paid back to the pool.',
     renderCell({ value }) {
       if (!value) return '-';
-      return '-';
+      return `${value}%`;
     },
   },
   {
     field: 'liquidationLTV',
     headerName: 'Liquidation LTV',
-    minWidth: 200,
+    flex: 1,
     type: 'number',
     description:
       'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
@@ -76,28 +110,29 @@ const columns: GridColDef<any[number]>[] = [
 export default function VaultAllocation(
   props: (IPoolWithUnderlying | undefined) & { loading: boolean },
 ) {
-  useLoans();
-  // TODO: deploy a loan and get attributes based on it here
-  const rows = useMemo(() => {
-    if (!props?.loans?.length) return [];
-    const loansWithDataa = props.loans?.map((l, i) => ({
+  const { loans, isLoading } = useLoans(props?.loans);
+
+  const rowsFormatter = () => {
+    if (!loans?.length) return [];
+    const loansWithDataa = loans?.map((l, i) => ({
       id: i,
-      address: l,
-      allocation: '100',
-      supply: '0.0',
-      collateral: '0.0',
-      liquidationLTV: '100',
+      address: l?.address,
+      allocation: '',
+      supply: l?.principalAmount?.normalized,
+      collateral: l?.collateralToken,
+      liquidationLTV: '',
+      currentApr: l?.currentApr?.normalized,
     }));
     return loansWithDataa;
-  }, [props?.loans]);
+  };
 
   return (
     <Stack gap={3} direction="column">
       <Typography variant="h6">Vault Allocation Breakdown</Typography>
 
       <DataGrid
-        loading={props.loading}
-        rows={rows}
+        loading={props.loading || isLoading}
+        rows={rowsFormatter()}
         columns={columns}
         autoHeight
         initialState={{

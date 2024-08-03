@@ -5,20 +5,21 @@ import type { IAddress } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
-import VaultAllocation from '@/ui/organisms/vault-allocation';
+import VaultAllocation from '@/ui/organisms/table-loans';
 import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
 import { useParams } from 'next/navigation';
 import type { UseQueryResult } from '@tanstack/react-query';
-import MyPositionsTableOrganism from '@/ui/organisms/positions-table';
+import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
+import { isAddress } from 'viem';
 
 const PoolPage = () => {
   const params = useParams();
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
     queryKey: ['lending-pool', (params?.address as IAddress)!],
-    disabled: !params?.address,
+    enabled: !!params?.address && isAddress(params.address as string),
   }) as UseQueryResult<any>;
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
@@ -77,5 +78,26 @@ const PoolPage = () => {
     </Base>
   );
 };
+
+// export const getStaticPaths = (async () => {
+//   return {
+//     paths: [
+//       {
+//         params: {
+//           name: 'next.js',
+//         },
+//       }, // See the "paths" section below
+//     ],
+//     fallback: true, // false or "blocking"
+//   }
+// }) satisfies GetStaticPaths
+
+// export const getStaticProps = (async (context) => {
+//   const res = await fetch('https://api.github.com/repos/vercel/next.js')
+//   const repo = await res.json()
+//   return { props: { repo } }
+// }) satisfies GetStaticProps<{
+//   repo: Repo
+// }>
 
 export default PoolPage;

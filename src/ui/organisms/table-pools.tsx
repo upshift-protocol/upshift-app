@@ -1,32 +1,55 @@
 import type { IColumn } from '@/utils/types';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, TableCell, Stack } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import { type IPoolWithUnderlying } from '@augustdigital/sdk';
 import useFetcher from '@/hooks/use-fetcher';
-import PoolActionsMolecule from './pool-actions';
+import PoolActionsMolecule from './actions-pool';
 import TableMolecule from '../molecules/table';
+import AmountDisplay from '../atoms/amount-display';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 150 },
-  { id: 'totalSupply', value: 'Total Supply', align: 'right', minWidth: 150 },
+  { id: 'name', value: 'Name', flex: 2 },
+  {
+    id: 'totalSupply',
+    value: 'Total Supply',
+    align: 'right',
+    flex: 2,
+    format: (value: number) => value.toLocaleString('en-US'),
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <Stack alignItems="end">
+            <AmountDisplay symbol={children?.[2]} round>
+              {children?.[0]}
+            </AmountDisplay>
+          </Stack>
+        </TableCell>
+      );
+    },
+  },
   {
     id: 'apy',
     value: 'Net APY',
-    minWidth: 100,
+    flex: 1,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'collateral',
     value: 'Collateral',
-    minWidth: 100,
+    flex: 2,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'loansOperator',
     value: 'Strategist',
-    minWidth: 100,
+    flex: 1,
   },
 ];
 

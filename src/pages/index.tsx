@@ -1,7 +1,7 @@
 import useFetcher from '@/hooks/use-fetcher';
 import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
-import PoolsTableOrganism from '@/ui/organisms/pools-table';
-import MyPositionsTableOrganism from '@/ui/organisms/positions-table';
+import PoolsTableOrganism from '@/ui/organisms/table-pools';
+import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';

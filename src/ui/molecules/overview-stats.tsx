@@ -1,7 +1,12 @@
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
-import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
-import { useMemo } from 'react';
+import Tooltip from '@mui/material/Tooltip';
+import {
+  toNormalizedBn,
+  round,
+  type IPoolWithUnderlying,
+} from '@augustdigital/sdk';
+import { Fragment, useMemo } from 'react';
 import CustomStat from '../atoms/stat';
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -29,19 +34,47 @@ const OverviewStatsMolecule = ({
       total += totalSupply.raw;
     });
     // TODO: return USD amount
-    return toNormalizedBn(total, 6).normalized;
+    return toNormalizedBn(total).normalized;
+  }, [pools?.length]);
+
+  const totalBorrowed = useMemo(() => {
+    if (!pools?.length) return '0.0';
+    let total = BigInt(0);
+    pools.forEach((_props) => {
+      total += BigInt(0);
+    });
+    // TODO: return USD amount
+    return toNormalizedBn(total).normalized;
   }, [pools?.length]);
   return (
     <ResponsiveStack>
       <CustomStat
-        value={`${totalSupplied} rsETH`}
+        value={
+          <Tooltip
+            title={totalSupplied}
+            disableHoverListener={totalSupplied === '0'}
+            placement="top"
+            arrow
+          >
+            <Fragment>{`${round(totalSupplied)} ETH`}</Fragment>
+          </Tooltip>
+        }
         unit="Total Deposits"
         variant="outlined"
         loading={loading}
       />
       <CustomStat
         loading={loading}
-        value="0.0 rsETH"
+        value={
+          <Tooltip
+            title={totalBorrowed}
+            disableHoverListener={totalBorrowed === '0'}
+            placement="top"
+            arrow
+          >
+            <Fragment>{`${round(totalBorrowed)} ETH`}</Fragment>
+          </Tooltip>
+        }
         unit="Total Borrowed"
         variant="outlined"
       />

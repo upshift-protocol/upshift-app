@@ -1,5 +1,5 @@
 import { truncate } from '@/utils/helpers/string';
-import { explorerLink, type IPool } from '@augustdigital/sdk';
+import { explorerLink, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
@@ -9,7 +9,7 @@ import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
-  props: (IPool | undefined) & { loading: boolean },
+  props: (IPoolWithUnderlying | undefined) & { loading: boolean },
 ) {
   return (
     <Stack gap={2} direction="column">
@@ -72,7 +72,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <AmountDisplay symbol="rsETH">
+              <AmountDisplay symbol={props?.underlying?.symbol} round>
                 {props?.totalSupply?.normalized}
               </AmountDisplay>
             )}
@@ -116,7 +116,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <AmountDisplay symbol={'rsETH'}>
+              <AmountDisplay symbol={props?.underlying?.symbol} round>
                 {props?.totalAssets?.normalized}
               </AmountDisplay>
             )}

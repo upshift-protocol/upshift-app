@@ -106,9 +106,6 @@ const ConnectWalletMolecule = ({
     return 'Connect Wallet';
   }
 
-  console.log('CONNECTORS:', connectors);
-  console.log('SELECTED:', selectedConnector);
-
   return (
     <Modal
       title="Connect Wallet"

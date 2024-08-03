@@ -3,7 +3,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import * as React from 'react';
 
 export interface StatProps {
-  value: number | string;
+  value: number | string | React.ReactNode;
   unit: string;
   variant?: 'outlined';
   loading?: number;

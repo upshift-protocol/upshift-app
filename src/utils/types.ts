@@ -27,6 +27,7 @@ export interface IColumn {
   align?: 'right';
   format?: (value: number) => string;
   component?: any;
+  flex?: number;
 }
 
 export type IBreadCumb = {

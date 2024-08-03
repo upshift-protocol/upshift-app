@@ -1,16 +1,19 @@
-import type { IAddress } from '@augustdigital/sdk';
-import { ABI_LOAN } from '@augustdigital/sdk';
-import { useEffect } from 'react';
+import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import { ABI_LOAN, toNormalizedBn } from '@augustdigital/sdk';
+import { useMemo } from 'react';
 import { useReadContracts } from 'wagmi';
 
-// type IVaultAllocationLoan = {
-//   id: number;
-//   address: IAddress;
-//   allocation: string;
-//   supply: string;
-//   collateral: string;
-//   liquidationLTV: string;
-// };
+type IPoolLoan = {
+  currentApr: INormalizedNumber;
+  collateralToken: IAddress;
+  effectiveLoanAmount: INormalizedNumber;
+  loanAmountInPrincipalTokens: INormalizedNumber;
+  principalAmount: INormalizedNumber;
+  principalRepaid: INormalizedNumber;
+  principalToken: IAddress;
+  loanState: number;
+  address: IAddress;
+};
 
 const readFunctions = [
   'currentApr',
@@ -23,18 +26,10 @@ const readFunctions = [
   'loanState',
 ];
 
-const loanz = [
-  '0xaE066F58924c1396DaB12EBC86f011b391F1865c',
-  // '0xD98af2187c03802C1390b6378AE15294C23038c2',
-  // '0xEeE4414151de8BE6b537a33d57380461d63EE680',
-];
-
 export default function useLoans(loanAddresses?: IAddress[]) {
-  // const [loans, setLoans] = useState<IVaultAllocationLoan[]>([]);
+  const list = loanAddresses?.length ? loanAddresses : [];
 
-  const list = loanAddresses?.length ? loanAddresses : loanz;
-
-  const { data: loansWithData } = useReadContracts({
+  const { data: loansWithData, isLoading } = useReadContracts({
     contracts: readFunctions
       .map((func) => {
         return list.map((l) => ({
@@ -46,45 +41,27 @@ export default function useLoans(loanAddresses?: IAddress[]) {
       .flat(),
   });
 
-  useEffect(() => {
+  const loans = useMemo(() => {
+    if (isLoading) return [];
     const reads = list.map((_loan) => {
-      return readFunctions.map((func) => ({
-        [func]: loansWithData,
-      }));
+      return readFunctions.reduce((acc, curr, i) => {
+        const returnValue = (val?: any) => {
+          if (curr === 'currentApr') return toNormalizedBn(val, 2); // TODO: is this correct for 1000n BigInt
+          if (typeof val === 'bigint') return toNormalizedBn(val); // TODO: add decimals
+          return val;
+        };
+        return {
+          ...acc,
+          address: _loan,
+          [curr]: returnValue(((loansWithData as any)?.[i] as any)?.result),
+        };
+      }, {} as IPoolLoan);
     });
+    return reads;
+  }, [loansWithData as any, isLoading]);
 
-    // const reads = readFunctions.map((func) => {
-    //   return list.map((listItem, i) => ({
-    //     [func]:
-    //   }));
-    // });
-
-    console.log(reads);
-
-    // const returnObj = loanAddresses.map((loan, i) => {
-    //   return {
-    //     id: Math.floor(i % readFunctions.length),
-    //     address: loan,
-    //     allocation: loansWithData[i]
-    //   }
-    // })
-    // const continuousList = loansWithData
-    //   .map((readCall, i) => {
-    //     if (readCall.result || String(readCall.result) === '{}') {
-    //       return readCall.result as string | number | bigint;
-    //     }
-    //     return undefined;
-    //   })
-    // const loansAmount = loansWithData?.length;
-    // const loansMatrix = [];
-    // continuousList.forEach((item, i) => {
-    //   if
-    // })
-
-    // setLoans(returnObj);
-  }, [loansWithData]);
-
-  // return {
-  //   loans,
-  // };
+  return {
+    loans,
+    isLoading,
+  };
 }

@@ -19,7 +19,7 @@ type IFetchTypes = 'lending-pools' | 'lending-pool';
 interface IUseFetcher extends UndefinedInitialDataOptions {
   queryKey: (IFetchTypes | string)[];
   initialData?: any;
-  disabled?: boolean;
+  enabled?: boolean;
   formatter?: (data: any) => any;
 }
 
@@ -145,7 +145,6 @@ export default function useFetcher({
             };
           }),
         );
-        // TODO: optimize to not use JS number class
         const filtered = promises.filter(
           (promise) => promise.status !== 'PENDING',
         );

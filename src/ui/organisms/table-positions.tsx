@@ -3,15 +3,16 @@ import { Box, Chip, TableCell, Typography } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { renderVariant } from '@/utils/helpers/ui';
+import { round } from '@augustdigital/sdk';
 import TableMolecule from '../molecules/table';
-import PoolActionsMolecule from './pool-actions';
+import PoolActionsMolecule from './actions-pool';
 
 const columns: readonly IColumn[] = [
-  { id: 'token', value: 'Token', minWidth: 150 },
+  { id: 'token', value: 'Token', flex: 2 },
   {
     id: 'status',
     value: 'Status',
-    minWidth: 150,
+    flex: 1,
     component: ({
       children: {
         props: { children },
@@ -29,27 +30,27 @@ const columns: readonly IColumn[] = [
       );
     },
   },
-  { id: 'position', value: 'Position', align: 'right', minWidth: 150 },
+  { id: 'position', value: 'Position', align: 'right', flex: 2 },
   {
     id: 'apy',
     value: 'Net APY',
-    minWidth: 100,
+    flex: 1,
     align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
+    format: (value: number) => round(value),
   },
   {
     id: 'walletBalance',
     value: 'Supplied',
-    minWidth: 100,
+    flex: 2,
     align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
+    format: (value: number) => round(value),
   },
   {
     id: 'redeemable',
     value: 'Redeemable',
-    minWidth: 100,
+    flex: 2,
     align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
+    format: (value: number) => round(value),
   },
 ];
 
