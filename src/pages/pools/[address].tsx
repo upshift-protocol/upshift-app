@@ -1,8 +1,12 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import { getLendingPool } from '@augustdigital/sdk';
-import type { IPoolWithUnderlying, IAddress } from '@augustdigital/sdk';
+import { getLendingPool, getLendingPools } from '@augustdigital/sdk';
+import type {
+  IPoolWithUnderlying,
+  IAddress,
+  IChainId,
+} from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -12,11 +16,28 @@ import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
 import type { UseQueryResult } from '@tanstack/react-query';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { FALLBACK_CHAINID, INFURA_API_KEY } from '@/utils/constants/web3';
 import { stringify } from '@/utils/helpers/string';
 
-export const getServerSideProps = (async (context) => {
+const infuraOptions = {
+  apiKey: INFURA_API_KEY,
+  chainId: FALLBACK_CHAINID as IChainId, // TODO: make dynamic later
+};
+
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts
+  const res = await getLendingPools(infuraOptions);
+
+  // Get the paths we want to pre-render based on posts
+  const paths = res.map((p) => ({
+    params: { address: p.address },
+  }));
+
+  return { paths, fallback: false };
+}
+
+export const getStaticProps = (async (context) => {
   // Fetch data from external API
   const res = await getLendingPool(context?.params?.address as IAddress, {
     apiKey: INFURA_API_KEY,
@@ -24,11 +45,13 @@ export const getServerSideProps = (async (context) => {
   });
   // Pass data to the page via props
   return { props: { pool: stringify(res) } };
-}) satisfies GetServerSideProps<{ pool: string | undefined }>;
+}) satisfies GetStaticProps<{
+  pool: string | undefined;
+}>;
 
 const PoolPage = ({
   pool: poolString,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   // const params = useParams();
   const pool: IPoolWithUnderlying = poolString ? JSON.parse(poolString) : {};
   // const { data: pool, isLoading: poolLoading } = useFetcher({
