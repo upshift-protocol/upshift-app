@@ -52,18 +52,11 @@ export const getStaticProps = (async (context) => {
 const PoolPage = ({
   pool: poolString,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // const params = useParams();
   const pool: IPoolWithUnderlying = poolString ? JSON.parse(poolString) : {};
-  // const { data: pool, isLoading: poolLoading } = useFetcher({
-  //   queryKey: ['lending-pool', (params?.address as IAddress)!],
-  //   enabled: !!params?.address && isAddress(params.address as string),
-  // }) as UseQueryResult<any>;
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
   }) as UseQueryResult<any>;
-
-  // const isLoading = !pool || poolLoading;
 
   function buildCrumbs(): IBreadCumb[] {
     return [
@@ -78,11 +71,9 @@ const PoolPage = ({
     <Base>
       <Section
         id="earn-table"
-        // loading={+isLoading}
         title={pool?.name ?? ' '}
         description={
           (pool as any)?.description ??
-          // `${isLoading ? 'This' : 'The'}
           `The ${pool?.name ?? ''} vault aims to optimize yields by lending rsETH against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
         }
         breadcrumbs={buildCrumbs()}
@@ -103,14 +94,8 @@ const PoolPage = ({
       >
         <Stack gap={3}>
           <Stack direction="column" gap={6} mt={2}>
-            <VaultInfo
-              // loading={isLoading}
-              {...pool}
-            />
-            <VaultAllocation
-              // loading={isLoading}
-              {...pool}
-            />
+            <VaultInfo {...pool} />
+            <VaultAllocation {...pool} />
           </Stack>
           <MyPositionsTableOrganism
             title="My Positions"
