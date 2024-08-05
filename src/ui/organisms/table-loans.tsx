@@ -108,7 +108,7 @@ const columns: GridColDef<any[number]>[] = [
 ];
 
 export default function VaultAllocation(
-  props: (IPoolWithUnderlying | undefined) & { loading: boolean },
+  props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
   const { loans, isLoading } = useLoans(props?.loans);
 

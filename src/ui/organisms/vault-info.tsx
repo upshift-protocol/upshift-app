@@ -9,7 +9,7 @@ import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
-  props: (IPoolWithUnderlying | undefined) & { loading: boolean },
+  props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
   return (
     <Stack gap={2} direction="column">
