@@ -46,6 +46,9 @@ export default function DepositModalMolecule(
           out={props?.address}
           fee={expected.fee.raw}
           loading={+expected.loading}
+          pool={{
+            apy: props?.apy?.normalized,
+          }}
         />
         <Web3Button
           onClick={handleDeposit}

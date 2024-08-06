@@ -13,6 +13,11 @@ import { ThemeProvider } from '@/stores/theme';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
+
+  // useEffect(() => {
+  //   (async () => augustSdk.init())().catch(console.error);
+  // }, []);
+
   return (
     <ThemeProvider>
       <WagmiProvider config={walletConfig}>

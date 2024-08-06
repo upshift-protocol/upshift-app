@@ -40,8 +40,8 @@ const OverviewStatsMolecule = ({
   const totalBorrowed = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = BigInt(0);
-    pools.forEach((_props) => {
-      total += BigInt(0);
+    pools.forEach((p) => {
+      total += p.totalBorrowed?.raw || BigInt(0);
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;

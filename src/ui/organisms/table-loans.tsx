@@ -110,7 +110,7 @@ const columns: GridColDef<any[number]>[] = [
 export default function VaultAllocation(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
-  const { loans, isLoading } = useLoans(props?.loans);
+  const { loans, isLoading } = useLoans(props?.loans?.map((l) => l.address));
 
   const rowsFormatter = () => {
     if (!loans?.length) return [];

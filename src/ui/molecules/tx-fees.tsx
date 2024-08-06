@@ -100,7 +100,7 @@ export default function TxFeesAtom(props: ITxFees) {
               },
               {
                 label: 'Estimated APY',
-                value: `${'-'}`,
+                value: `${props?.pool?.apy || '0.00'}%`,
               },
             ]}
           />

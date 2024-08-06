@@ -9,7 +9,6 @@ import {
 } from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { isAddress } from 'viem';
 import { readContract } from 'viem/actions';
 import { useAccount, useChainId, usePublicClient } from 'wagmi';
@@ -46,10 +45,12 @@ export default function useFetcher({
           console.error('Second query key in array must be an address');
           return null;
         }
-        return getLendingPool(address as IAddress, infuraOptions);
+        return getLendingPool(address as IAddress, infuraOptions, {
+          loans: true,
+        });
       }
       case 'lending-pools': {
-        return getLendingPools(infuraOptions);
+        return getLendingPools(infuraOptions, { loans: true });
       }
       case 'my-positions': {
         const pools = await getLendingPools(infuraOptions);
@@ -62,56 +63,57 @@ export default function useFetcher({
                 address: pool.address,
                 abi: ABI_LENDING_POOLS,
               };
-              const [bal, ...rest] = await Promise.all([
+              const [bal] = await Promise.all([
                 readContract(provider, {
                   ...args,
                   functionName: 'balanceOf',
                   args: [wallet],
                 }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'getWithdrawalEpoch',
-                  args: [],
-                }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'liquidationHour',
-                  args: [],
-                }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'maxRedeem',
-                  args: [wallet],
-                }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'lagDuration',
-                  args: [],
-                }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'getBurnableAmountByReceiver',
-                  args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
-                }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'getClaimableAmountByReceiver',
-                  args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
-                }),
-                readContract(provider, {
-                  ...args,
-                  functionName: 'getScheduledTransactionsByDate',
-                  args: [BigInt(2024), BigInt(7), BigInt(31)],
-                }),
               ]);
-              console.log('');
-              console.log('getWithdrawalEpoch:', rest?.[0]);
-              console.log('liquidationHour:', rest?.[1]);
-              console.log('maxRedeem:', rest?.[2]);
-              console.log('lagDuration:', rest?.[3]);
-              console.log('getBurnableAmountByReceiver:', rest?.[4]);
-              console.log('getClaimableAmountByReceiver:', rest?.[5]);
-              console.log('getScheduledTransactionsByDate:', rest?.[6]);
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'getWithdrawalEpoch',
+              //     args: [],
+              //   }),
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'liquidationHour',
+              //     args: [],
+              //   }),
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'maxRedeem',
+              //     args: [wallet],
+              //   }),
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'lagDuration',
+              //     args: [],
+              //   }),
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'getBurnableAmountByReceiver',
+              //     args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
+              //   }),
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'getClaimableAmountByReceiver',
+              //     args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
+              //   }),
+              //   readContract(provider, {
+              //     ...args,
+              //     functionName: 'getScheduledTransactionsByDate',
+              //     args: [BigInt(2024), BigInt(7), BigInt(31)],
+              //   }),
+              // ]);
+              // console.log('');
+              // console.log('getWithdrawalEpoch:', rest?.[0]);
+              // console.log('liquidationHour:', rest?.[1]);
+              // console.log('maxRedeem:', rest?.[2]);
+              // console.log('lagDuration:', rest?.[3]);
+              // console.log('getBurnableAmountByReceiver:', rest?.[4]);
+              // console.log('getClaimableAmountByReceiver:', rest?.[5]);
+              // console.log('getScheduledTransactionsByDate:', rest?.[6]);
 
               // TODO: optimize with viem and remove ethers library once latest loan is deployed
               balance = toNormalizedBn(bal, pool.decimals);
@@ -127,6 +129,10 @@ export default function useFetcher({
               if (balance.raw > BigInt(0)) return 'STAKED';
               return 'PENDING';
             }
+            const aggregateAvailableRedemptions = availableRedemptions.reduce(
+              (acc, curr) => acc + (curr.amount as INormalizedNumber).raw,
+              BigInt(0),
+            );
             return {
               ...pool,
               token: pool?.underlying?.symbol,
@@ -135,10 +141,7 @@ export default function useFetcher({
               status: renderStatus(),
               availableRedemptions,
               redeemable: toNormalizedBn(
-                availableRedemptions.reduce(
-                  (acc, curr) => acc + (curr.amount as INormalizedNumber).raw,
-                  BigInt(0),
-                ),
+                aggregateAvailableRedemptions,
                 pool.decimals,
               ),
               walletBalance: balance.normalized,
@@ -151,7 +154,7 @@ export default function useFetcher({
         return filtered;
       }
       default: {
-        return getLendingPools(infuraOptions);
+        return getLendingPools(infuraOptions, { loans: true });
       }
     }
   }
@@ -167,11 +170,6 @@ export default function useFetcher({
     queryKey,
     queryFn: masterGetter,
   });
-
-  // TODO: not working
-  useEffect(() => {
-    (async () => wallet && (await query?.refetch()))().catch(console.error);
-  }, [wallet, provider]);
 
   return query;
 }

@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
-import { isAddress } from 'viem';
+import { isAddress, zeroAddress } from 'viem';
 import { truncate } from '@/utils/helpers/string';
 import { Skeleton, Stack, Typography } from '@mui/material';
 import {
@@ -81,23 +81,33 @@ export default function TableMolecule({
       return value;
     };
     const extracted = extractor();
+    // if either string address or array of string addresses
     if (
       (typeof extracted === 'string' && isAddress(extracted)) ||
       (Array.isArray(extracted) && isAddress(extracted?.[0]))
     ) {
+      // if address array
       if (Array.isArray(extracted))
         return (
           <Stack direction="row" justifyContent="end">
-            {extracted.map((e, i) => (
-              <LinkAtom
-                key={`link-${i}-${e}`}
-                href={explorerLink(e, FALLBACK_CHAINID, 'address')}
-              >
-                {truncate(e)}
-              </LinkAtom>
-            ))}
+            {extracted.map((e, i) => {
+              const isNative = e === zeroAddress;
+              if (isNative) return 'ETH';
+              return (
+                <LinkAtom
+                  key={`link-${i}-${e}`}
+                  href={explorerLink(e, FALLBACK_CHAINID, 'address')}
+                >
+                  {truncate(e)}
+                </LinkAtom>
+              );
+            })}
           </Stack>
         );
+      // else string address
+      const isNative = extracted === zeroAddress;
+      if (isNative) return 'ETH';
+
       return (
         <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
           {truncate(extracted)}
@@ -167,7 +177,20 @@ export default function TableMolecule({
 
                     function renderValue() {
                       // TODO: optimize
+                      // if is a number
                       if (/^\d+(?:\.\d{1,18})?$/.test(String(value))) {
+                        // if it is an apy
+                        if (
+                          column.id.includes('apy') ||
+                          column.id.includes('apr')
+                        ) {
+                          return (
+                            <Typography fontFamily={'monospace'}>
+                              {value}%
+                            </Typography>
+                          );
+                        }
+                        // else it is an asset amount
                         return (
                           <Typography fontFamily={'monospace'}>
                             {value} {underlying?.symbol}

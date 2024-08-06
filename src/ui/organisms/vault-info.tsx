@@ -88,7 +88,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <AmountDisplay>{'0.0%'}</AmountDisplay>
+              <AmountDisplay>{`${props?.apy?.normalized || '0.00'}%`}</AmountDisplay>
             )}
           </Stack>
         </Grid>
@@ -102,7 +102,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <AmountDisplay>{'0.0%'}</AmountDisplay>
+              <AmountDisplay>{`0.00%`}</AmountDisplay>
             )}
           </Stack>
         </Grid>

@@ -1,12 +1,8 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import { getLendingPool, getLendingPools } from '@augustdigital/sdk';
-import type {
-  IPoolWithUnderlying,
-  IAddress,
-  IChainId,
-} from '@augustdigital/sdk';
+import { getLendingPools } from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -16,9 +12,9 @@ import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
 import type { UseQueryResult } from '@tanstack/react-query';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
-import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { FALLBACK_CHAINID, INFURA_API_KEY } from '@/utils/constants/web3';
-import { stringify } from '@/utils/helpers/string';
+import { useAccount } from 'wagmi';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 const infuraOptions = {
   apiKey: INFURA_API_KEY,
@@ -39,24 +35,32 @@ export async function getStaticPaths() {
 
 export const getStaticProps = (async (context) => {
   // Fetch data from external API
-  const res = await getLendingPool(context?.params?.address as IAddress, {
-    apiKey: INFURA_API_KEY,
-    chainId: FALLBACK_CHAINID, // TODO: make dynamic later
-  });
+  // const res = await getLendingPool(
+  //   context?.params?.address as IAddress,
+  //   {
+  //     apiKey: INFURA_API_KEY,
+  //     chainId: FALLBACK_CHAINID, // TODO: make dynamic later
+  //   },
+  //   { loans: true, loansData: true },
+  // );
   // Pass data to the page via props
-  return { props: { pool: stringify(res) } };
+  return { props: { pool: context?.params?.address as IAddress } };
 }) satisfies GetStaticProps<{
   pool: string | undefined;
 }>;
 
 const PoolPage = ({
-  pool: poolString,
+  pool: poolAddress,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const pool: IPoolWithUnderlying = poolString ? JSON.parse(poolString) : {};
+  const { address } = useAccount();
+
+  const { data: pool, isLoading: poolLoading } = useFetcher({
+    queryKey: ['lending-pool', poolAddress],
+  }) as UseQueryResult<any>; // TODO: interface
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions'],
-  }) as UseQueryResult<any>;
+    queryKey: ['my-positions', address ?? ''],
+  }) as UseQueryResult<any>; // TODO: interface
 
   function buildCrumbs(): IBreadCumb[] {
     return [
@@ -77,6 +81,7 @@ const PoolPage = ({
           `The ${pool?.name ?? ''} vault aims to optimize yields by lending rsETH against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
         }
         breadcrumbs={buildCrumbs()}
+        loading={+poolLoading}
         action={
           <Stack direction="column" alignItems={'end'} gap={2}>
             <AssetDisplay
@@ -84,6 +89,7 @@ const PoolPage = ({
               img={`/assets/tokens/${pool?.underlying?.symbol}.png`}
               variant="glass"
               address={pool?.underlying?.address}
+              loading={poolLoading}
             />
             <Stack direction={'row'} gap={1}>
               <DepositModalMolecule {...pool} />
@@ -94,8 +100,8 @@ const PoolPage = ({
       >
         <Stack gap={3}>
           <Stack direction="column" gap={6} mt={2}>
-            <VaultInfo {...pool} />
-            <VaultAllocation {...pool} />
+            <VaultInfo {...pool} loading={+poolLoading} />
+            <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
           <MyPositionsTableOrganism
             title="My Positions"
