@@ -1,17 +1,11 @@
-import { INFURA_API_KEY } from '@/utils/constants/web3';
-import { getAvailableRedemptions } from '@/utils/helpers/actions';
-import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
-import {
-  ABI_LENDING_POOLS,
-  getLendingPool,
-  getLendingPools,
-  toNormalizedBn,
-} from '@augustdigital/sdk';
+import { augustSdk } from '@/config/august-sdk';
+import type { INormalizedNumber } from '@augustdigital/sdk';
+import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
 import { readContract } from 'viem/actions';
-import { useAccount, useChainId, usePublicClient } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 
 type IFetchTypes = 'lending-pools' | 'lending-pool';
 
@@ -29,11 +23,6 @@ export default function useFetcher({
 }: IUseFetcher) {
   const { address: wallet } = useAccount();
   const provider = usePublicClient();
-  const chain = useChainId();
-  const infuraOptions = {
-    chainId: chain as IChainId,
-    apiKey: INFURA_API_KEY,
-  };
 
   const type = queryKey?.[0];
   const address = queryKey?.[1];
@@ -45,15 +34,13 @@ export default function useFetcher({
           console.error('Second query key in array must be an address');
           return null;
         }
-        return getLendingPool(address as IAddress, infuraOptions, {
-          loans: true,
-        });
+        return augustSdk.pools.getPool(address);
       }
       case 'lending-pools': {
-        return getLendingPools(infuraOptions, { loans: true });
+        return augustSdk.pools.getPools();
       }
       case 'my-positions': {
-        const pools = await getLendingPools(infuraOptions);
+        const pools = await augustSdk.pools.getPools();
         const promises = await Promise.all(
           pools.map(async (pool) => {
             let balance = toNormalizedBn(0);
@@ -119,10 +106,11 @@ export default function useFetcher({
               balance = toNormalizedBn(bal, pool.decimals);
             }
 
-            const availableRedemptions = await getAvailableRedemptions(
-              pool.address,
-              wallet,
-            );
+            const availableRedemptions =
+              await augustSdk.pools.getAvailableRedemptions(
+                pool.address,
+                wallet,
+              );
 
             function renderStatus() {
               if (availableRedemptions.length) return 'REDEEM';
@@ -154,7 +142,7 @@ export default function useFetcher({
         return filtered;
       }
       default: {
-        return getLendingPools(infuraOptions, { loans: true });
+        return augustSdk.pools.getPools();
       }
     }
   }

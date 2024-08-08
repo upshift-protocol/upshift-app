@@ -71,7 +71,8 @@ const columns: GridColDef<any[number]>[] = [
     type: 'number',
     flex: 2,
     editable: true,
-    renderCell({ value }) {
+    renderCell({ value, ...props }) {
+      console.log('\n\nprops\n\n:', props);
       if (!value) return '-';
       return (
         <Stack alignItems="end" justifyContent="center" height="100%">

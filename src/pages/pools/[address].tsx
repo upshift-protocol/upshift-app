@@ -1,8 +1,7 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import { getLendingPools } from '@augustdigital/sdk';
-import type { IAddress, IChainId } from '@augustdigital/sdk';
+import type { IAddress } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -12,19 +11,13 @@ import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
 import type { UseQueryResult } from '@tanstack/react-query';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
-import { FALLBACK_CHAINID, INFURA_API_KEY } from '@/utils/constants/web3';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
-
-const infuraOptions = {
-  apiKey: INFURA_API_KEY,
-  chainId: FALLBACK_CHAINID as IChainId, // TODO: make dynamic later
-};
+import { augustSdk } from '@/config/august-sdk';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
-  const res = await getLendingPools(infuraOptions);
-
+  const res = await augustSdk.pools.getPools();
   // Get the paths we want to pre-render based on posts
   const paths = res.map((p) => ({
     params: { address: p.address },
@@ -34,28 +27,21 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps = (async (context) => {
-  // Fetch data from external API
-  // const res = await getLendingPool(
-  //   context?.params?.address as IAddress,
-  //   {
-  //     apiKey: INFURA_API_KEY,
-  //     chainId: FALLBACK_CHAINID, // TODO: make dynamic later
-  //   },
-  //   { loans: true, loansData: true },
-  // );
   // Pass data to the page via props
-  return { props: { pool: context?.params?.address as IAddress } };
+  return {
+    props: {
+      pool: context?.params?.address as IAddress,
+    },
+  };
 }) satisfies GetStaticProps<{
   pool: string | undefined;
 }>;
 
-const PoolPage = ({
-  pool: poolAddress,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { address } = useAccount();
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
-    queryKey: ['lending-pool', poolAddress],
+    queryKey: ['lending-pool', params.pool],
   }) as UseQueryResult<any>; // TODO: interface
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
