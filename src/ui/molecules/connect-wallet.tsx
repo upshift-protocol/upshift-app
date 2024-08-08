@@ -19,7 +19,7 @@ import type { SyntheticEvent } from 'react';
 import { truncate } from '@/utils/helpers/string';
 import React from 'react';
 import { Chip, Link, Stack, Typography } from '@mui/material';
-import { arbitrum } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 import { LINKS } from '@/utils/constants/links';
 import { useThemeMode } from '@/stores/theme';
 import Modal from '../atoms/modal';
@@ -88,8 +88,8 @@ const ConnectWalletMolecule = ({
       } catch (error) {
         console.error('user rejected request:', error);
       } finally {
-        if (chainId !== arbitrum.id) {
-          switchChain({ chainId: arbitrum.id });
+        if (chainId !== mainnet.id) {
+          switchChain({ chainId: mainnet.id });
         }
         setSelectedConnector(null);
       }
