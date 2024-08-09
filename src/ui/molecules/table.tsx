@@ -98,7 +98,7 @@ export default function TableMolecule({
                   key={`link-${i}-${e}`}
                   href={explorerLink(e, FALLBACK_CHAINID, 'address')}
                 >
-                  {truncate(e)}
+                  {e ? truncate(e) : '-'}
                 </LinkAtom>
               );
             })}
@@ -110,11 +110,11 @@ export default function TableMolecule({
 
       return (
         <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
-          {truncate(extracted)}
+          {extracted ? truncate(extracted) : '-'}
         </LinkAtom>
       );
     }
-    return extracted;
+    return extracted || '-';
   };
 
   const rows = useMemo(() => {
@@ -171,9 +171,9 @@ export default function TableMolecule({
                     let value = row[column.id as keyof ITableItem];
                     value = extractData(value);
                     value =
-                      column.format && typeof value === 'number'
+                      (column.format && typeof value === 'number'
                         ? column.format(value)
-                        : value;
+                        : value) || '-';
 
                     function renderValue() {
                       // TODO: optimize
@@ -186,14 +186,14 @@ export default function TableMolecule({
                         ) {
                           return (
                             <Typography fontFamily={'monospace'}>
-                              {value}%
+                              {value || '-'}%
                             </Typography>
                           );
                         }
                         // else it is an asset amount
                         return (
                           <Typography fontFamily={'monospace'}>
-                            {value} {underlying?.symbol}
+                            {value || '-'} {underlying?.symbol}
                           </Typography>
                         );
                       }

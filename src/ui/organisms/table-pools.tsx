@@ -25,7 +25,7 @@ const columns: readonly IColumn[] = [
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay symbol={children?.[2]} round>
-              {children?.[0]}
+              {children?.[0] || '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
