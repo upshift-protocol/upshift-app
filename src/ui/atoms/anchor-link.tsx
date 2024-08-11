@@ -2,6 +2,7 @@ import MUILink from '@mui/material/Link';
 import type { CSSProperties, ReactNode } from 'react';
 import type { IHrefTarget } from '@/utils/types';
 import Link from 'next/link';
+import Typography from '@mui/material/Typography';
 
 type ILinkAtom = {
   href: string;
@@ -24,7 +25,7 @@ export default function LinkAtom(props: ILinkAtom) {
       component={Link}
       rel={!props.target ? 'noreferrer' : undefined}
     >
-      {props.children}
+      <Typography>{props.children}</Typography>
     </MUILink>
   );
 }

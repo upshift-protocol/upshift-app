@@ -10,17 +10,6 @@ import { zeroAddress } from 'viem';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
-// const readFunctions = [
-//   'currentApr',
-//   'collateralToken',
-//   'effectiveLoanAmount',
-//   'loanAmountInPrincipalTokens',
-//   'principalAmount',
-//   'principalRepaid',
-//   'principalToken',
-//   'loanState',
-// ];
-
 const columns: GridColDef<any[number]>[] = [
   {
     field: 'address',
@@ -31,9 +20,11 @@ const columns: GridColDef<any[number]>[] = [
     renderCell({ value }) {
       if (!value) return '-';
       return (
-        <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
-          {truncate(value)}
-        </LinkAtom>
+        <Stack justifyContent={'center'} height="100%">
+          <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
+            {truncate(value)}
+          </LinkAtom>
+        </Stack>
       );
     },
   },
@@ -71,12 +62,11 @@ const columns: GridColDef<any[number]>[] = [
     type: 'number',
     flex: 2,
     editable: true,
-    renderCell({ value, ...props }) {
-      console.log('\n\nprops\n\n:', props);
+    renderCell({ value, row }) {
       if (!value) return '-';
       return (
         <Stack alignItems="end" justifyContent="center" height="100%">
-          <AmountDisplay symbol={'rsETH'} round size="14px">
+          <AmountDisplay symbol={row?.underlying || 'N/A'} round size="14px">
             {value}
           </AmountDisplay>
         </Stack>
@@ -115,7 +105,7 @@ export default function VaultAllocation(
 
   const rowsFormatter = () => {
     if (!loans?.length) return [];
-    const loansWithDataa = loans?.map((l, i) => ({
+    const loansWithData = loans?.map((l, i) => ({
       id: i,
       address: l?.address,
       allocation: '',
@@ -123,8 +113,9 @@ export default function VaultAllocation(
       collateral: l?.collateralToken,
       liquidationLTV: '',
       currentApr: l?.currentApr?.normalized,
+      underlying: props?.underlying?.symbol ?? l?.principalToken,
     }));
-    return loansWithDataa;
+    return loansWithData;
   };
 
   return (

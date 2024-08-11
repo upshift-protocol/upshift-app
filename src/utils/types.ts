@@ -19,6 +19,7 @@ export type IPoolMetadata = {
   lockTime?: INormalizedNumber;
   loading?: boolean;
   apy?: string;
+  collateral?: string[];
 };
 
 export interface IColumn {

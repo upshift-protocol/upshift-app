@@ -110,7 +110,7 @@ export default function AssetInputMolecule(props: IAssetInput) {
             </Box>
           </Box>
         )}
-        <AssetSelectorAtom {...props} loading={!!props.loading} forInput />
+        <AssetSelectorAtom {...props} loading={!!props?.loading} forInput />
       </Stack>
     </Stack>
   );

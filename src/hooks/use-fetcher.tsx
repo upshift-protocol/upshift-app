@@ -57,50 +57,6 @@ export default function useFetcher({
                   args: [wallet],
                 }),
               ]);
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'getWithdrawalEpoch',
-              //     args: [],
-              //   }),
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'liquidationHour',
-              //     args: [],
-              //   }),
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'maxRedeem',
-              //     args: [wallet],
-              //   }),
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'lagDuration',
-              //     args: [],
-              //   }),
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'getBurnableAmountByReceiver',
-              //     args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
-              //   }),
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'getClaimableAmountByReceiver',
-              //     args: [BigInt(2024), BigInt(7), BigInt(25), wallet],
-              //   }),
-              //   readContract(provider, {
-              //     ...args,
-              //     functionName: 'getScheduledTransactionsByDate',
-              //     args: [BigInt(2024), BigInt(7), BigInt(31)],
-              //   }),
-              // ]);
-              // console.log('');
-              // console.log('getWithdrawalEpoch:', rest?.[0]);
-              // console.log('liquidationHour:', rest?.[1]);
-              // console.log('maxRedeem:', rest?.[2]);
-              // console.log('lagDuration:', rest?.[3]);
-              // console.log('getBurnableAmountByReceiver:', rest?.[4]);
-              // console.log('getClaimableAmountByReceiver:', rest?.[5]);
-              // console.log('getScheduledTransactionsByDate:', rest?.[6]);
 
               // TODO: optimize with viem and remove ethers library once latest loan is deployed
               balance = toNormalizedBn(bal, pool.decimals);

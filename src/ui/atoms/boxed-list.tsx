@@ -1,6 +1,10 @@
 import { useThemeMode } from '@/stores/theme';
 import type { ITheme } from '@/utils/types';
 import { Stack, styled, Typography } from '@mui/material';
+import { isAddress, zeroAddress } from 'viem';
+import { explorerLink, truncate } from '@augustdigital/sdk';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import LinkAtom from './anchor-link';
 
 type IBoxedListItem = {
   label: string | JSX.Element | number;
@@ -30,9 +34,25 @@ export default function BoxedListAtom(props: { items: IBoxedListItem[] }) {
       {props.items.map((item, i) => (
         <StackRow key={`boxed-list-item-${i}`}>
           <Typography variant="body2">{item.label}</Typography>
-          <Typography variant="body2" fontFamily="monospace">
-            {item.value}
-          </Typography>
+          {typeof item.value === 'string' && isAddress(item.value) ? (
+            <>
+              {item.value === zeroAddress ? (
+                <Typography variant="body2" fontFamily="monospace">
+                  {'ETH'}
+                </Typography>
+              ) : (
+                <LinkAtom
+                  href={explorerLink(item.value, FALLBACK_CHAINID, 'token')}
+                >
+                  {item.value === zeroAddress ? 'ETH' : truncate(item.value)}
+                </LinkAtom>
+              )}
+            </>
+          ) : (
+            <Typography variant="body2" fontFamily="monospace">
+              {item.value}
+            </Typography>
+          )}
         </StackRow>
       ))}
     </StackOutline>

@@ -12,6 +12,8 @@ type IAssetSelector = IAssetDisplay & {
 export default function AssetSelectorAtom(props: IAssetSelector) {
   const { isDark } = useThemeMode();
 
+  console.log('LOADING:', props.loading);
+
   const { data: symbol } = useReadContract({
     address: props.address,
     abi: erc20Abi,

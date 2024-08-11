@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useDeposit from '@/hooks/use-deposit';
+import useLoans from '@/hooks/use-loans';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
@@ -16,6 +17,7 @@ export default function DepositModalMolecule(
     asset: props?.asset,
     pool: props?.address,
   });
+  const { loans, isLoading } = useLoans(props?.loans?.map((l) => l.address));
 
   return (
     <ModalAtom
@@ -47,7 +49,9 @@ export default function DepositModalMolecule(
           fee={expected.fee.raw}
           loading={+expected.loading}
           pool={{
+            loading: isLoading,
             apy: props?.apy?.normalized,
+            collateral: loans?.map((l) => l.collateralToken),
           }}
         />
         <Web3Button

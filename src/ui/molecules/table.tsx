@@ -92,7 +92,10 @@ export default function TableMolecule({
           <Stack direction="row" justifyContent="end">
             {extracted.map((e, i) => {
               const isNative = e === zeroAddress;
-              if (isNative) return 'ETH';
+              if (isNative)
+                return (
+                  <Typography key={`table-value-arr-${i}`}>ETH</Typography>
+                );
               return (
                 <LinkAtom
                   key={`link-${i}-${e}`}
@@ -106,7 +109,7 @@ export default function TableMolecule({
         );
       // else string address
       const isNative = extracted === zeroAddress;
-      if (isNative) return 'ETH';
+      if (isNative) return <Typography>ETH</Typography>;
 
       return (
         <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
@@ -184,20 +187,32 @@ export default function TableMolecule({
                           column.id.includes('apy') ||
                           column.id.includes('apr')
                         ) {
-                          return (
-                            <Typography fontFamily={'monospace'}>
-                              {value || '-'}%
-                            </Typography>
-                          );
+                          if (typeof value === 'string') {
+                            return (
+                              <Typography fontFamily={'monospace'}>
+                                {value || '-'}%
+                              </Typography>
+                            );
+                          }
+                          return value;
                         }
-                        // else it is an asset amount
-                        return (
-                          <Typography fontFamily={'monospace'}>
-                            {value || '-'} {underlying?.symbol}
-                          </Typography>
-                        );
+                        if (typeof value === 'string') {
+                          // else it is an asset amount
+                          if (typeof value === 'string') {
+                            return (
+                              <Typography fontFamily={'monospace'}>
+                                {value || '-'} {underlying?.symbol}
+                              </Typography>
+                            );
+                          }
+                          return value;
+                        }
+                        return value;
                       }
-                      return <Typography>{value || '-'}</Typography>;
+                      if (typeof value === 'string') {
+                        return <Typography>{value || '-'}</Typography>;
+                      }
+                      return value;
                     }
                     return (
                       <TableCell

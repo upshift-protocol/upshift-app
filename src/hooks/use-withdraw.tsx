@@ -203,7 +203,6 @@ export default function useWithdraw(props: IUseDepositProps) {
           foundRedemption.year.raw,
           foundRedemption.month.raw,
           foundRedemption.day.raw,
-          normalized.raw,
           address,
         ],
       });
