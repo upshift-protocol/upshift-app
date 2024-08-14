@@ -18,7 +18,7 @@ export type ITheme = 'light' | 'dark';
 export type IPoolMetadata = {
   lockTime?: INormalizedNumber;
   loading?: boolean;
-  apy?: string;
+  apy?: string | number;
   collateral?: string[];
 };
 

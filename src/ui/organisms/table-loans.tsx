@@ -1,12 +1,13 @@
 import { explorerLink, truncate } from '@augustdigital/sdk';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IPoolLoan, IPoolWithUnderlying } from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
-import useLoans from '@/hooks/use-loans';
 import { zeroAddress } from 'viem';
+import useFetcher from '@/hooks/use-fetcher';
+import type { UseQueryResult } from '@tanstack/react-query';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -51,8 +52,9 @@ const columns: GridColDef<any[number]>[] = [
     type: 'number',
     editable: true,
     renderCell({ value }) {
-      if (!value) return '-';
-      return `${value}%`;
+      if (!value) return '- %';
+      if (typeof value === 'number') return `${(value * 100).toFixed(3)}%`;
+      return `${value || '-'}%`;
     },
   },
   {
@@ -101,22 +103,29 @@ const columns: GridColDef<any[number]>[] = [
 export default function VaultAllocation(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
-  const { loans, isLoading } = useLoans(props?.loans?.map((l) => l.address));
+  const { data: loans, isLoading } = useFetcher({
+    queryKey: ['pool-loans', props.address],
+    enabled: !props?.loans?.length,
+  }) as UseQueryResult<IPoolLoan[]>;
+
+  const loansSelector = props?.loans || loans;
 
   const rowsFormatter = () => {
-    if (!loans?.length) return [];
-    const loansWithData = loans?.map((l, i) => ({
+    const loansWithData = loansSelector?.map((l, i) => ({
       id: i,
       address: l?.address,
-      allocation: '',
-      supply: l?.principalAmount?.normalized,
-      collateral: l?.collateralToken,
+      allocation: l?.allocation,
+      supply: l?.principal?.normalized,
+      collateral: l?.collateral,
       liquidationLTV: '',
-      currentApr: l?.currentApr?.normalized,
-      underlying: props?.underlying?.symbol ?? l?.principalToken,
+      currentApr: l?.apr,
+      underlying: props?.underlying?.symbol,
     }));
     return loansWithData;
   };
+
+  // console.log('loans:', loans);
+  // console.log('rowsFormatter:', rowsFormatter());
 
   return (
     <Stack gap={3} direction="column">

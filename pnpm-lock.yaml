@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@augustdigital/sdk':
-        specifier: 0.2.4-alpha
-        version: 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        specifier: 0.3.0-alpha
+        version: 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.13.0(@types/react@18.3.3)(react@18.3.1)
@@ -161,20 +161,20 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@augustdigital/abis@0.2.4-alpha':
-    resolution: {integrity: sha512-/IFR68yEpz9puBXTOuyBiDVm/GdBiJiybcx6lCg0+qiirDdBEyj9w3wOIsPbEvekW7pp8iwsYXHw4bBdagfIUA==}
+  '@augustdigital/abis@0.3.0-alpha':
+    resolution: {integrity: sha512-Yg8o5WA+pqRxK+QEqOM7g/fG+unmL8vMg5pNYQhlmlZvJ6sNgxofVmibrSGcMQPLchNRjNTtxxO0g0B1M1te6g==}
 
-  '@augustdigital/pools@0.2.4-alpha':
-    resolution: {integrity: sha512-cM2JXwjO+qEopbplrX405xDCrsTQ8fSRVUgp6Ii5PbxvZMOhsKhMHnbCAcVWxYX9rm/UlOS/v/Z06vNo15WUaw==}
+  '@augustdigital/pools@0.3.0-alpha':
+    resolution: {integrity: sha512-zEHO8owUjJWG4U1LJOfY42Dgoi68SRLmYvg9wUNv6yGvsuq9KtSox6UjdtP7eawswoAp+sKAp+YnJ2nw26Ah5g==}
 
-  '@augustdigital/sdk@0.2.4-alpha':
-    resolution: {integrity: sha512-tX18L3RmdNGHh6aQ1d5d8nR5FepXKVhyrJg6Fj4HVkpceaTn7Cq0CaDv6pYL+TY1jc96UtByTjt6+9LqoDZ0CQ==}
+  '@augustdigital/sdk@0.3.0-alpha':
+    resolution: {integrity: sha512-le4PpgEATcw/SxwlwUai6T7cV8+ZcgSYIIZxJhchjWKgvmP/y3e02rnYrKuBIDPbzV6+Z4tAYFL6CEdLoy69Gw==}
 
-  '@augustdigital/types@0.2.4-alpha':
-    resolution: {integrity: sha512-s2kAXKlOdSGOm4w+lkQWoM2vHFqKvJ2lMHQenPS0+BSvV8hULOrpNz7f6fmnX05ASr8wTKvHec0HRuE2F4JvEg==}
+  '@augustdigital/types@0.3.0-alpha':
+    resolution: {integrity: sha512-mVt6S7+19s8Ycjx08WbZsFIGIoq3kIxdphIA4ulIQbavjFJisWaaRHsubmptB2ffECB6MltZHop4qLEMqcev/A==}
 
-  '@augustdigital/utils@0.2.4-alpha':
-    resolution: {integrity: sha512-X21kCJYILVHu73wKhJRzC4pKASJKzIipN1jSQJ2LHxKZwX/IYrPg98m1duJigrsjt2oUJWq181bgyrwwX2TTjA==}
+  '@augustdigital/utils@0.3.0-alpha':
+    resolution: {integrity: sha512-jQbVi9ol02BsKjAmJZGDJBBMmHMhhPuZD7zOYtFEJLoo6Iuy1D63SKK4UBy0HqVzW7wrk+l2SYTzL0bVgCvGnw==}
 
   '@babel/code-frame@7.24.7':
     resolution: {integrity: sha512-BcYH1CVJBO9tvyIZ2jVeXgSIMvGZ2FDRvDdOIVQyuklNKSsx+eppDEBq/g47Ayw+RqNFE+URvOShmf+f/qwAlA==}
@@ -2954,6 +2954,9 @@ packages:
   eth-rpc-errors@4.0.3:
     resolution: {integrity: sha512-Z3ymjopaoft7JDoxZcEb3pwdGh7yiYMhOwm2doUt6ASXlMavpNlK6Cre0+IMl2VSGyEU9rkiperQhp5iRxn5Pg==}
 
+  ethereum-block-by-date@1.5.0:
+    resolution: {integrity: sha512-amsE+ASchZFjGq+F+xMKuD9k7HVImBfnJSJ9S0byjikFofXz/Zo8Rdm/lB3P4Rt28mpsw1fSeXqSiCZVltEwuw==}
+
   ethereum-cryptography@2.2.1:
     resolution: {integrity: sha512-r/W8lkHSiTLxUxW8Rf3u4HGB0xQweG2RyETjywylKZSzLWoWAijRz8WCuOtJ6wah+avllXBqZuk29HCCvhEIRg==}
 
@@ -3964,6 +3967,9 @@ packages:
 
   mlly@1.7.1:
     resolution: {integrity: sha512-rrVRZRELyQzrIUAVMHxP97kv+G786pHmOKzuFII8zDYahFBS7qnHh2AlYSl1GAHhaMPCz6/oHjVMcfFYgFYHgA==}
+
+  moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
   motion@10.16.2:
     resolution: {integrity: sha512-p+PurYqfUdcJZvtnmAqu5fJgV2kR0uLFQuBKtLeFVTrYEVllI99tiOTSefVNYuip9ELTEkepIIDftNdze76NAQ==}
@@ -5725,39 +5731,40 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@augustdigital/abis@0.2.4-alpha': {}
+  '@augustdigital/abis@0.3.0-alpha': {}
 
-  '@augustdigital/pools@0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/pools@0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/abis': 0.2.4-alpha
-      '@augustdigital/types': 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/utils': 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/abis': 0.3.0-alpha
+      '@augustdigital/types': 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ethereum-block-by-date: 1.5.0
       ethers: 6.13.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/sdk@0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/sdk@0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/abis': 0.2.4-alpha
-      '@augustdigital/pools': 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/types': 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/utils': 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/abis': 0.3.0-alpha
+      '@augustdigital/pools': 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 6.13.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/types@0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/types@0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       ethers: 6.13.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/utils@0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/utils@0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/types': 0.2.4-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 0.3.0-alpha(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 6.13.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
@@ -9616,6 +9623,10 @@ snapshots:
     dependencies:
       fast-safe-stringify: 2.1.1
 
+  ethereum-block-by-date@1.5.0:
+    dependencies:
+      moment: 2.30.1
+
   ethereum-cryptography@2.2.1:
     dependencies:
       '@noble/curves': 1.4.2
@@ -10807,6 +10818,8 @@ snapshots:
       pathe: 1.1.2
       pkg-types: 1.1.3
       ufo: 1.5.4
+
+  moment@2.30.1: {}
 
   motion@10.16.2:
     dependencies:

@@ -14,6 +14,7 @@ import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
+import { useEffect } from 'react';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -47,6 +48,15 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions', address ?? ''],
   }) as UseQueryResult<any>; // TODO: interface
+
+  useEffect(() => {
+    (async () => {
+      if (!params?.pool) return;
+      await augustSdk.pools.getPoolApr(params?.pool, {
+        start: new Date('2024-8-8'),
+      });
+    })().catch(console.error);
+  }, [params?.pool]);
 
   function buildCrumbs(): IBreadCumb[] {
     return [

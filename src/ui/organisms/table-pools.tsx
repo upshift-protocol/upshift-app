@@ -44,7 +44,6 @@ const columns: readonly IColumn[] = [
     value: 'Collateral',
     flex: 2,
     align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
   },
   {
     id: 'loansOperator',
