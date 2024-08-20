@@ -12,6 +12,7 @@ import { useThemeMode } from '@/stores/theme';
 import Button from '@mui/material/Button';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
+import ChainDropdown from '../molecules/chain-dropdown';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: () => <Button variant="outlined">Loading</Button>,
@@ -59,6 +60,7 @@ const HeaderSkeleton = () => {
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2}>
               <ThemeSwitch checked={isDark} onChange={toggleTheme} />
+              <ChainDropdown />
               <DynamicWalletBtn />
             </Stack>
           </Toolbar>
