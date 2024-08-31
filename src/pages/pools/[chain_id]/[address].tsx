@@ -1,7 +1,7 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import type { IAddress } from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
@@ -17,24 +17,31 @@ import { augustSdk } from '@/config/august-sdk';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
-  const res = await augustSdk.pools.getPools();
-  // Get the paths we want to pre-render based on posts
-  const paths = res.map((p) => ({
-    params: { address: p.address },
-  }));
-
-  return { paths, fallback: false };
+  const paths = await Promise.all(
+    Object.keys(augustSdk.providers).map(async (chain) => {
+      augustSdk.switchNetwork(Number(chain) as IChainId);
+      const res = await augustSdk.pools.getPools();
+      // Get the paths we want to pre-render based on posts
+      return res.map((p) => ({
+        params: { address: p.address, chain_id: chain },
+      }));
+    }),
+  );
+  const flattenedPaths = paths.flat();
+  return { paths: flattenedPaths, fallback: false };
 }
 
 export const getStaticProps = (async (context) => {
   // Pass data to the page via props
   return {
     props: {
+      chain_id: Number(context?.params?.chain_id) as IChainId,
       pool: context?.params?.address as IAddress,
     },
   };
 }) satisfies GetStaticProps<{
   pool: string | undefined;
+  chain_id: IChainId | undefined;
 }>;
 
 const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -45,7 +52,8 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   }) as UseQueryResult<any>; // TODO: interface
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions', address ?? ''],
+    queryKey: ['my-positions'],
+    wallet: address,
   }) as UseQueryResult<any>; // TODO: interface
 
   function buildCrumbs(): IBreadCumb[] {

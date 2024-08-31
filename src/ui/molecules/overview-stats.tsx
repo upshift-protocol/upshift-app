@@ -7,6 +7,7 @@ import {
   type IPoolWithUnderlying,
 } from '@augustdigital/sdk';
 import { Fragment, useMemo } from 'react';
+import { useChainId } from 'wagmi';
 import CustomStat from '../atoms/stat';
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -27,6 +28,7 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
+  const chainId = useChainId();
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = BigInt(0);
@@ -35,7 +37,7 @@ const OverviewStatsMolecule = ({
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
-  }, [pools?.length]);
+  }, [pools?.length, chainId]);
 
   const totalBorrowed = useMemo(() => {
     if (!pools?.length) return '0.0';
@@ -45,7 +47,7 @@ const OverviewStatsMolecule = ({
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
-  }, [pools?.length]);
+  }, [pools?.length, chainId]);
   return (
     <ResponsiveStack>
       <CustomStat

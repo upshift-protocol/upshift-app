@@ -68,11 +68,12 @@ export default function TableMolecule({
   const handleRowClick = (e: React.SyntheticEvent, index: number) => {
     e.preventDefault();
     const uid = data?.[index]?.[uidKey];
+    const chainId = data?.[index]?.chainId;
     if (!uid) {
       console.error('uid not found');
-      return;
+      // return;
     }
-    router.push(`/pools/${uid}`);
+    router.push(`/pools/${chainId}/${uid}`);
   };
 
   const extractData = (value: any) => {

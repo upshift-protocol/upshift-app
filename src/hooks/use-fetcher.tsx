@@ -1,8 +1,10 @@
 import { augustSdk } from '@/config/august-sdk';
+import { buildQueryKey } from '@/utils/helpers/query';
+import type { IAddress } from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 
 type IFetchTypes = 'lending-pools' | 'lending-pool';
 
@@ -11,15 +13,16 @@ interface IUseFetcher extends UndefinedInitialDataOptions {
   initialData?: any;
   enabled?: boolean;
   formatter?: (data: any) => any;
+  wallet?: IAddress;
 }
 
 export default function useFetcher({
   queryKey,
   formatter,
+  wallet,
   ...props
 }: IUseFetcher) {
   const chainId = useChainId();
-  const { address: wallet } = useAccount();
 
   const type = queryKey?.[0];
   const poolAddress = queryKey?.[1];
@@ -57,7 +60,7 @@ export default function useFetcher({
 
   const query = useQuery({
     ...props,
-    queryKey: [...queryKey, chainId],
+    queryKey: buildQueryKey(queryKey.join('-'), chainId, wallet),
     queryFn: masterGetter,
   });
 

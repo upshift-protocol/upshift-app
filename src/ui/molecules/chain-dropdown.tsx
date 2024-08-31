@@ -1,5 +1,6 @@
 import { augustSdk } from '@/config/august-sdk';
-import type { IChainId } from '@augustdigital/sdk';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { type IChainId } from '@augustdigital/sdk';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box, FormControl, MenuItem, Select } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -14,7 +15,9 @@ const ChainDropdown = () => {
   const { switchChain } = useSwitchChain();
   const chainId = useChainId();
   const chains = useChains();
-  const [activeChain, setActiveChain] = useState<string>('1');
+  const [activeChain, setActiveChain] = useState<string>(
+    String(FALLBACK_CHAINID),
+  );
 
   const handleChange = async (event: SelectChangeEvent) => {
     const changeChainId = Number(event.target.value);
@@ -26,6 +29,7 @@ const ChainDropdown = () => {
     const foundChain = chains.find(({ id }) => id === chainId);
     if (foundChain) {
       setActiveChain(String(chainId));
+      // TODO: fix
       augustSdk.switchNetwork(chainId as IChainId);
     }
   }, [chainId]);

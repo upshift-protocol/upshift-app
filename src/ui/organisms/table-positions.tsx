@@ -4,6 +4,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { renderVariant } from '@/utils/helpers/ui';
 import { round } from '@augustdigital/sdk';
+import { useAccount } from 'wagmi';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 
@@ -63,8 +64,10 @@ export default function MyPositionsTableOrganism({
   data?: any;
   loading?: number;
 }) {
+  const { address } = useAccount();
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
+    wallet: address,
     enabled: typeof data === 'undefined' && !loading,
   }) as UseQueryResult<any>;
 
