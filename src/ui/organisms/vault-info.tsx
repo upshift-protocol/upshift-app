@@ -88,7 +88,10 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <AmountDisplay>{`${props?.apy || '0.00'}%`}</AmountDisplay>
+              <Typography fontFamily={'monospace'} display="flex">
+                <AmountDisplay round>{`${props?.apy || '0.00'}`}</AmountDisplay>
+                %
+              </Typography>
             )}
           </Stack>
         </Grid>
