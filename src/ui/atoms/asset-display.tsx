@@ -7,11 +7,15 @@ import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { useChainId } from 'wagmi';
 
 export default function AssetDisplay(props: IAssetDisplay) {
   const [imgSrc, setImgSrc] = useState<string>(props?.img ?? '');
+  const chainId = useChainId();
+
   function renderVariant(): {
     wrapperCss: string;
     textVariant: TypographyVariant;
@@ -72,7 +76,11 @@ export default function AssetDisplay(props: IAssetDisplay) {
     return (
       <Link
         style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
-        href={explorerLink(props.address, FALLBACK_CHAINID, 'token')}
+        href={explorerLink(
+          props.address,
+          (chainId as IChainId) || FALLBACK_CHAINID,
+          'token',
+        )}
         target="_blank"
         rel="noreferrer"
       >

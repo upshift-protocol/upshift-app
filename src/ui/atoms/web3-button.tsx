@@ -1,6 +1,6 @@
 import type { ButtonProps } from '@mui/material';
 import { Button } from '@mui/material';
-import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useChainId, useChains, useSwitchChain } from 'wagmi';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import ConnectWalletMolecule from '../molecules/connect-wallet';
 
@@ -9,6 +9,7 @@ interface IWeb3Button extends ButtonProps {}
 export default function Web3Button(props: IWeb3Button) {
   const { address } = useAccount();
   const chainId = useChainId();
+  const chains = useChains();
   const { switchChain } = useSwitchChain();
 
   if (!address) {
@@ -23,7 +24,7 @@ export default function Web3Button(props: IWeb3Button) {
     );
   }
 
-  if (chainId !== FALLBACK_CHAINID) {
+  if (!chains.map((c) => c.id).includes(chainId)) {
     return (
       <Button
         {...props}

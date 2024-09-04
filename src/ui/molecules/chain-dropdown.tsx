@@ -16,7 +16,7 @@ const ChainDropdown = () => {
   const chainId = useChainId();
   const chains = useChains();
   const [activeChain, setActiveChain] = useState<string>(
-    String(FALLBACK_CHAINID),
+    String(chainId || FALLBACK_CHAINID),
   );
 
   const handleChange = async (event: SelectChangeEvent) => {

@@ -1,5 +1,6 @@
 import { truncate } from '@/utils/helpers/string';
-import { explorerLink, type IPoolWithUnderlying } from '@augustdigital/sdk';
+import { explorerLink } from '@augustdigital/sdk';
+import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
@@ -32,7 +33,11 @@ export default function VaultInfo(
             ) : (
               <LinkAtom
                 overflow="hidden"
-                href={explorerLink(props?.address, FALLBACK_CHAINID, 'address')}
+                href={explorerLink(
+                  props?.address,
+                  (props?.chainId as IChainId) || FALLBACK_CHAINID,
+                  'address',
+                )}
               >
                 {truncate(props?.address, 6)}
               </LinkAtom>
@@ -53,7 +58,7 @@ export default function VaultInfo(
                 overflow="hidden"
                 href={explorerLink(
                   props?.loansOperator,
-                  FALLBACK_CHAINID,
+                  (props?.chainId as IChainId) || FALLBACK_CHAINID,
                   'address',
                 )}
               >

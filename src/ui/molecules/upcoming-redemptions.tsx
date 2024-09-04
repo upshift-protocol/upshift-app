@@ -1,6 +1,7 @@
 import { Skeleton, Stack, Typography } from '@mui/material';
 import type { INormalizedNumber } from '@augustdigital/sdk';
 import BoxedListAtom from '../atoms/boxed-list';
+import AmountDisplay from '../atoms/amount-display';
 
 type IUpcomingRedemptions = {
   redemptions?: {
@@ -32,7 +33,14 @@ export default function UpcomingRedemptionsMolecule(
       <BoxedListAtom
         items={
           props?.redemptions?.map((redemption) => ({
-            value: `${renderValue(redemption.amount.normalized)} ${props?.asset || ''}`,
+            value: (
+              <Stack alignItems="end">
+                <AmountDisplay symbol={props?.asset} round size="14px">
+                  {redemption.amount.normalized || '-'}
+                </AmountDisplay>
+              </Stack>
+            ),
+            // `${renderValue(redemption.amount.normalized)} ${props?.asset || ''}`,
             label: `${renderValue(redemption.date.toLocaleDateString())}`,
           })) ?? []
         }

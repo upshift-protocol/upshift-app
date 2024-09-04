@@ -18,11 +18,17 @@ const columns: GridColDef<any[number]>[] = [
     description: 'The vault address.',
     flex: 2,
     editable: false,
-    renderCell({ value }) {
+    renderCell({ value, row }) {
       if (!value) return '-';
       return (
         <Stack justifyContent={'center'} height="100%">
-          <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
+          <LinkAtom
+            href={explorerLink(
+              value,
+              row?.chainId || FALLBACK_CHAINID,
+              'address',
+            )}
+          >
             {truncate(value)}
           </LinkAtom>
         </Stack>
@@ -34,11 +40,17 @@ const columns: GridColDef<any[number]>[] = [
     headerName: 'Collateral',
     flex: 2,
     editable: true,
-    renderCell({ value }) {
+    renderCell({ value, row }) {
       if (!value) return '-';
       if (value === zeroAddress) return 'ETH';
       return (
-        <LinkAtom href={explorerLink(value, FALLBACK_CHAINID, 'address')}>
+        <LinkAtom
+          href={explorerLink(
+            value,
+            (row?.chainId, FALLBACK_CHAINID),
+            'address',
+          )}
+        >
           {truncate(value)}
         </LinkAtom>
       );

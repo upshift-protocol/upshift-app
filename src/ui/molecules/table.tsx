@@ -12,13 +12,10 @@ import type { IColumn } from '@/utils/types';
 import { isAddress, zeroAddress } from 'viem';
 import { truncate } from '@/utils/helpers/string';
 import { Skeleton, Stack, Typography } from '@mui/material';
-import {
-  explorerLink,
-  type IAddress,
-  type INormalizedNumber,
-} from '@augustdigital/sdk';
+import { explorerLink } from '@augustdigital/sdk';
+import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -51,6 +48,7 @@ export default function TableMolecule({
 }: ITable) {
   const { address } = useAccount();
   const router = useRouter();
+  const chainId = useChainId();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -68,12 +66,12 @@ export default function TableMolecule({
   const handleRowClick = (e: React.SyntheticEvent, index: number) => {
     e.preventDefault();
     const uid = data?.[index]?.[uidKey];
-    const chainId = data?.[index]?.chainId;
+    const rowChainId = data?.[index]?.chainId;
     if (!uid) {
       console.error('uid not found');
       // return;
     }
-    router.push(`/pools/${chainId}/${uid}`);
+    router.push(`/pools/${rowChainId}/${uid}`);
   };
 
   const extractData = (value: any) => {
@@ -100,7 +98,11 @@ export default function TableMolecule({
               return (
                 <LinkAtom
                   key={`link-${i}-${e}`}
-                  href={explorerLink(e, FALLBACK_CHAINID, 'address')}
+                  href={explorerLink(
+                    e,
+                    (chainId as IChainId) || FALLBACK_CHAINID,
+                    'address',
+                  )}
                 >
                   {e ? truncate(e) : '-'}
                 </LinkAtom>

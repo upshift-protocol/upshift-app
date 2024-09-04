@@ -2,8 +2,10 @@ import { useThemeMode } from '@/stores/theme';
 import type { ITheme } from '@/utils/types';
 import { Stack, styled, Typography } from '@mui/material';
 import { isAddress, zeroAddress } from 'viem';
+import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { useChainId } from 'wagmi';
 import LinkAtom from './anchor-link';
 
 type IBoxedListItem = {
@@ -28,6 +30,7 @@ const StackRow = styled(Stack)`
 
 export default function BoxedListAtom(props: { items: IBoxedListItem[] }) {
   const { theme } = useThemeMode();
+  const chainId = useChainId();
 
   return (
     <StackOutline thememode={theme}>
@@ -42,7 +45,11 @@ export default function BoxedListAtom(props: { items: IBoxedListItem[] }) {
                 </Typography>
               ) : (
                 <LinkAtom
-                  href={explorerLink(item.value, FALLBACK_CHAINID, 'token')}
+                  href={explorerLink(
+                    item.value,
+                    (chainId as IChainId) || FALLBACK_CHAINID,
+                    'token',
+                  )}
                 >
                   {item.value === zeroAddress ? 'ETH' : truncate(item.value)}
                 </LinkAtom>

@@ -1,5 +1,5 @@
 import type { IColumn } from '@/utils/types';
-import { Box, Chip, TableCell, Typography } from '@mui/material';
+import { Box, Chip, Stack, TableCell, Typography } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { renderVariant } from '@/utils/helpers/ui';
@@ -7,6 +7,7 @@ import { round } from '@augustdigital/sdk';
 import { useAccount } from 'wagmi';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
+import AmountDisplay from '../atoms/amount-display';
 
 const columns: readonly IColumn[] = [
   { id: 'token', value: 'Token', flex: 2 },
@@ -45,6 +46,22 @@ const columns: readonly IColumn[] = [
     flex: 2,
     align: 'right',
     format: (value: number) => round(value),
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <Stack alignItems="end">
+            <AmountDisplay symbol={children?.[2]} round>
+              {children?.[0] || '-'}
+            </AmountDisplay>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
   {
     id: 'redeemable',
@@ -52,6 +69,22 @@ const columns: readonly IColumn[] = [
     flex: 2,
     align: 'right',
     format: (value: number) => round(value),
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <Stack alignItems="end">
+            <AmountDisplay symbol={children?.[2]} round>
+              {children?.[0] || '-'}
+            </AmountDisplay>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
 ];
 
