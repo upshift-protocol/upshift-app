@@ -53,9 +53,12 @@ const HeaderSkeleton = () => {
               <LinkAtom
                 href="/"
                 target="_self"
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                }}
               >
-                {appConfig.site_name}
+                <span style={{ fontSize: '24px' }}>{appConfig.site_name}</span>
               </LinkAtom>
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2}>

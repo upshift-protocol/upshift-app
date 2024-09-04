@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
 import { useChainId } from 'wagmi';
 
-type IFetchTypes = 'lending-pools' | 'lending-pool';
+type IFetchTypes = 'lending-pools' | 'lending-pool' | 'price' | 'my-positions';
 
 interface IUseFetcher extends UndefinedInitialDataOptions {
   queryKey: (IFetchTypes | string)[];
@@ -25,16 +25,16 @@ export default function useFetcher({
   const chainId = useChainId();
 
   const type = queryKey?.[0];
-  const poolAddress = queryKey?.[1];
+  const poolAddressOrSymbol = queryKey?.[1];
 
   async function determineGetter() {
     switch (type) {
       case 'lending-pool': {
-        if (!(poolAddress && isAddress(poolAddress))) {
+        if (!(poolAddressOrSymbol && isAddress(poolAddressOrSymbol))) {
           console.error('Second query key in array must be an address');
           return null;
         }
-        return augustSdk.pools.getPool(poolAddress);
+        return augustSdk.pools.getPool(poolAddressOrSymbol);
       }
       case 'lending-pools': {
         return augustSdk.pools.getPools();
@@ -45,6 +45,10 @@ export default function useFetcher({
           return [];
         }
         return augustSdk.pools.getAllPositions(wallet);
+      }
+      case 'price': {
+        if (!poolAddressOrSymbol) return 1;
+        return augustSdk.getPrice(poolAddressOrSymbol);
       }
       default: {
         return augustSdk.pools.getPools();

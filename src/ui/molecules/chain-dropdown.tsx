@@ -41,14 +41,14 @@ const ChainDropdown = () => {
           id={`chain-dropdown-${Math.floor(Math.random() * 100)}`}
           value={String(activeChain)}
           renderValue={(value) =>
-            renderer(chains.find((chain) => chain.id === Number(value))?.name)
+            renderer(chains?.find((chain) => chain.id === Number(value))?.name)
           }
           onChange={handleChange}
           size="small"
           placeholder="Select Network"
         >
-          {chains.map((chain) => (
-            <MenuItem key={`chain-dropdown-${chain.id}`} value={chain.id}>
+          {chains?.map((chain, i) => (
+            <MenuItem key={`chain-dropdown-${i}`} value={chain.id}>
               {chain.name}
             </MenuItem>
           ))}

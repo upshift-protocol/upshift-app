@@ -118,6 +118,7 @@ export default function MyPositionsTableOrganism({
         loading={loading ?? +positionsLoading}
         action={(rowData: any) => PoolActionsMolecule({ pool: rowData })}
         pagination={false}
+        emptyText="No positions available"
       />
     </Box>
   );

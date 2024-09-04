@@ -1,4 +1,4 @@
-import { blueGrey, blue, red, teal, pink } from '@mui/material/colors';
+import { blueGrey, blue, red, teal, pink, yellow } from '@mui/material/colors';
 import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import { roboto } from './font';
@@ -38,6 +38,9 @@ export const lightTheme = createTheme({
     },
     error: {
       main: red.A200,
+    },
+    warning: {
+      main: yellow['800'],
     },
   },
 });

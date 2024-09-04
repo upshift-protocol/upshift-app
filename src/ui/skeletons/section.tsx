@@ -72,6 +72,7 @@ const SectionSkeleton = (props: ISectionProps) => {
             {props.description && (
               <Typography
                 variant="body1"
+                fontSize={18}
                 maxWidth={STYLE_VARS.descriptionWidth}
               >
                 {props.description}

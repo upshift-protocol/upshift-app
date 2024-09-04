@@ -2,7 +2,6 @@ import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
-import type { IBreadCumb } from '@/utils/types';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/table-loans';
@@ -56,14 +55,14 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
     wallet: address,
   }) as UseQueryResult<any>; // TODO: interface
 
-  function buildCrumbs(): IBreadCumb[] {
-    return [
-      {
-        text: 'Earn',
-        href: '/',
-      },
-    ];
-  }
+  // function buildCrumbs(): IBreadCumb[] {
+  //   return [
+  //     {
+  //       text: 'Earn',
+  //       href: '/',
+  //     },
+  //   ];
+  // }
 
   return (
     <Base>
@@ -74,7 +73,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
           (pool as any)?.description ??
           `The ${pool?.name ?? ''} vault aims to optimize yields by lending ${pool?.underlying?.symbol ?? ''} against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
         }
-        breadcrumbs={buildCrumbs()}
+        // breadcrumbs={buildCrumbs()}
         loading={+poolLoading}
         action={
           <Stack direction="column" alignItems={'end'} gap={2}>

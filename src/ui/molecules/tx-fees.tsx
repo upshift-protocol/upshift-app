@@ -1,6 +1,7 @@
 import { secondsToHours } from '@/utils/helpers/time';
 import type { IPoolMetadata } from '@/utils/types';
 import {
+  round,
   toNormalizedBn,
   type IAddress,
   type IPoolAction,
@@ -101,7 +102,7 @@ export default function TxFeesAtom(props: ITxFees) {
               },
               {
                 label: 'Estimated APY',
-                value: `${props?.pool?.apy || '0.00'}%`,
+                value: `${round(props?.pool?.apy as number | string) || '0.00'}%`,
               },
             ]}
           />

@@ -1,13 +1,11 @@
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import {
-  toNormalizedBn,
-  round,
-  type IPoolWithUnderlying,
-} from '@augustdigital/sdk';
+import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Fragment, useMemo } from 'react';
 import { useChainId } from 'wagmi';
+import useFetcher from '@/hooks/use-fetcher';
+import { formatCompactNumber } from '@/utils/helpers/ui';
 import CustomStat from '../atoms/stat';
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -29,6 +27,14 @@ const OverviewStatsMolecule = ({
   loading?: number;
 }) => {
   const chainId = useChainId();
+
+  const { data: ethPrice, error } = useFetcher({
+    queryKey: ['price', 'eth'],
+    initialData: 1,
+  });
+
+  console.log('ethPrice', ethPrice, error);
+
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = BigInt(0);
@@ -58,7 +64,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${round(totalSupplied)} ETH`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalSupplied) * Number(ethPrice))}`}</Fragment>
           </Tooltip>
         }
         unit="Total Deposits"
@@ -74,7 +80,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${round(totalBorrowed)} ETH`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalBorrowed) * Number(ethPrice))}`}</Fragment>
           </Tooltip>
         }
         unit="Total Borrowed"

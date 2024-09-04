@@ -56,10 +56,12 @@ export default function PoolsTableOrganism({
   title,
   data,
   loading,
+  pagination,
 }: {
   title?: string;
   data?: any;
   loading?: number;
+  pagination?: boolean;
 }) {
   const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
     queryKey: ['lending-pools'],
@@ -79,6 +81,7 @@ export default function PoolsTableOrganism({
         uidKey="address"
         loading={loading ?? +allPoolsLoading}
         action={(rowData) => PoolActionsMolecule({ pool: rowData })}
+        pagination={pagination}
       />
     </Box>
   );

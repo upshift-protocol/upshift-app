@@ -34,6 +34,7 @@ type ITable = {
   type?: ITableType;
   pagination?: boolean;
   hover?: boolean;
+  emptyText?: string;
 };
 
 export default function TableMolecule({
@@ -45,6 +46,7 @@ export default function TableMolecule({
   pagination = true,
   hover = true,
   type = 'custom',
+  emptyText,
 }: ITable) {
   const { address } = useAccount();
   const router = useRouter();
@@ -255,7 +257,7 @@ export default function TableMolecule({
       {!rows.length && (
         <Stack p={4} justifyContent={'center'} alignItems={'center'}>
           <Typography fontSize={'14px'} color="GrayText">
-            No positions available
+            {emptyText || 'No pools available'}
           </Typography>
         </Stack>
       )}

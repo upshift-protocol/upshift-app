@@ -32,13 +32,13 @@ const HomePage = () => {
     <Base>
       <Section
         id="earn-table"
-        title="Earn"
-        description="Earn yields from real institutional loans via the Olympia protocol. Democratizing high-yield investments traditionally limited to financial institutions."
+        // title="Earn"
+        description="Upshift pools generate yields from institutional loans on the August protocol."
         action={
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
       >
-        <Stack gap={3}>
+        <Stack gap={{ sm: 3, md: 4, lg: 5, xl: 6 }}>
           <Collapse in={walletConnected}>
             <MyPositionsTableOrganism
               title="My Positions"
@@ -47,9 +47,20 @@ const HomePage = () => {
             />
           </Collapse>
           <PoolsTableOrganism
-            title="All Pools"
-            data={allPools}
+            title="Upshift Pools"
+            data={allPools?.filter(
+              (p) => !p.name?.toLowerCase()?.includes('kelp'),
+            )}
             loading={+allPoolsLoading}
+            pagination={false}
+          />
+          <PoolsTableOrganism
+            title="Partner Pools"
+            data={allPools?.filter((p) =>
+              p.name?.toLowerCase()?.includes('kelp'),
+            )}
+            loading={+allPoolsLoading}
+            pagination={false}
           />
         </Stack>
       </Section>
