@@ -37,7 +37,11 @@ const SectionSkeleton = (props: ISectionProps) => {
   return (
     <Box
       id={props?.id ?? props?.title?.toLowerCase().replaceAll(' ', '-')}
-      p={props.noYPadding ? '0 2rem' : '2rem'}
+      p={
+        props.noYPadding
+          ? { xs: '0 1rem', md: '0 2rem' }
+          : { xs: '1rem', md: '2rem' }
+      }
       maxWidth={STYLE_VARS.width}
       mx="auto"
     >

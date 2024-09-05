@@ -31,13 +31,13 @@ const OverviewStatsMolecule = ({
   const {
     data: ethPrice,
     isError,
-    isLoading,
+    isFetching,
   } = useFetcher({
     queryKey: ['price', 'eth'],
     initialData: 1,
   });
 
-  const displayEth = isError || isLoading;
+  const displayEth = isError || isFetching;
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
@@ -73,10 +73,10 @@ const OverviewStatsMolecule = ({
         }
         unit="Total Deposits"
         variant="outlined"
-        loading={loading || +isLoading}
+        loading={loading}
       />
       <CustomStat
-        loading={loading || +isLoading}
+        loading={loading}
         value={
           <Tooltip
             title={totalBorrowed}

@@ -61,7 +61,7 @@ const HeaderSkeleton = () => {
                 <span style={{ fontSize: '24px' }}>{appConfig.site_name}</span>
               </LinkAtom>
             </Typography>
-            <Stack direction="row" alignItems="center" spacing={2}>
+            <Stack direction="row" alignItems="center" gap={{ xs: 1, md: 2 }}>
               <ThemeSwitch checked={isDark} onChange={toggleTheme} />
               <ChainDropdown />
               <DynamicWalletBtn />

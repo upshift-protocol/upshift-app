@@ -13,6 +13,8 @@ import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
+import { Collapse } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -45,6 +47,7 @@ export const getStaticProps = (async (context) => {
 
 const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { address } = useAccount();
+  const [walletConnected, setWalletConnected] = useState(false);
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
     queryKey: ['lending-pool', params.pool],
@@ -54,6 +57,11 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
     queryKey: ['my-positions'],
     wallet: address,
   }) as UseQueryResult<any>; // TODO: interface
+
+  useEffect(() => {
+    if (address) setWalletConnected(true);
+    else setWalletConnected(false);
+  }, [address]);
 
   // function buildCrumbs(): IBreadCumb[] {
   //   return [
@@ -92,15 +100,17 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         }
       >
         <Stack gap={3}>
+          <Collapse in={walletConnected && positions.length}>
+            <MyPositionsTableOrganism
+              title="My Positions"
+              data={positions}
+              loading={+positionsLoading}
+            />
+          </Collapse>
           <Stack direction="column" gap={6} mt={2}>
             <VaultInfo {...pool} loading={+poolLoading} />
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
-          <MyPositionsTableOrganism
-            title="My Positions"
-            data={positions}
-            loading={+positionsLoading}
-          />
         </Stack>
       </Section>
     </Base>

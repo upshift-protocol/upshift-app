@@ -39,7 +39,7 @@ const HomePage = () => {
         }
       >
         <Stack gap={{ sm: 3, md: 4, lg: 5, xl: 6 }}>
-          <Collapse in={walletConnected}>
+          <Collapse in={walletConnected && positions.length}>
             <MyPositionsTableOrganism
               title="My Positions"
               data={positions}
