@@ -100,7 +100,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         }
       >
         <Stack gap={3}>
-          <Collapse in={walletConnected && positions.length}>
+          <Collapse in={walletConnected && positions?.length}>
             <MyPositionsTableOrganism
               title="My Positions"
               data={positions}
