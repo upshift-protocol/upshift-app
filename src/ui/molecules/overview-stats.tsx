@@ -28,12 +28,10 @@ const OverviewStatsMolecule = ({
 }) => {
   const chainId = useChainId();
 
-  const { data: ethPrice, error } = useFetcher({
+  const { data: ethPrice, isError } = useFetcher({
     queryKey: ['price', 'eth'],
     initialData: 1,
   });
-
-  console.log('ethPrice', ethPrice, error);
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
@@ -64,7 +62,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalSupplied) * Number(ethPrice))}`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalSupplied) * Number(ethPrice), { symbol: !isError })} ${isError ? 'ETH' : ''}`}</Fragment>
           </Tooltip>
         }
         unit="Total Deposits"
@@ -80,7 +78,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalBorrowed) * Number(ethPrice))}`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalBorrowed) * Number(ethPrice), { symbol: !isError })} ${isError ? 'ETH' : ''}`}</Fragment>
           </Tooltip>
         }
         unit="Total Borrowed"

@@ -9,11 +9,14 @@ export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
   }
 }
 
-export function formatCompactNumber(number: number) {
+export function formatCompactNumber(
+  number: number,
+  options?: { symbol?: boolean },
+) {
   const formatter = Intl.NumberFormat('en-US', {
     notation: 'compact',
     currencySign: 'standard',
-    style: 'currency',
+    style: options?.symbol ? 'currency' : undefined,
     currency: 'USD',
     minimumSignificantDigits: 6,
     maximumSignificantDigits: 6,
