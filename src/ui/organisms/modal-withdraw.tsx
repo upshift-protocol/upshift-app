@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useWithdraw from '@/hooks/use-withdraw';
 import { Card, Typography, useTheme } from '@mui/material';
@@ -10,11 +10,12 @@ import TxFeesAtom from '../molecules/tx-fees';
 
 export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
   const { palette } = useTheme();
-  const inInputProps = useInput(props?.address);
+  const inInputProps = useInput(props?.address, props?.chainId as IChainId);
   const { requestWithdraw, isSuccess, button, expected, pool } = useWithdraw({
     ...inInputProps,
     asset: props?.asset,
     pool: props?.address,
+    chainId: props?.chainId as IChainId,
   });
 
   return (
@@ -24,6 +25,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
         children: 'Withdraw',
         variant: 'outlined',
         color: 'error',
+        disabled: !props?.address,
       }}
       onClose={inInputProps.clearInput}
       closeWhen={isSuccess}
@@ -31,6 +33,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
       <Stack spacing={2} position="relative">
         <AssetInputMolecule
           {...inInputProps}
+          chainId={props?.chainId as IChainId}
           address={props?.address}
           type="In"
         />
@@ -39,12 +42,13 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           type="Out"
           value={expected.loading ? ' ' : expected.out.normalized}
           loading={+expected.loading}
+          chainId={props?.chainId as IChainId}
         />
         <TxFeesAtom
           function="withdraw"
           out={props?.underlying?.address}
           in={props?.address}
-          fee={expected.fee.raw}
+          fee={BigInt(expected.fee.raw)}
           loading={+expected.loading}
           pool={pool}
         />
@@ -83,6 +87,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           variant="contained"
           onClick={requestWithdraw}
           disabled={button.disabled || pool?.loading}
+          chainId={props?.chainId}
         >
           {button.text}
         </Web3Button>

@@ -8,9 +8,34 @@ import { useAccount } from 'wagmi';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AmountDisplay from '../atoms/amount-display';
+import AssetDisplay from '../atoms/asset-display';
 
 const columns: readonly IColumn[] = [
-  { id: 'token', value: 'Token', flex: 2 },
+  {
+    id: 'token',
+    value: 'Token',
+    minWidth: 200,
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <AssetDisplay
+            symbol={String(children)}
+            img={`/assets/tokens/${String(children)}.png`}
+          />
+        </TableCell>
+      );
+    },
+  },
+  {
+    id: 'chainId',
+    value: 'Chain',
+    minWidth: 50,
+  },
   {
     id: 'status',
     value: 'Status',

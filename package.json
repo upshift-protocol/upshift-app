@@ -15,7 +15,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.0.6-alpha",
+    "@augustdigital/sdk": "1.1.0-alpha",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.21",
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^14.1.0",
+    "@tanstack/react-query-devtools": "^5.54.1",
     "@types/node": "^20.11.10",
     "@types/react": "^18.2.48",
     "@typescript-eslint/eslint-plugin": "^6.19.1",

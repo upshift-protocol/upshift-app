@@ -50,7 +50,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [walletConnected, setWalletConnected] = useState(false);
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
-    queryKey: ['lending-pool', params.pool],
+    queryKey: ['lending-pool', params.pool, String(params.chain_id)],
   }) as UseQueryResult<any>; // TODO: interface
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
@@ -83,6 +83,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         }
         // breadcrumbs={buildCrumbs()}
         loading={+poolLoading}
+        chainId={pool?.chainId}
         action={
           <Stack direction="column" alignItems={'end'} gap={2}>
             <AssetDisplay
@@ -93,22 +94,22 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               loading={poolLoading}
             />
             <Stack direction={'row'} gap={1}>
-              <DepositModalMolecule {...pool} />
-              <WithdrawModalMolecule {...pool} />
+              <DepositModalMolecule {...pool} chainId={params?.chain_id} />
+              <WithdrawModalMolecule {...pool} chainId={params?.chain_id} />
             </Stack>
           </Stack>
         }
       >
         <Stack gap={3}>
-          <Collapse in={walletConnected && positions?.length}>
-            <MyPositionsTableOrganism
-              title="My Positions"
-              data={positions}
-              loading={+positionsLoading}
-            />
-          </Collapse>
           <Stack direction="column" gap={6} mt={2}>
             <VaultInfo {...pool} loading={+poolLoading} />
+            <Collapse in={walletConnected && Boolean(positions?.length)}>
+              <MyPositionsTableOrganism
+                title="My Positions"
+                data={positions}
+                loading={+positionsLoading}
+              />
+            </Collapse>
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>

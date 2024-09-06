@@ -7,14 +7,14 @@ import {
   Typography,
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import type { IAddress } from '@augustdigital/sdk';
-import { useAccount, useBalance } from 'wagmi';
-import { formatUnits } from 'viem';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
+import { useAccount, useReadContracts } from 'wagmi';
+import { erc20Abi, formatUnits, zeroAddress } from 'viem';
 import { Fragment } from 'react';
 import AssetSelectorAtom from '../atoms/asset-selector';
 
 type IAssetInput = {
-  chain?: number;
+  chainId?: IChainId;
   address?: IAddress;
   value?: string;
   type?: 'In' | 'Out';
@@ -37,14 +37,29 @@ const StyledTextField = styled(TextField)({
 export default function AssetInputMolecule(props: IAssetInput) {
   const { address } = useAccount();
 
-  const { data: balance, isLoading: balanceLoading } = useBalance({
-    ...props,
-    address,
-    token: props.address,
+  const { data, isLoading } = useReadContracts({
+    contracts: [
+      {
+        ...props,
+        abi: erc20Abi,
+        functionName: 'balanceOf',
+        args: [address || zeroAddress],
+      },
+      {
+        ...props,
+        abi: erc20Abi,
+        functionName: 'decimals',
+      },
+      {
+        ...props,
+        abi: erc20Abi,
+        functionName: 'symbol',
+      },
+    ],
   });
 
   function renderBalance() {
-    if (balanceLoading) {
+    if (isLoading) {
       return (
         <Skeleton
           variant="text"
@@ -53,13 +68,14 @@ export default function AssetInputMolecule(props: IAssetInput) {
         />
       );
     }
+
     return (
       <Fragment>
         {formatUnits(
-          balance?.value || BigInt(0),
-          balance?.decimals || 18,
+          data?.[0]?.result || BigInt(0),
+          data?.[1]?.result || 18,
         ).slice(0, 8) || '0'}{' '}
-        {balance?.symbol}
+        {data?.[2]?.result}
       </Fragment>
     );
   }

@@ -6,7 +6,10 @@ import { Fragment, type ReactNode } from 'react';
 
 import { STYLE_VARS } from '@/utils/constants/ui';
 import type { IBreadCumb } from '@/utils/types';
-import { Skeleton } from '@mui/material';
+import { Chip, Skeleton } from '@mui/material';
+import { useChains } from 'wagmi';
+import Image from 'next/image';
+import { formatChainForImg } from '@/utils/helpers/ui';
 import BreadCrumbs from '../atoms/breadcrumbs';
 
 type ISectionProps = {
@@ -18,6 +21,7 @@ type ISectionProps = {
   breadcrumbs?: IBreadCumb[];
   loading?: number;
   noYPadding?: boolean;
+  chainId?: number;
 };
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -34,6 +38,7 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
 }));
 
 const SectionSkeleton = (props: ISectionProps) => {
+  const chains = useChains();
   return (
     <Box
       id={props?.id ?? props?.title?.toLowerCase().replaceAll(' ', '-')}
@@ -59,18 +64,44 @@ const SectionSkeleton = (props: ISectionProps) => {
           <Box>
             {props.title && (
               <Fragment>
-                {props.loading ? (
-                  <Skeleton
-                    variant="text"
-                    style={{ transform: 'none', marginBottom: '1rem' }}
-                    height={36}
-                    width={300}
-                  />
-                ) : (
-                  <Typography variant="h2" mb={2}>
-                    {props.title}
-                  </Typography>
-                )}
+                <Stack direction={'row'} gap={4}>
+                  {props.loading ? (
+                    <Skeleton
+                      variant="text"
+                      style={{ transform: 'none', marginBottom: '1rem' }}
+                      height={36}
+                      width={300}
+                    />
+                  ) : (
+                    <Typography variant="h2" mb={2}>
+                      {props.title}
+                    </Typography>
+                  )}
+                  {props?.chainId ? (
+                    <Chip
+                      sx={{ mt: 0.5 }}
+                      label={
+                        <Stack direction={'row'} gap={1} alignItems={'center'}>
+                          <Image
+                            src={
+                              formatChainForImg(props?.chainId, chains)
+                                .formatted
+                            }
+                            alt={String(props.chainId)}
+                            height={16}
+                            width={16}
+                          />
+                          <span>
+                            {chains?.find((c) => c.id === props.chainId)
+                              ?.name || props.chainId}
+                          </span>
+                        </Stack>
+                      }
+                      color="info"
+                      variant="outlined"
+                    />
+                  ) : null}
+                </Stack>
               </Fragment>
             )}
             {props.description && (

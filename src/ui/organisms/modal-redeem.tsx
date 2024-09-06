@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useWithdraw from '@/hooks/use-withdraw';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from '../molecules/asset-input';
@@ -13,6 +13,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
     pool: props?.address,
     value: (props as any)?.redeemable?.normalized, // TODO: add type interface
     redemptions: (props as any)?.availableRedemptions,
+    chainId: props?.chainId as IChainId,
   });
 
   return (
@@ -22,6 +23,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
         children: 'Redeem',
         variant: 'outlined',
         color: 'warning',
+        disabled: !props?.address,
       }}
       closeWhen={isSuccess}
     >
@@ -30,6 +32,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           address={props?.address}
           type="Out"
           value={(props as any)?.redeemable?.normalized}
+          chainId={props?.chainId as IChainId}
         />
         <UpcomingRedemptionsMolecule
           redemptions={(props as any)?.availableRedemptions}
@@ -40,7 +43,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           function="claim"
           out={props?.underlying?.address}
           in={props?.address}
-          fee={expected.fee.raw}
+          fee={BigInt(expected.fee.raw)}
           loading={+expected.loading}
           pool={pool}
         />
@@ -50,6 +53,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           variant="contained"
           onClick={handleWithdraw}
           disabled={button.disabled || pool?.loading}
+          chainId={props?.chainId}
         >
           {button.text}
         </Web3Button>

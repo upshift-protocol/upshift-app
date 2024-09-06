@@ -47,4 +47,5 @@ export type IAssetDisplay = {
   truncate?: boolean;
   imgFallback?: boolean;
   loading?: boolean;
+  chainId?: number;
 };

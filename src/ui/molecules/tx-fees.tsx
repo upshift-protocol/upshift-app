@@ -98,7 +98,9 @@ export default function TxFeesAtom(props: ITxFees) {
               },
               {
                 label: 'Collateral Exposure',
-                value: `${props?.pool?.collateral?.join(', ') || '-'}`,
+                value: Array.isArray(props?.pool?.collateral)
+                  ? props?.pool?.collateral?.join(', ')
+                  : '-',
               },
               {
                 label: 'Estimated APY',

@@ -2,7 +2,7 @@ import { queryClient } from '@/config/react-query';
 import Toast from '@/ui/atoms/toast';
 import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
-import type { IAddress } from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -16,6 +16,7 @@ import {
   useAccount,
   usePublicClient,
   useReadContract,
+  useSwitchChain,
   useWalletClient,
 } from 'wagmi';
 
@@ -25,9 +26,11 @@ type IUseDepositProps = {
   clearInput?: () => void;
   pool?: IAddress;
   closeModal?: () => void;
+  chainId?: IChainId;
 };
 
 export default function useDeposit(props: IUseDepositProps) {
+  const { switchChainAsync } = useSwitchChain();
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -77,12 +80,17 @@ export default function useDeposit(props: IUseDepositProps) {
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
-    if (normalized.raw === BigInt(0)) {
+    if (BigInt(normalized.raw) === BigInt(0)) {
       console.error('#handleDeposit: amount input is zero');
       return;
     }
 
     try {
+      if (props?.chainId && props?.chainId !== provider.chain.id) {
+        await switchChainAsync({ chainId: props?.chainId });
+        return;
+      }
+
       setIsLoading(true);
       setError('');
 
@@ -93,7 +101,7 @@ export default function useDeposit(props: IUseDepositProps) {
         functionName: 'allowance',
         args: [address, props.pool],
       });
-      if (allowance < normalized.raw) {
+      if (BigInt(allowance) < BigInt(normalized.raw)) {
         // Approve input amount
         setButton({ text: BUTTON_TEXTS.approving, disabled: true });
         const approveHash = await signer?.writeContract({
@@ -101,7 +109,7 @@ export default function useDeposit(props: IUseDepositProps) {
           address: props.asset,
           abi: erc20Abi,
           functionName: 'approve',
-          args: [props.pool, normalized.raw],
+          args: [props.pool, BigInt(normalized.raw)],
         });
         await toast.promise(
           waitForTransactionReceipt(provider, { hash: approveHash! }),
@@ -128,7 +136,7 @@ export default function useDeposit(props: IUseDepositProps) {
         address: props.pool,
         abi: ABI_LENDING_POOLS,
         functionName: 'deposit',
-        args: [normalized.raw, address],
+        args: [BigInt(normalized.raw), address],
       });
       await toast.promise(
         waitForTransactionReceipt(provider, { hash: depositHash! }),
@@ -189,27 +197,33 @@ export default function useDeposit(props: IUseDepositProps) {
     if (!(provider && props.asset && props.pool && address)) return;
     const normalized = toNormalizedBn(props.value, decimals);
 
-    const { request: approveReq } = await simulateContract(provider, {
-      account: address,
-      address: props.asset,
-      abi: erc20Abi,
-      functionName: 'approve',
-      args: [props.pool, normalized.raw],
-    });
+    let approveReq;
+    let out = BigInt(0);
+    if (props?.chainId === provider.chain.id) {
+      const { request: xapproveReq } = await simulateContract(provider, {
+        account: address,
+        address: props.asset,
+        abi: erc20Abi,
+        functionName: 'approve',
+        args: [props.pool, BigInt(normalized.raw || 0)],
+      });
+      if (xapproveReq) approveReq = xapproveReq;
 
-    const out = await readContract(provider, {
-      account: address,
-      address: props.pool,
-      abi: ABI_LENDING_POOLS,
-      functionName: 'previewDeposit',
-      args: [normalized.raw],
-    });
+      const xout = await readContract(provider, {
+        account: address,
+        address: props.pool,
+        abi: ABI_LENDING_POOLS,
+        functionName: 'previewDeposit',
+        args: [BigInt(normalized.raw)],
+      });
+      if (xout) out = xout;
+    }
 
     // TODO: get actual transaction fee
     const fee = (approveReq?.gas || BigInt(2)) * BigInt(200000);
     setExpected((_prev) => ({
       fee: toNormalizedBn(fee, decimals),
-      out: toNormalizedBn(out, decimals),
+      out: toNormalizedBn(out || BigInt(0), decimals),
       loading: false,
     }));
   }
@@ -226,7 +240,7 @@ export default function useDeposit(props: IUseDepositProps) {
   useEffect(() => {
     (async () => {
       const val = toNormalizedBn(props.value || '0', decimals);
-      if (val.raw === BigInt(0)) {
+      if (BigInt(val.raw) === BigInt(0)) {
         setButton({ text: BUTTON_TEXTS.zero, disabled: true });
       } else {
         let allowance = BigInt(0);
@@ -239,7 +253,7 @@ export default function useDeposit(props: IUseDepositProps) {
             args: [address, props.pool],
           });
         }
-        if (allowance < val.raw) {
+        if (allowance < BigInt(val.raw)) {
           setButton({ text: BUTTON_TEXTS.approve, disabled: false });
         } else {
           setButton({ text: BUTTON_TEXTS.submit, disabled: false });

@@ -23,3 +23,20 @@ export function formatCompactNumber(
   });
   return formatter.format(number);
 }
+
+export function formatChainForImg(chainId?: number, chains?: any) {
+  const value = chains?.find(
+    (chain: any) => chain.id === Number(chainId),
+  )?.name;
+  if (!value)
+    return {
+      chainId,
+      formatted: '/chains/unknown.svg',
+    };
+  let formatted = value;
+  if (value?.includes(' ')) formatted = value?.replaceAll(' ', '-');
+  return {
+    chainId,
+    formatted: `/chains/${formatted}.svg`,
+  };
+}

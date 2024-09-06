@@ -9,13 +9,15 @@ import Typography from '@mui/material/Typography';
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants/ui';
 import { useThemeMode } from '@/stores/theme';
-import Button from '@mui/material/Button';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
-import ChainDropdown from '../molecules/chain-dropdown';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
-  loading: () => <Button variant="outlined">Loading</Button>,
+  ssr: false,
+});
+
+const DynamicChainBtn = dynamic(() => import('../molecules/chain-dropdown'), {
+  ssr: false,
 });
 
 const HeaderSkeleton = () => {
@@ -63,7 +65,7 @@ const HeaderSkeleton = () => {
             </Typography>
             <Stack direction="row" alignItems="center" gap={{ xs: 1, md: 2 }}>
               <ThemeSwitch checked={isDark} onChange={toggleTheme} />
-              <ChainDropdown />
+              <DynamicChainBtn />
               <DynamicWalletBtn />
             </Stack>
           </Toolbar>

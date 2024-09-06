@@ -112,7 +112,7 @@ export default function VaultInfo(
               <Skeleton variant="text" width={75} />
             ) : (
               <Typography fontFamily={'monospace'} display="flex">
-                {props?.withdrawalFee?.raw === BigInt(0) ? (
+                {BigInt(props?.withdrawalFee?.raw || 0) === BigInt(0) ? (
                   <Chip
                     label={'None'}
                     color={'success'}

@@ -32,14 +32,13 @@ const HomePage = () => {
     <Base>
       <Section
         id="earn-table"
-        // title="Earn"
         description="Upshift pools generate yields from institutional loans on the August protocol."
         action={
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
       >
         <Stack gap={{ sm: 3, md: 4, lg: 5, xl: 6 }}>
-          <Collapse in={walletConnected && positions?.length}>
+          <Collapse in={walletConnected && Boolean(positions?.length)}>
             <MyPositionsTableOrganism
               title="My Positions"
               data={positions}

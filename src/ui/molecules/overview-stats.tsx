@@ -32,18 +32,19 @@ const OverviewStatsMolecule = ({
     data: ethPrice,
     isError,
     isFetching,
+    isLoading,
   } = useFetcher({
     queryKey: ['price', 'eth'],
     initialData: 1,
   });
 
-  const displayEth = isError || isFetching;
+  const displayEth = isError || isFetching || isLoading;
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = BigInt(0);
     pools.forEach(({ totalSupply }) => {
-      total += totalSupply.raw;
+      total += totalSupply.raw ? BigInt(totalSupply.raw) : BigInt(0);
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
@@ -53,7 +54,7 @@ const OverviewStatsMolecule = ({
     if (!pools?.length) return '0.0';
     let total = BigInt(0);
     pools.forEach((p) => {
-      total += p.totalBorrowed?.raw || BigInt(0);
+      total += p.totalBorrowed?.raw ? BigInt(p.totalBorrowed?.raw) : BigInt(0);
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
@@ -73,10 +74,10 @@ const OverviewStatsMolecule = ({
         }
         unit="Total Deposits"
         variant="outlined"
-        loading={loading}
+        loading={loading || +isLoading || +isFetching}
       />
       <CustomStat
-        loading={loading}
+        loading={loading || +isLoading || +isFetching}
         value={
           <Tooltip
             title={totalBorrowed}

@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useDeposit from '@/hooks/use-deposit';
 import ModalAtom from '../atoms/modal';
@@ -10,11 +10,15 @@ import TxFeesAtom from '../molecules/tx-fees';
 export default function DepositModalMolecule(
   props: IPoolWithUnderlying | undefined,
 ) {
-  const inInputProps = useInput(props?.underlying?.address);
+  const inInputProps = useInput(
+    props?.underlying?.address,
+    props?.chainId as IChainId,
+  );
   const { handleDeposit, isSuccess, button, expected } = useDeposit({
     ...inInputProps,
     asset: props?.asset,
     pool: props?.address,
+    chainId: props?.chainId as IChainId,
   });
 
   return (
@@ -23,6 +27,7 @@ export default function DepositModalMolecule(
       buttonProps={{
         children: 'Deposit',
         variant: 'outlined',
+        disabled: !props?.address,
       }}
       // TODO: leave modal open for 4 seconds
       onClose={inInputProps.clearInput}
@@ -33,18 +38,20 @@ export default function DepositModalMolecule(
           {...inInputProps}
           address={props?.underlying?.address}
           type="In"
+          chainId={props?.chainId as IChainId}
         />
         <AssetInputMolecule
           address={props?.address}
           type="Out"
           value={expected.loading ? ' ' : expected.out.normalized}
           loading={+expected.loading}
+          chainId={props?.chainId as IChainId}
         />
         <TxFeesAtom
           function="deposit"
           in={props?.underlying?.address}
           out={props?.address}
-          fee={expected.fee.raw}
+          fee={BigInt(expected.fee.raw)}
           loading={+expected.loading}
           pool={{
             apy: props?.apy,
@@ -56,6 +63,7 @@ export default function DepositModalMolecule(
           size="large"
           variant="contained"
           disabled={button.disabled}
+          chainId={props?.chainId}
         >
           {button.text}
         </Web3Button>

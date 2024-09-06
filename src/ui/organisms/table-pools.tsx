@@ -8,12 +8,13 @@ import TableMolecule from '../molecules/table';
 import AmountDisplay from '../atoms/amount-display';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', flex: 2 },
+  { id: 'name', value: 'Name', minWidth: 200 },
+  { id: 'chainId', value: 'Chain', minWidth: 50 },
   {
     id: 'totalSupply',
     value: 'Total Supply',
     align: 'right',
-    flex: 2,
+    minWidth: 200,
     format: (value: number) => value.toLocaleString('en-US'),
     component: ({
       children: {
@@ -35,7 +36,7 @@ const columns: readonly IColumn[] = [
   {
     id: 'apy',
     value: 'Net APY',
-    flex: 1,
+    minWidth: 100,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },

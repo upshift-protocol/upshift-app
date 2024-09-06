@@ -1,13 +1,24 @@
-import { type IAddress } from '@augustdigital/sdk';
+import type { IChainId, IAddress } from '@augustdigital/sdk';
 import { useState } from 'react';
-import { formatUnits } from 'viem';
-import { useAccount, useBalance } from 'wagmi';
+import { erc20Abi, formatUnits, zeroAddress } from 'viem';
+import { useAccount, useReadContract } from 'wagmi';
 
-export default function useInput(token?: IAddress) {
+export default function useInput(token?: IAddress, chainId?: IChainId) {
   const { address } = useAccount();
-  const { data } = useBalance({
-    address,
-    token,
+
+  const { data: balance } = useReadContract({
+    address: token,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: [address || zeroAddress],
+    chainId,
+  });
+
+  const { data: decimals } = useReadContract({
+    address: token,
+    abi: erc20Abi,
+    functionName: 'decimals',
+    chainId,
   });
 
   const [value, setValue] = useState('');
@@ -16,11 +27,12 @@ export default function useInput(token?: IAddress) {
     e.preventDefault();
     if (!token) {
       console.warn('#useInput: token address not passed');
-    } else if (!data?.value) {
+      setValue('0');
+    } else if (balance && decimals) {
+      setValue(formatUnits(balance, decimals));
+    } else {
       console.warn('#useInput: no token balance');
       setValue('0');
-    } else {
-      setValue(formatUnits(data.value, data.decimals));
     }
   }
 

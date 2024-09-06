@@ -1,6 +1,6 @@
 import { augustSdk } from '@/config/august-sdk';
 import { buildQueryKey } from '@/utils/helpers/query';
-import type { IAddress } from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
@@ -22,10 +22,11 @@ export default function useFetcher({
   wallet,
   ...props
 }: IUseFetcher) {
-  const chainId = useChainId();
+  const connectedChainId = useChainId();
 
   const type = queryKey?.[0];
   const poolAddressOrSymbol = queryKey?.[1];
+  const chainId = queryKey?.[2] || connectedChainId;
 
   async function determineGetter() {
     switch (type) {
@@ -34,24 +35,32 @@ export default function useFetcher({
           console.error('Second query key in array must be an address');
           return null;
         }
-        return augustSdk.pools.getPool(poolAddressOrSymbol);
+        const pool = await augustSdk.pools.getPool(
+          poolAddressOrSymbol,
+          Number(chainId) as IChainId,
+        );
+        return pool;
       }
       case 'lending-pools': {
-        return augustSdk.pools.getPools();
+        const pools = await augustSdk.pools.getPools();
+        return pools;
       }
       case 'my-positions': {
         if (!(wallet && isAddress(wallet))) {
           console.error('Connected address is undefined:', wallet);
           return [];
         }
-        return augustSdk.pools.getAllPositions(wallet);
+        const positions = await augustSdk.pools.getAllPositions(wallet);
+        return positions;
       }
       case 'price': {
         if (!poolAddressOrSymbol) return 1;
-        return augustSdk.getPrice(poolAddressOrSymbol);
+        const price = await augustSdk.getPrice(poolAddressOrSymbol);
+        return price;
       }
       default: {
-        return augustSdk.pools.getPools();
+        const pools = await augustSdk.pools.getPools();
+        return pools;
       }
     }
   }

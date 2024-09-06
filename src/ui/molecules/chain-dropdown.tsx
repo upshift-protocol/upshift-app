@@ -1,5 +1,8 @@
+'use client';
+
 import { augustSdk } from '@/config/august-sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { formatChainForImg } from '@/utils/helpers/ui';
 import { type IChainId } from '@augustdigital/sdk';
 import type { SelectChangeEvent } from '@mui/material';
 import {
@@ -25,12 +28,10 @@ const ChainDropdown = () => {
   function renderer(_value?: string) {
     const value = chains?.find((chain) => chain.id === Number(_value))?.name;
     if (!value) return 'Unknown';
-    let formatted = value;
-    if (value?.includes(' ')) formatted = value?.replaceAll(' ', '-');
     return (
       <Stack justifyContent={'center'} alignItems={'center'}>
         <Image
-          src={`/chains/${formatted}.svg`}
+          src={formatChainForImg(Number(_value), chains).formatted}
           alt={value}
           height={20}
           width={20}
@@ -48,18 +49,16 @@ const ChainDropdown = () => {
   useEffect(() => {
     const foundChain = chains.find(({ id }) => id === chainId);
     if (foundChain) {
-      setActiveChain(String(chainId));
-      // TODO: fix
-      augustSdk.switchNetwork(chainId as IChainId);
+      setActiveChain(String(foundChain.id));
+      augustSdk.switchNetwork(foundChain.id as IChainId);
     }
-  }, [chainId]);
+  }, [chainId, chains?.length]);
 
   return (
     <Box>
       <FormControl fullWidth>
         <Select
-          id={`chain-dropdown-${Math.floor(Math.random() * 100)}`}
-          value={String(activeChain)}
+          value={activeChain}
           renderValue={renderer}
           onChange={handleChange}
           size="small"
@@ -69,7 +68,7 @@ const ChainDropdown = () => {
             <MenuItem key={`chain-dropdown-${i}`} value={chain.id}>
               <Stack flexDirection={'row'} gap={1} alignItems={'center'}>
                 <Image
-                  src={`/chains/${chain.name?.replaceAll(' ', '-')}.svg`}
+                  src={formatChainForImg(Number(chain), chains).formatted}
                   alt={chain.name}
                   height={20}
                   width={20}

@@ -13,6 +13,7 @@ import {
   usePublicClient,
   useReadContract,
   useReadContracts,
+  useSwitchChain,
   useWalletClient,
 } from 'wagmi';
 
@@ -23,9 +24,11 @@ type IUseDepositProps = {
   pool?: IAddress;
   closeModal?: () => void;
   redemptions?: any; // TODO: add type interface
+  chainId?: number;
 };
 
 export default function useWithdraw(props: IUseDepositProps) {
+  const { switchChainAsync } = useSwitchChain();
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -48,6 +51,7 @@ export default function useWithdraw(props: IUseDepositProps) {
     address: props.asset,
     abi: erc20Abi,
     functionName: 'decimals',
+    chainId: props?.chainId,
   });
 
   const { data: poolMetaData, isLoading: poolMetaLoading } = useReadContracts({
@@ -56,11 +60,13 @@ export default function useWithdraw(props: IUseDepositProps) {
         address: props.asset,
         abi: erc20Abi,
         functionName: 'symbol',
+        chainId: props?.chainId,
       },
       {
         address: props.pool,
         abi: ABI_LENDING_POOLS,
         functionName: 'lagDuration',
+        chainId: props?.chainId,
       },
     ],
   });
@@ -87,12 +93,17 @@ export default function useWithdraw(props: IUseDepositProps) {
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
-    if (normalized.raw === BigInt(0)) {
+    if (BigInt(normalized.raw || 0) === BigInt(0)) {
       console.error('#requestWithdraw: amount input is zero');
       return;
     }
 
     try {
+      if (props?.chainId && props?.chainId !== provider.chain.id) {
+        await switchChainAsync({ chainId: props?.chainId });
+        return;
+      }
+
       setIsLoading(true);
       setError('');
 
@@ -103,7 +114,7 @@ export default function useWithdraw(props: IUseDepositProps) {
         address: props.pool,
         abi: ABI_LENDING_POOLS,
         functionName: 'requestRedeem',
-        args: [normalized.raw, address, address],
+        args: [BigInt(normalized.raw), address, address],
       });
       await toast.promise(
         waitForTransactionReceipt(provider, { hash: redeemHash! }),
@@ -171,7 +182,7 @@ export default function useWithdraw(props: IUseDepositProps) {
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
-    if (normalized.raw === BigInt(0)) {
+    if (BigInt(normalized.raw) === BigInt(0)) {
       console.error('#requestWithdraw: amount input is zero');
       return;
     }
@@ -188,6 +199,11 @@ export default function useWithdraw(props: IUseDepositProps) {
     }
 
     try {
+      if (props?.chainId && props?.chainId !== provider.chain.id) {
+        await switchChainAsync({ chainId: props?.chainId });
+        return;
+      }
+
       setIsLoading(true);
       setError('');
 
@@ -265,21 +281,23 @@ export default function useWithdraw(props: IUseDepositProps) {
     if (!(provider && props.asset && props.pool && address)) return;
     const normalized = toNormalizedBn(props.value, decimals);
 
-    const out = await readContract(provider, {
-      account: address,
-      address: props.pool,
-      abi: ABI_LENDING_POOLS,
-      functionName: 'previewRedeem',
-      args: [normalized.raw],
-    });
+    if (props?.chainId === provider.chain.id) {
+      const out = await readContract(provider, {
+        account: address,
+        address: props.pool,
+        abi: ABI_LENDING_POOLS,
+        functionName: 'previewRedeem',
+        args: [BigInt(normalized.raw)],
+      });
 
-    // TODO: get actual transaction fee
-    const fee = BigInt(200000);
-    setExpected((_prev) => ({
-      fee: toNormalizedBn(fee, decimals),
-      out: toNormalizedBn(out, decimals),
-      loading: false,
-    }));
+      // TODO: get actual transaction fee
+      const fee = BigInt(200000);
+      setExpected((_prev) => ({
+        fee: toNormalizedBn(fee, decimals),
+        out: toNormalizedBn(out, decimals),
+        loading: false,
+      }));
+    }
   }
 
   function reset() {
@@ -293,7 +311,7 @@ export default function useWithdraw(props: IUseDepositProps) {
   // useEffects
   useEffect(() => {
     const val = toNormalizedBn(props.value || '0', decimals);
-    if (val.raw === BigInt(0)) {
+    if (BigInt(val.raw) === BigInt(0)) {
       setButton({ text: BUTTON_TEXTS.zero, disabled: true });
     } else {
       setButton({ text: BUTTON_TEXTS.submit, disabled: false });

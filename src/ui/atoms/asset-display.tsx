@@ -78,7 +78,9 @@ export default function AssetDisplay(props: IAssetDisplay) {
         style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
         href={explorerLink(
           props.address,
-          (chainId as IChainId) || FALLBACK_CHAINID,
+          (props?.chainId as IChainId) ||
+            (chainId as IChainId) ||
+            FALLBACK_CHAINID,
           'token',
         )}
         target="_blank"

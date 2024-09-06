@@ -38,6 +38,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
         symbol={props.symbol ?? symbol}
         truncate
         imgFallback
+        chainId={props?.chainId}
       />
     </Stack>
   );
