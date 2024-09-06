@@ -1,10 +1,18 @@
 import type { IColumn } from '@/utils/types';
-import { Box, Chip, Stack, TableCell, Typography } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Stack,
+  TableCell,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { renderVariant } from '@/utils/helpers/ui';
 import { round } from '@augustdigital/sdk';
 import { useAccount } from 'wagmi';
+import Image from 'next/image';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AmountDisplay from '../atoms/amount-display';
@@ -35,6 +43,28 @@ const columns: readonly IColumn[] = [
     id: 'chainId',
     value: 'Chain',
     minWidth: 50,
+    format: (value: number) => value.toString(),
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <Stack justifyContent={'center'}>
+            <Tooltip title={children?.[0]} arrow placement="top">
+              <Image
+                src={`/chains/${children?.[0]}.svg`}
+                alt={children?.[0]}
+                height={20}
+                width={20}
+              />
+            </Tooltip>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
   {
     id: 'status',

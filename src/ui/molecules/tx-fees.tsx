@@ -8,6 +8,7 @@ import {
 } from '@augustdigital/sdk';
 import { Skeleton, Stack, Typography } from '@mui/material';
 import { useGasPrice } from 'wagmi';
+import { Suspense } from 'react';
 import BoxedListAtom from '../atoms/boxed-list';
 
 type ITxFees = {
@@ -19,13 +20,14 @@ type ITxFees = {
   fee?: bigint;
   loading?: number;
   pool?: IPoolMetadata;
+  chainId?: number;
 };
 
 export default function TxFeesAtom(props: ITxFees) {
-  const { data: gasPrice } = useGasPrice();
+  const { data: gasPrice } = useGasPrice({ chainId: props?.chainId });
   const feeTotal = (gasPrice || BigInt(0)) * (props.fee || BigInt(0));
 
-  function renderValue(value?: string | bigint, type?: 'lock' | 'gas') {
+  function renderValue(value?: string, type?: 'lock' | 'gas') {
     switch (type) {
       case 'lock': {
         if (props.pool?.loading)
@@ -54,8 +56,8 @@ export default function TxFeesAtom(props: ITxFees) {
               height="14px"
             />
           );
-        if (typeof type === 'string') return value ?? '-';
-        return value ?? '-';
+        if (typeof type === 'string') return `${value} ETH` ?? '-';
+        return `${value} ETH` ?? '-';
       }
     }
   }
@@ -68,7 +70,7 @@ export default function TxFeesAtom(props: ITxFees) {
             items={[
               {
                 label: 'Gas Fee',
-                value: `${renderValue(toNormalizedBn(feeTotal)?.normalized)} ETH`,
+                value: renderValue(toNormalizedBn(feeTotal)?.normalized),
               },
             ]}
           />
@@ -79,11 +81,11 @@ export default function TxFeesAtom(props: ITxFees) {
             items={[
               {
                 label: 'Gas Fee',
-                value: `${renderValue(toNormalizedBn(feeTotal)?.normalized)} ETH`,
+                value: renderValue(toNormalizedBn(feeTotal)?.normalized),
               },
               {
                 label: 'Unstake Lock Period',
-                value: `${renderValue(props?.pool?.lockTime?.normalized, 'lock')}`,
+                value: renderValue(props?.pool?.lockTime?.normalized, 'lock'),
               },
             ]}
           />
@@ -94,7 +96,7 @@ export default function TxFeesAtom(props: ITxFees) {
             items={[
               {
                 label: 'Gas Fee',
-                value: `${renderValue(toNormalizedBn(feeTotal)?.normalized)} ETH`,
+                value: renderValue(toNormalizedBn(feeTotal)?.normalized),
               },
               {
                 label: 'Collateral Exposure',
@@ -115,7 +117,7 @@ export default function TxFeesAtom(props: ITxFees) {
             items={[
               {
                 label: 'Gas Fee',
-                value: `${renderValue(toNormalizedBn(feeTotal)?.normalized)} ETH`,
+                value: renderValue(toNormalizedBn(feeTotal)?.normalized),
               },
             ]}
           />
@@ -124,9 +126,11 @@ export default function TxFeesAtom(props: ITxFees) {
   }
 
   return (
-    <Stack gap={1}>
-      <Typography variant="body2">Transaction Overview</Typography>
-      {renderList()}
-    </Stack>
+    <Suspense>
+      <Stack gap={1}>
+        <Typography variant="body2">Transaction Overview</Typography>
+        {renderList()}
+      </Stack>
+    </Suspense>
   );
 }

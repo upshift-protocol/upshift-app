@@ -46,18 +46,20 @@ export default function useDeposit(props: IUseDepositProps) {
   });
 
   // Meta hooks
-  const provider = usePublicClient();
-  const { data: signer } = useWalletClient();
+  const provider = usePublicClient({ chainId: props?.chainId });
+  const { data: signer } = useWalletClient({ chainId: props?.chainId });
   const { address } = useAccount();
   const { data: decimals } = useReadContract({
     address: props.asset,
     abi: erc20Abi,
     functionName: 'decimals',
+    chainId: props?.chainId,
   });
   const { data: symbol } = useReadContract({
     address: props.asset,
     abi: erc20Abi,
     functionName: 'symbol',
+    chainId: props?.chainId,
   });
 
   // Functions
@@ -197,27 +199,21 @@ export default function useDeposit(props: IUseDepositProps) {
     if (!(provider && props.asset && props.pool && address)) return;
     const normalized = toNormalizedBn(props.value, decimals);
 
-    let approveReq;
-    let out = BigInt(0);
-    if (props?.chainId === provider.chain.id) {
-      const { request: xapproveReq } = await simulateContract(provider, {
-        account: address,
-        address: props.asset,
-        abi: erc20Abi,
-        functionName: 'approve',
-        args: [props.pool, BigInt(normalized.raw || 0)],
-      });
-      if (xapproveReq) approveReq = xapproveReq;
+    const { request: approveReq } = await simulateContract(provider, {
+      account: address,
+      address: props.asset,
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [props.pool, BigInt(normalized.raw || 0)],
+    });
 
-      const xout = await readContract(provider, {
-        account: address,
-        address: props.pool,
-        abi: ABI_LENDING_POOLS,
-        functionName: 'previewDeposit',
-        args: [BigInt(normalized.raw)],
-      });
-      if (xout) out = xout;
-    }
+    const out = await readContract(provider, {
+      account: address,
+      address: props.pool,
+      abi: ABI_LENDING_POOLS,
+      functionName: 'previewDeposit',
+      args: [BigInt(normalized.raw)],
+    });
 
     // TODO: get actual transaction fee
     const fee = (approveReq?.gas || BigInt(2)) * BigInt(200000);

@@ -1,15 +1,42 @@
 import type { IColumn } from '@/utils/types';
-import { Box, Typography, TableCell, Stack } from '@mui/material';
+import { Box, Typography, TableCell, Stack, Tooltip } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { type IPoolWithUnderlying } from '@augustdigital/sdk';
 import useFetcher from '@/hooks/use-fetcher';
+import Image from 'next/image';
 import PoolActionsMolecule from './actions-pool';
 import TableMolecule from '../molecules/table';
 import AmountDisplay from '../atoms/amount-display';
 
 const columns: readonly IColumn[] = [
   { id: 'name', value: 'Name', minWidth: 200 },
-  { id: 'chainId', value: 'Chain', minWidth: 50 },
+  {
+    id: 'chainId',
+    value: 'Chain',
+    minWidth: 50,
+    format: (value: number) => value.toString(),
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children) return <></>;
+      return (
+        <TableCell>
+          <Stack justifyContent={'center'}>
+            <Tooltip title={children?.[0]} arrow placement="top">
+              <Image
+                src={`/chains/${children?.[0]}.svg`}
+                alt={children?.[0]}
+                height={20}
+                width={20}
+              />
+            </Tooltip>
+          </Stack>
+        </TableCell>
+      );
+    },
+  },
   {
     id: 'totalSupply',
     value: 'Total Supply',

@@ -53,6 +53,7 @@ export default function DepositModalMolecule(
           out={props?.address}
           fee={BigInt(expected.fee.raw)}
           loading={+expected.loading}
+          chainId={props?.chainId}
           pool={{
             apy: props?.apy,
             collateral: props?.collateral,

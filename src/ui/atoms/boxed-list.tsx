@@ -28,9 +28,13 @@ const StackRow = styled(Stack)`
   align-items: center;
 `;
 
-export default function BoxedListAtom(props: { items: IBoxedListItem[] }) {
+export default function BoxedListAtom(props: {
+  items: IBoxedListItem[];
+  chainId?: number;
+}) {
   const { theme } = useThemeMode();
-  const chainId = useChainId();
+  const underlyingChainId = useChainId();
+  const chainId = props?.chainId || underlyingChainId;
 
   return (
     <StackOutline thememode={theme}>

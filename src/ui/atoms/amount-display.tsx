@@ -21,14 +21,14 @@ export default function AmountDisplay(props: IAmountDisplay) {
         placement="top"
         arrow
       >
-        <Stack direction="row" gap={1} alignItems="center">
-          <Typography fontFamily="monospace" fontSize={props?.size}>
+        <span>
+          <span style={{ fontFamily: 'monospace', fontSize: props?.size }}>
             {round(props.children)}
-          </Typography>
+          </span>
           {props.symbol ? (
-            <Typography fontSize={props?.size}>{props.symbol}</Typography>
+            <span style={{ fontSize: props?.size }}> {props.symbol}</span>
           ) : null}
-        </Stack>
+        </span>
       </Tooltip>
     );
   }

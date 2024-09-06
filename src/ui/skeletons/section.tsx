@@ -64,7 +64,7 @@ const SectionSkeleton = (props: ISectionProps) => {
           <Box>
             {props.title && (
               <Fragment>
-                <Stack direction={'row'} gap={4}>
+                <Stack direction={'row'} gap={{ xs: 2, sm: 3, md: 4 }}>
                   {props.loading ? (
                     <Skeleton
                       variant="text"

@@ -73,7 +73,7 @@ export default function useFetcher({
 
   const query = useQuery({
     ...props,
-    queryKey: buildQueryKey(queryKey.join('-'), chainId, wallet),
+    queryKey: buildQueryKey(queryKey.join('-'), '', wallet),
     queryFn: masterGetter,
   });
 

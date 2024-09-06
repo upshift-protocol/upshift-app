@@ -3,7 +3,6 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Fragment, useMemo } from 'react';
-import { useChainId } from 'wagmi';
 import useFetcher from '@/hooks/use-fetcher';
 import { formatCompactNumber } from '@/utils/helpers/ui';
 import CustomStat from '../atoms/stat';
@@ -26,8 +25,6 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
-  const chainId = useChainId();
-
   const {
     data: ethPrice,
     isError,
@@ -48,7 +45,7 @@ const OverviewStatsMolecule = ({
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
-  }, [pools?.length, chainId]);
+  }, [pools?.length]);
 
   const totalBorrowed = useMemo(() => {
     if (!pools?.length) return '0.0';
@@ -58,7 +55,7 @@ const OverviewStatsMolecule = ({
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
-  }, [pools?.length, chainId]);
+  }, [pools?.length]);
   return (
     <ResponsiveStack>
       <CustomStat

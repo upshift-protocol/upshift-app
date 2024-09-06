@@ -68,7 +68,7 @@ const ChainDropdown = () => {
             <MenuItem key={`chain-dropdown-${i}`} value={chain.id}>
               <Stack flexDirection={'row'} gap={1} alignItems={'center'}>
                 <Image
-                  src={formatChainForImg(Number(chain), chains).formatted}
+                  src={formatChainForImg(Number(chain.id), chains).formatted}
                   alt={chain.name}
                   height={20}
                   width={20}

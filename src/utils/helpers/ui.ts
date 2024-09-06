@@ -33,10 +33,10 @@ export function formatChainForImg(chainId?: number, chains?: any) {
       chainId,
       formatted: '/chains/unknown.svg',
     };
-  let formatted = value;
+  let formatted: string = value;
   if (value?.includes(' ')) formatted = value?.replaceAll(' ', '-');
   return {
     chainId,
-    formatted: `/chains/${formatted}.svg`,
+    formatted: `/chains/${formatted.toLowerCase()}.svg`,
   };
 }

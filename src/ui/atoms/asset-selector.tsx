@@ -16,6 +16,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
     address: props.address,
     abi: erc20Abi,
     functionName: 'symbol',
+    chainId: props?.chainId,
   });
 
   return (
