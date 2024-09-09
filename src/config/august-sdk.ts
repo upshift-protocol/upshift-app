@@ -7,4 +7,5 @@ export const augustSdk = new AugustDigitalSDK({
     1: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`,
     42161: `https://arbitrum-mainnet.infura.io/v3/${INFURA_API_KEY}`,
   },
+  env: process.env.NEXT_PUBLIC_DEV ? 'DEV' : 'PROD',
 });
