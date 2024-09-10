@@ -1,7 +1,17 @@
+import { queryClient } from '@/config/react-query';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
-import { Fragment, useState } from 'react';
+import dynamic from 'next/dynamic';
+import React, { Fragment, useState } from 'react';
+
+const ReactQueryDevtoolsProduction = dynamic(() =>
+  // eslint-disable-next-line import/extensions
+  import('@tanstack/react-query-devtools/build/modern/production.js').then(
+    (d) => ({
+      default: d.ReactQueryDevtoolsPanel,
+    }),
+  ),
+);
 
 export default function DevtoolsSkeleton() {
   const [showQueryTools, setShowQueryTools] = useState(false);
@@ -24,7 +34,7 @@ export default function DevtoolsSkeleton() {
 
       {showQueryTools && (
         <Box position="fixed" bottom="0" right="0" zIndex={99}>
-          <ReactQueryDevtoolsPanel onClose={() => setShowQueryTools(false)} />
+          <ReactQueryDevtoolsProduction client={queryClient} />
         </Box>
       )}
     </Fragment>
