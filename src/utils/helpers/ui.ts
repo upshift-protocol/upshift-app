@@ -1,3 +1,4 @@
+import { zeroAddress } from 'viem';
 import { FALLBACK_CHAINID } from '../constants/web3';
 
 export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
@@ -49,5 +50,22 @@ export function getChainNameById(chainId?: number | string) {
       return 'Arbitrum One';
     default:
       return 'Mainnet';
+  }
+}
+
+export function getTokenSymbol(address: string, chainId?: number | string) {
+  const lowercaseAddress = address.toLowerCase();
+  if (lowercaseAddress === zeroAddress) return 'ETH';
+  switch (Number(chainId)) {
+    case 42161: {
+      return address;
+    }
+    default: {
+      if (lowercaseAddress === '0xa1290d69c65a6fe4df752f95823fae25cb99e5a7')
+        return 'rsETH';
+      if (lowercaseAddress === '0x54e44dbb92dba848ace27f44c0cb4268981ef1cc')
+        return 'Karak XP';
+      return address;
+    }
   }
 }

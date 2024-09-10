@@ -13,6 +13,7 @@ import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Tooltip } from '@mui/material';
+import { getTokenSymbol } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -42,7 +43,7 @@ const columns: GridColDef<any[number]>[] = [
   },
   {
     field: 'positions',
-    headerName: 'Positions',
+    headerName: 'Protocol Exposure',
     flex: 2,
     editable: true,
     renderCell({ value, row }) {
@@ -71,25 +72,31 @@ const columns: GridColDef<any[number]>[] = [
   },
   {
     field: 'exposure',
-    headerName: 'Exposure',
+    headerName: 'Token Exposure',
     flex: 2,
     editable: true,
     renderCell({ value, row }) {
       if (!value?.length) return '-';
-      // if (value === zeroAddress) return 'ETH';
       return (
         <Stack direction="row" alignItems={'center'} height="100%" gap={1}>
-          {value.map((exp: { value: IAddress; label: string }) => (
-            <LinkAtom
+          {value.map((exp: { value: IAddress; label: string }, i: number) => (
+            <span
               key={`table-loans-${row.id}-${exp.value}`}
-              href={explorerLink(
-                exp.value,
-                (row?.chainId, FALLBACK_CHAINID),
-                'address',
-              )}
+              style={{ display: 'flex', alignItems: 'center' }}
             >
-              {truncate(exp.value, 3)}
-            </LinkAtom>
+              <LinkAtom
+                href={explorerLink(
+                  exp.value,
+                  (row?.chainId, FALLBACK_CHAINID),
+                  'address',
+                )}
+              >
+                {getTokenSymbol(exp?.value)?.length > 20
+                  ? truncate(exp.value, 3)
+                  : getTokenSymbol(exp.value)}
+              </LinkAtom>
+              {i !== Number(value?.length) - 1 ? ',' : null}
+            </span>
           ))}
         </Stack>
       );
