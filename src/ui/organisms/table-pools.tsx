@@ -1,15 +1,24 @@
-import type { IColumn } from '@/utils/types';
-import { Box, Typography, TableCell, Stack, Tooltip } from '@mui/material';
-import type { UseQueryResult } from '@tanstack/react-query';
-import { type IPoolWithUnderlying } from '@augustdigital/sdk';
-import useFetcher from '@/hooks/use-fetcher';
 import Image from 'next/image';
-import PoolActionsMolecule from './actions-pool';
-import TableMolecule from '../molecules/table';
+
+import type { IColumn } from '@/utils/types';
+import { type IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { UseQueryResult } from '@tanstack/react-query';
+
+import useFetcher from '@/hooks/use-fetcher';
+
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TableCell from '@mui/material/TableCell';
+import Stack from '@mui/material/Stack';
+import Skeleton from '@mui/material/Skeleton';
+import Tooltip from '@mui/material/Tooltip';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import AmountDisplay from '../atoms/amount-display';
+import TableMolecule from '../molecules/table';
+import PoolActionsMolecule from './actions-pool';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 200 },
+  { id: 'name', value: 'Name', minWidth: 180 },
   {
     id: 'chainId',
     value: 'Chain',
@@ -20,13 +29,18 @@ const columns: readonly IColumn[] = [
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
             <Tooltip title={children?.[0]} arrow placement="top">
               <Image
-                src={`/chains/${children?.[0]}.svg`}
+                src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
                 alt={children?.[0]}
                 height={20}
                 width={20}
@@ -48,7 +62,12 @@ const columns: readonly IColumn[] = [
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <Stack alignItems="end">

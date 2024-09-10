@@ -1,18 +1,21 @@
 import type { IColumn } from '@/utils/types';
-import {
-  Box,
-  Chip,
-  Stack,
-  TableCell,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TableCell from '@mui/material/TableCell';
+import Stack from '@mui/material/Stack';
+import Skeleton from '@mui/material/Skeleton';
+import Tooltip from '@mui/material/Tooltip';
+
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { renderVariant } from '@/utils/helpers/ui';
 import { round } from '@augustdigital/sdk';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
+import Chip from '@mui/material/Chip';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AmountDisplay from '../atoms/amount-display';
@@ -22,18 +25,27 @@ const columns: readonly IColumn[] = [
   {
     id: 'token',
     value: 'Token',
-    minWidth: 200,
+    minWidth: 180,
     component: ({
       children: {
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <AssetDisplay
             symbol={String(children)}
-            img={`/assets/tokens/${String(children)}.png`}
+            img={
+              children && children !== '-'
+                ? `/assets/tokens/${String(children)}.png`
+                : FALLBACK_TOKEN_IMG
+            }
           />
         </TableCell>
       );
@@ -49,13 +61,18 @@ const columns: readonly IColumn[] = [
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
             <Tooltip title={children?.[0]} arrow placement="top">
               <Image
-                src={`/chains/${children?.[0]}.svg`}
+                src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
                 alt={children?.[0]}
                 height={20}
                 width={20}
@@ -75,7 +92,12 @@ const columns: readonly IColumn[] = [
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <Chip
@@ -106,7 +128,12 @@ const columns: readonly IColumn[] = [
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <Stack alignItems="end">
@@ -129,7 +156,12 @@ const columns: readonly IColumn[] = [
         props: { children },
       },
     }: any) => {
-      if (!children) return <></>;
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
           <Stack alignItems="end">

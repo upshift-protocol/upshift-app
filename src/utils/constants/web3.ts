@@ -4,4 +4,6 @@ export const NETWORK =
   (process.env.NEXT_PUBLIC_NETWORK as 'localhost' | 'arbitrum' | 'mainnet') ??
   'mainnet';
 
+export const SHOW_LOGS = process.env.NEXT_PUBLIC_DEV ? 1 : 0;
+
 export const FALLBACK_CHAINID = 1;

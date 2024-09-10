@@ -26,12 +26,12 @@ export default function useInput(token?: IAddress, chainId?: IChainId) {
   function handleMax(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     if (!token) {
-      console.warn('#useInput: token address not passed');
+      console.warn('#handleMax: token address is undefined');
       setValue('0');
     } else if (balance && decimals) {
       setValue(formatUnits(balance, decimals));
     } else {
-      console.warn('#useInput: no token balance');
+      console.warn('#handleMax: no token balance');
       setValue('0');
     }
   }

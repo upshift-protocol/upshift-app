@@ -56,8 +56,8 @@ export default function TxFeesAtom(props: ITxFees) {
               height="14px"
             />
           );
-        if (typeof type === 'string') return `${value} ETH` ?? '-';
-        return `${value} ETH` ?? '-';
+        if (typeof type === 'string') return `${value} ETH` || '-';
+        return `${value} ETH` || '-';
       }
     }
   }

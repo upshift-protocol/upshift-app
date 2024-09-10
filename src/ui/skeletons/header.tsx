@@ -9,16 +9,32 @@ import Typography from '@mui/material/Typography';
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants/ui';
 import { useThemeMode } from '@/stores/theme';
-import { Drawer, IconButton } from '@mui/material';
+import { Drawer, IconButton, Skeleton } from '@mui/material';
 import { useState } from 'react';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
+  loading: (_props) =>
+    (
+      <Skeleton
+        width={'160px'}
+        height={'42.5px'}
+        style={{ margin: '0px', padding: '0px', marginInline: '0px' }}
+      />
+    ) as JSX.Element,
   ssr: false,
 });
 
 const DynamicChainBtn = dynamic(() => import('../molecules/chain-dropdown'), {
+  loading: (_props) =>
+    (
+      <Skeleton
+        width={'66px'}
+        height={'42.5px'}
+        style={{ margin: '0px', padding: '0px', marginInline: '0px' }}
+      />
+    ) as JSX.Element,
   ssr: false,
 });
 

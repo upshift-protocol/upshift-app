@@ -21,13 +21,11 @@ export default function AmountDisplay(props: IAmountDisplay) {
         placement="top"
         arrow
       >
-        <span>
-          <span style={{ fontFamily: 'monospace', fontSize: props?.size }}>
+        <span style={{ fontSize: props?.size || '18px' }}>
+          <span style={{ fontFamily: 'monospace' }}>
             {round(props.children)}
           </span>
-          {props.symbol ? (
-            <span style={{ fontSize: props?.size }}> {props.symbol}</span>
-          ) : null}
+          {props.symbol ? <span> {props.symbol}</span> : null}
         </span>
       </Tooltip>
     );

@@ -15,6 +15,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
 import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -88,7 +89,11 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
           <Stack direction="column" alignItems={'end'} gap={2}>
             <AssetDisplay
               symbol={pool?.underlying?.symbol}
-              img={`/assets/tokens/${pool?.underlying?.symbol}.png`}
+              img={
+                pool?.underlying?.symbol
+                  ? `/assets/tokens/${pool?.underlying?.symbol}.png`
+                  : FALLBACK_TOKEN_IMG
+              }
               variant="glass"
               address={pool?.underlying?.address}
               loading={poolLoading}

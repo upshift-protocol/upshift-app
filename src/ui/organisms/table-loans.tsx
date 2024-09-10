@@ -1,13 +1,18 @@
 import { explorerLink, truncate } from '@augustdigital/sdk';
-import type { IPoolLoan, IPoolWithUnderlying } from '@augustdigital/sdk';
+import type {
+  IAddress,
+  IPoolLoan,
+  IPoolWithUnderlying,
+} from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
-import { zeroAddress } from 'viem';
 import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
+import Image from 'next/image';
+import { Tooltip } from '@mui/material';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -36,23 +41,57 @@ const columns: GridColDef<any[number]>[] = [
     },
   },
   {
-    field: 'collateral',
-    headerName: 'Collateral',
+    field: 'positions',
+    headerName: 'Positions',
     flex: 2,
     editable: true,
     renderCell({ value, row }) {
-      if (!value) return '-';
-      if (value === zeroAddress) return 'ETH';
+      if (!value?.length) return '-';
       return (
-        <LinkAtom
-          href={explorerLink(
-            value,
-            (row?.chainId, FALLBACK_CHAINID),
-            'address',
-          )}
-        >
-          {truncate(value)}
-        </LinkAtom>
+        <Stack direction="row" alignItems={'center'} height="100%" gap={1}>
+          {value?.map((item: { value: string; label: string }) => (
+            <Tooltip
+              key={`table-loans-${row.id}-${item.value}`}
+              title={item.label}
+              arrow
+              placement="top"
+            >
+              <Image
+                src={item.value}
+                alt={item.value}
+                height={24}
+                width={24}
+                style={{ borderRadius: '6px' }}
+              />
+            </Tooltip>
+          ))}
+        </Stack>
+      );
+    },
+  },
+  {
+    field: 'exposure',
+    headerName: 'Exposure',
+    flex: 2,
+    editable: true,
+    renderCell({ value, row }) {
+      if (!value?.length) return '-';
+      // if (value === zeroAddress) return 'ETH';
+      return (
+        <Stack direction="row" alignItems={'center'} height="100%" gap={1}>
+          {value.map((exp: { value: IAddress; label: string }) => (
+            <LinkAtom
+              key={`table-loans-${row.id}-${exp.value}`}
+              href={explorerLink(
+                exp.value,
+                (row?.chainId, FALLBACK_CHAINID),
+                'address',
+              )}
+            >
+              {truncate(exp.value, 3)}
+            </LinkAtom>
+          ))}
+        </Stack>
       );
     },
   },
@@ -98,18 +137,18 @@ const columns: GridColDef<any[number]>[] = [
       return `${value}%`;
     },
   },
-  {
-    field: 'liquidationLTV',
-    headerName: 'Liquidation LTV',
-    flex: 1,
-    type: 'number',
-    description:
-      'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
-    renderCell({ value }) {
-      if (!value) return '-';
-      return `${value}%`;
-    },
-  },
+  // {
+  //   field: 'liquidationLTV',
+  //   headerName: 'Liquidation LTV',
+  //   flex: 1,
+  //   type: 'number',
+  //   description:
+  //     'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
+  //   renderCell({ value }) {
+  //     if (!value) return '-';
+  //     return `${value}%`;
+  //   },
+  // },
 ];
 
 export default function VaultAllocation(
@@ -132,12 +171,11 @@ export default function VaultAllocation(
       liquidationLTV: '',
       currentApr: l?.apr,
       underlying: props?.underlying?.symbol,
+      positions: l?.positions,
+      exposure: l?.exposure,
     }));
     return loansWithData;
   };
-
-  // console.log('loans:', loans);
-  // console.log('rowsFormatter:', rowsFormatter());
 
   return (
     <Stack gap={3} direction="column">

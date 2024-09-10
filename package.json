@@ -1,9 +1,9 @@
 {
-  "name": "earn-app",
+  "name": "upshift-earn-app",
   "version": "1.0.0",
   "scripts": {
     "dev": "NEXT_PUBLIC_DEV=1 next dev",
-    "dev:local": "NEXT_PUBLIC_NETWORK=localhost next dev",
+    "dev:local": "NEXT_PUBLIC_NETWORK=localhost pnpm dev",
     "build": "next build",
     "start": "next start",
     "build-stats": "cross-env ANALYZE=true npm run build",
@@ -15,7 +15,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.1.1-alpha",
+    "@augustdigital/sdk": "1.2.0-alpha",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.21",

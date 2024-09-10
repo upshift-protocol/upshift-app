@@ -43,6 +43,16 @@ export const lightTheme = createTheme({
       main: yellow['800'],
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          backdropFilter: 'blur(4px)',
+          background: 'rgba(255, 255, 255, 0.2)',
+        },
+      },
+    },
+  },
 });
 
 export const darkTheme = createTheme({
@@ -57,6 +67,16 @@ export const darkTheme = createTheme({
     },
     error: {
       main: pink[400],
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          backdropFilter: 'blur(4px)',
+          background: 'rgba(0, 0, 0, 0.2)',
+        },
+      },
     },
   },
 });

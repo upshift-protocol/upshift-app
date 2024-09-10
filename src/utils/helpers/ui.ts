@@ -1,3 +1,5 @@
+import { FALLBACK_CHAINID } from '../constants/web3';
+
 export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
   switch (status) {
     case 'STAKED':
@@ -37,6 +39,6 @@ export function formatChainForImg(chainId?: number, chains?: any) {
   if (value?.includes(' ')) formatted = value?.replaceAll(' ', '-');
   return {
     chainId,
-    formatted: `/chains/${formatted.toLowerCase()}.svg`,
+    formatted: `/chains/${formatted && formatted !== '-' ? formatted : FALLBACK_CHAINID}.svg`,
   };
 }

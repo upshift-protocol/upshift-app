@@ -6,11 +6,14 @@ import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors';
 const wcProjectId = '10fa7eb32238070e7838c931d185363a';
 
 export const walletConfig = createConfig({
-  chains: NETWORK === 'localhost' ? [localhost] : [mainnet, arbitrum],
+  chains:
+    NETWORK === 'localhost'
+      ? [mainnet, arbitrum, localhost]
+      : [mainnet, arbitrum],
   connectors: [
     injected(),
     walletConnect({ projectId: wcProjectId }),
-    coinbaseWallet({ appName: 'Lazarev' }),
+    coinbaseWallet({ appName: 'Upshift' }),
   ],
   transports: {
     [arbitrum.id]: http(),

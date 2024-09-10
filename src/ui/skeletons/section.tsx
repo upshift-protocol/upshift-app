@@ -81,7 +81,13 @@ const SectionSkeleton = (props: ISectionProps) => {
                     <Chip
                       sx={{ mt: 0.5 }}
                       label={
-                        <Stack direction={'row'} gap={1} alignItems={'center'}>
+                        <span
+                          style={{
+                            display: 'flex',
+                            gap: '6px',
+                            alignItems: 'center',
+                          }}
+                        >
                           <Image
                             src={
                               formatChainForImg(props?.chainId, chains)
@@ -95,7 +101,7 @@ const SectionSkeleton = (props: ISectionProps) => {
                             {chains?.find((c) => c.id === props.chainId)
                               ?.name || props.chainId}
                           </span>
-                        </Stack>
+                        </span>
                       }
                       color="info"
                       variant="outlined"

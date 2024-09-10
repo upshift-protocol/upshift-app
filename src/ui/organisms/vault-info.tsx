@@ -111,7 +111,7 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <Typography fontFamily={'monospace'} display="flex">
+              <span style={{ fontFamily: 'monospace', display: 'flex' }}>
                 {BigInt(props?.withdrawalFee?.raw || 0) === BigInt(0) ? (
                   <Chip
                     label={'None'}
@@ -127,7 +127,7 @@ export default function VaultInfo(
                     %
                   </>
                 )}
-              </Typography>
+              </span>
             )}
           </Stack>
         </Grid>

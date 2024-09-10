@@ -2,6 +2,7 @@ import { queryClient } from '@/config/react-query';
 import Toast from '@/ui/atoms/toast';
 import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
+import { SHOW_LOGS } from '@/utils/constants/web3';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
@@ -65,25 +66,25 @@ export default function useDeposit(props: IUseDepositProps) {
   // Functions
   async function handleDeposit() {
     if (!(address && provider)) {
-      console.error('#handleDeposit: no wallet is connected');
+      console.warn('#handleDeposit: no wallet is connected');
       return;
     }
     if (!props.pool) {
-      console.error('#handleDeposit: pool address is undefined');
+      console.warn('#handleDeposit: pool address is undefined');
       return;
     }
     if (!props.asset) {
-      console.error('#handleDeposit: pool asset is undefined');
+      console.warn('#handleDeposit: pool asset is undefined');
       return;
     }
     if (!props.value) {
-      console.error('#handleDeposit: amount input is undefined');
+      console.warn('#handleDeposit: amount input is undefined');
       return;
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
     if (BigInt(normalized.raw) === BigInt(0)) {
-      console.error('#handleDeposit: amount input is zero');
+      console.warn('#handleDeposit: amount input is zero');
       return;
     }
 
@@ -163,12 +164,14 @@ export default function useDeposit(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      console.log(
-        '#handleDeposit: successfully executed transaction',
-        depositHash,
-      );
+      if (SHOW_LOGS) {
+        console.log(
+          '#handleDeposit: successfully executed transaction',
+          depositHash,
+        );
+      }
     } catch (e) {
-      console.error(e);
+      console.error('#handleDeposit:', e);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });

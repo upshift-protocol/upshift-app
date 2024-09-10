@@ -16,6 +16,7 @@ import {
   useSwitchChain,
   useWalletClient,
 } from 'wagmi';
+import { SHOW_LOGS } from '@/utils/constants/web3';
 
 type IUseDepositProps = {
   value?: string;
@@ -76,25 +77,25 @@ export default function useWithdraw(props: IUseDepositProps) {
   // Functions
   async function requestWithdraw() {
     if (!(address && provider)) {
-      console.error('#requestWithdraw: no wallet is connected');
+      console.warn('#requestWithdraw: no wallet is connected');
       return;
     }
     if (!props.pool) {
-      console.error('#requestWithdraw: pool address is undefined');
+      console.warn('#requestWithdraw: pool address is undefined');
       return;
     }
     if (!props.asset) {
-      console.error('#requestWithdraw: pool asset is undefined');
+      console.warn('#requestWithdraw: pool asset is undefined');
       return;
     }
     if (!props.value) {
-      console.error('#requestWithdraw: amount input is undefined');
+      console.warn('#requestWithdraw: amount input is undefined');
       return;
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
     if (BigInt(normalized.raw || 0) === BigInt(0)) {
-      console.error('#requestWithdraw: amount input is zero');
+      console.warn('#requestWithdraw: amount input is zero');
       return;
     }
 
@@ -139,12 +140,14 @@ export default function useWithdraw(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      console.log(
-        '#requestWithdraw: successfully executed transaction',
-        redeemHash,
-      );
+      if (SHOW_LOGS) {
+        console.log(
+          '#requestWithdraw: successfully executed transaction',
+          redeemHash,
+        );
+      }
     } catch (e) {
-      console.error(e);
+      console.error('#handleWithdraw', e);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
@@ -165,25 +168,25 @@ export default function useWithdraw(props: IUseDepositProps) {
 
   async function handleWithdraw() {
     if (!(address && provider)) {
-      console.error('#handleWithdraw: no wallet is connected');
+      console.warn('#handleWithdraw: no wallet is connected');
       return;
     }
     if (!props.pool) {
-      console.error('#handleWithdraw: pool address is undefined');
+      console.warn('#handleWithdraw: pool address is undefined');
       return;
     }
     if (!props.asset) {
-      console.error('#handleWithdraw: pool asset is undefined');
+      console.warn('#handleWithdraw: pool asset is undefined');
       return;
     }
     if (!props.value) {
-      console.error('#handleWithdraw: amount input is undefined');
+      console.warn('#handleWithdraw: amount input is undefined');
       return;
     }
     const normalized = toNormalizedBn(props.value, decimals);
 
     if (BigInt(normalized.raw) === BigInt(0)) {
-      console.error('#requestWithdraw: amount input is zero');
+      console.warn('#requestWithdraw: amount input is zero');
       return;
     }
 
@@ -192,7 +195,7 @@ export default function useWithdraw(props: IUseDepositProps) {
     );
     if (!foundRedemption) {
       console.error(
-        '#requestWithdraw: could not find redemption in',
+        '#requestWithdraw: could not find redemption',
         props?.redemptions,
       );
       return;
@@ -245,12 +248,14 @@ export default function useWithdraw(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      console.log(
-        '#requestWithdraw: successfully executed transaction',
-        redeemHash,
-      );
+      if (SHOW_LOGS) {
+        console.log(
+          '#requestWithdraw: successfully executed transaction',
+          redeemHash,
+        );
+      }
     } catch (e) {
-      console.error(e);
+      console.error('#handleWithdraw:', e);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });

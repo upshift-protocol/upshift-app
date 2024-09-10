@@ -22,6 +22,7 @@ import { Chip, Link, Stack, Typography } from '@mui/material';
 import { mainnet } from 'wagmi/chains';
 import { LINKS } from '@/utils/constants/links';
 import { useThemeMode } from '@/stores/theme';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import Modal from '../atoms/modal';
 
 type IConnectWallet = {
@@ -86,7 +87,7 @@ const ConnectWalletMolecule = ({
           }
         }
       } catch (error) {
-        console.error('user rejected request:', error);
+        console.error('#handleConnect:', error);
       } finally {
         if (chainId !== mainnet.id) {
           switchChain({ chainId: mainnet.id });
@@ -97,6 +98,8 @@ const ConnectWalletMolecule = ({
   }
 
   function renderIcon(connector: Partial<Connector>) {
+    if (!connector.id || connector.id === '-')
+      return `/wallets/${FALLBACK_CHAINID}.svg`;
     if (connector?.icon) return connector?.icon;
     return `/wallets/${connector.id?.toLowerCase()}.svg`;
   }
