@@ -13,7 +13,8 @@ Upshift pools generate yields from institutional loans on the August protocol.
 
 Create a `.env.local` to input the following variables:
 
-- `NEXT_PUBLIC_INFURA_API_KEY`
+- `NEXT_PUBLIC_INFURA_API_KEY`: being your infura API key
+- `NEXT_PUBLIC_AUGUST_DIGITAL_API_KEY`: being your august digital API key
 
 #### Development
 
