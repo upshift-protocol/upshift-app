@@ -13,6 +13,7 @@ import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { getChainNameById } from '@/utils/helpers/ui';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
@@ -38,7 +39,11 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
-            <Tooltip title={children?.[0]} arrow placement="top">
+            <Tooltip
+              title={getChainNameById(children?.[0])}
+              arrow
+              placement="top"
+            >
               <Image
                 src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
                 alt={children?.[0]}

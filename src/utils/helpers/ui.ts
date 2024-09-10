@@ -42,3 +42,12 @@ export function formatChainForImg(chainId?: number, chains?: any) {
     formatted: `/chains/${formatted && formatted !== '-' ? formatted : FALLBACK_CHAINID}.svg`,
   };
 }
+
+export function getChainNameById(chainId?: number | string) {
+  switch (Number(chainId)) {
+    case 42161:
+      return 'Arbitrum One';
+    default:
+      return 'Mainnet';
+  }
+}

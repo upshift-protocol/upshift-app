@@ -9,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
-import { renderVariant } from '@/utils/helpers/ui';
+import { getChainNameById, renderVariant } from '@/utils/helpers/ui';
 import { round } from '@augustdigital/sdk';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
@@ -70,7 +70,11 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
-            <Tooltip title={children?.[0]} arrow placement="top">
+            <Tooltip
+              title={getChainNameById(children?.[0])}
+              arrow
+              placement="top"
+            >
               <Image
                 src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
                 alt={children?.[0]}
