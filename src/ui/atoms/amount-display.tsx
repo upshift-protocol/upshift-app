@@ -21,7 +21,7 @@ export default function AmountDisplay(props: IAmountDisplay) {
         placement="top"
         arrow
       >
-        <span style={{ fontSize: props?.size || '18px' }}>
+        <span style={{ fontSize: props?.size || '16px' }}>
           <span style={{ fontFamily: 'monospace' }}>
             {round(props.children)}
           </span>
