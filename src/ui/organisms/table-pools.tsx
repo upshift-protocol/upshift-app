@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import type { IColumn } from '@/utils/types';
-import { type IPoolWithUnderlying } from '@augustdigital/sdk';
+import type { IWSTokenEntry, IPoolWithUnderlying } from '@augustdigital/sdk';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 import useFetcher from '@/hooks/use-fetcher';
@@ -17,6 +17,7 @@ import { getChainNameById } from '@/utils/helpers/ui';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
+import AssetDisplay from '../atoms/asset-display';
 
 const columns: readonly IColumn[] = [
   { id: 'name', value: 'Name', minWidth: 180 },
@@ -92,10 +93,35 @@ const columns: readonly IColumn[] = [
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: 'collateral',
-    value: 'Collateral',
+    id: 'underlying',
+    value: 'Deposit Token',
     flex: 2,
-    align: 'right',
+    component: ({ children }: { children?: IWSTokenEntry }) => {
+      if (!children?.symbol)
+        return (
+          <TableCell>
+            <Stack alignItems="center" gap={1} direction="row">
+              <Skeleton variant="circular" height={24} width={24} />
+              <Skeleton variant="text" height={36} width={48} />
+            </Stack>
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack alignItems="start">
+            <div onClick={(e) => e.stopPropagation()}>
+              <AssetDisplay
+                img={`/assets/tokens/${children.symbol}.png`}
+                imgSize={18}
+                symbol={children.symbol}
+                address={children.address}
+                chainId={children?.chain}
+              />
+            </div>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
   {
     id: 'loansOperator',
