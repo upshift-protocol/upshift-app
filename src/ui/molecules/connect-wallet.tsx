@@ -70,6 +70,7 @@ const ConnectWalletMolecule = ({
   React.useEffect(() => {
     setHydrated(true);
   }, []);
+
   if (!hydrated)
     return (
       <Button variant="outlined">
@@ -118,6 +119,7 @@ const ConnectWalletMolecule = ({
   return (
     <Modal
       title="Connect Wallet"
+      description='Select an available wallet provider or "Wallet Connect" to see more options.'
       buttonProps={{
         fullWidth: !!btnFullWidth,
         variant: variant ?? (address ? 'contained' : 'outlined'),
@@ -133,7 +135,7 @@ const ConnectWalletMolecule = ({
         {connectorsList
           .filter((c) => c.id !== 'injected')
           .map((connector, index) => (
-            <ListItem key={`connector-${index}`}>
+            <ListItem key={`connector-${index}`} sx={{ px: '0px' }}>
               <Button
                 onClick={() => setSelectedConnector(connector)}
                 disabled={connectPending || disconnectPending}
@@ -182,50 +184,48 @@ const ConnectWalletMolecule = ({
               </Button>
             </ListItem>
           ))}
-
-        <ListItem style={{ padding: '0 1.5rem', paddingTop: '0.5rem' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={agreeToTerms}
-                onChange={(e) => setAgreeToTerms(e.target.checked)}
-                name="agreeToTerms"
-                color="primary"
-              />
-            }
-            label={
-              <Typography variant="body2">
-                I have read and accept{' '}
-                <Link target="_blank" href={LINKS.terms_of_service}>
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link target="_blank" href={LINKS.privacy_policy}>
-                  Privacy Notice
-                </Link>
-              </Typography>
-            }
-          />
-        </ListItem>
-        <ListItem>
-          <Button
-            onClick={handleConnect}
-            disabled={
-              !selectedConnector ||
-              !agreeToTerms ||
-              connectPending ||
-              disconnectPending
-            }
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-            startIcon={connectPending ? <CircularProgress size={24} /> : null}
-          >
-            {connectPending ? 'Connecting...' : 'Connect'}
-          </Button>
-        </ListItem>
       </List>
+
+      <FormControlLabel
+        sx={{ mb: 1 }}
+        control={
+          <Checkbox
+            checked={agreeToTerms}
+            onChange={(e) => setAgreeToTerms(e.target.checked)}
+            name="agreeToTerms"
+            color="primary"
+          />
+        }
+        label={
+          <Typography variant="body2">
+            I have read and accept{' '}
+            <Link target="_blank" href={LINKS.terms_of_service}>
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link target="_blank" href={LINKS.privacy_policy}>
+              Privacy Notice
+            </Link>
+          </Typography>
+        }
+      />
+
+      <Button
+        onClick={handleConnect}
+        disabled={
+          !selectedConnector ||
+          !agreeToTerms ||
+          connectPending ||
+          disconnectPending
+        }
+        fullWidth
+        size="large"
+        variant="contained"
+        color="primary"
+        startIcon={connectPending ? <CircularProgress size={24} /> : null}
+      >
+        {connectPending ? 'Connecting...' : 'Connect'}
+      </Button>
     </Modal>
   );
 };

@@ -3,12 +3,15 @@ import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useWithdraw from '@/hooks/use-withdraw';
 import { Card, Typography, useTheme } from '@mui/material';
+import { useAccount, useReadContract } from 'wagmi';
+import { erc20Abi, zeroAddress } from 'viem';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
 import TxFeesAtom from '../molecules/tx-fees';
 
 export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
+  const { address } = useAccount();
   const { palette } = useTheme();
   const inInputProps = useInput(props?.address, props?.chainId as IChainId);
   const { requestWithdraw, isSuccess, button, expected, pool } = useWithdraw({
@@ -18,6 +21,13 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
     chainId: props?.chainId as IChainId,
   });
 
+  const { data } = useReadContract({
+    ...props,
+    abi: erc20Abi,
+    functionName: 'balanceOf',
+    args: [address || zeroAddress],
+  });
+
   return (
     <ModalAtom
       title="Withdraw"
@@ -25,7 +35,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
         children: 'Request Redeem',
         variant: 'outlined',
         color: 'error',
-        disabled: !props?.address,
+        disabled: !props?.address || data === BigInt(0),
       }}
       onClose={inInputProps.clearInput}
       closeWhen={isSuccess}

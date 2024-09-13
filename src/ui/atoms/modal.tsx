@@ -24,12 +24,14 @@ export default function ModalAtom({
   children,
   title,
   closeWhen,
+  description,
   onClose,
 }: {
   title: string;
   buttonProps: ButtonProps;
   children: React.ReactNode;
   closeWhen?: boolean;
+  description?: string;
   onClose?: Function;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -83,9 +85,12 @@ export default function ModalAtom({
                 justifyContent="space-between"
                 width="100%"
               >
-                <Typography variant="h5" mb={2}>
-                  {title}
-                </Typography>
+                <Stack mb={1}>
+                  <Typography variant="h5">{title}</Typography>
+                  {description ? (
+                    <Typography variant="caption">{description}</Typography>
+                  ) : null}
+                </Stack>
                 <Button
                   variant="text"
                   onClick={handleClose}
