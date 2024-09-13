@@ -14,6 +14,8 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Tooltip } from '@mui/material';
 import { getTokenSymbol } from '@/utils/helpers/ui';
+import { Fragment } from 'react';
+import { isAddress } from 'viem';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -79,25 +81,51 @@ const columns: GridColDef<any[number]>[] = [
       if (!value?.length) return '-';
       return (
         <Stack direction="row" alignItems={'center'} height="100%" gap={1}>
-          {value.map((exp: { value: IAddress; label: string }, i: number) => (
-            <span
-              key={`table-loans-${row.id}-${exp.value}`}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              <LinkAtom
-                href={explorerLink(
-                  exp.value,
-                  (row?.chainId, FALLBACK_CHAINID),
-                  'address',
-                )}
+          {value.map((exp: { value: IAddress; label: string }, i: number) =>
+            exp.label !== 'eth' && String(exp.value) !== 'eth' ? (
+              <span
+                key={`table-loans-${row.id}-${exp.value}-${i}`}
+                style={{ display: 'flex', alignItems: 'center' }}
               >
-                {getTokenSymbol(exp?.value)?.length > 20
-                  ? truncate(exp.value, 3)
-                  : getTokenSymbol(exp.value)}
-              </LinkAtom>
-              {i !== Number(value?.length) - 1 ? ',' : null}
-            </span>
-          ))}
+                {!exp?.label?.includes('_') ? (
+                  <Tooltip
+                    title={exp?.label}
+                    placement="top"
+                    arrow
+                    sx={{
+                      left: -(i !== 0 ? i * 5 : 0),
+                      position: 'relative',
+                    }}
+                  >
+                    <Image
+                      src={`/assets/tokens/${exp.label}.svg`}
+                      alt={exp.value}
+                      height={24}
+                      width={24}
+                      style={{ borderRadius: '50%' }}
+                    />
+                  </Tooltip>
+                ) : !isAddress(exp.label) ? (
+                  <Fragment>
+                    <LinkAtom
+                      href={explorerLink(
+                        exp.value,
+                        (row?.chainId, FALLBACK_CHAINID),
+                        'address',
+                      )}
+                    >
+                      {getTokenSymbol(exp?.value)?.length > 20
+                        ? !exp?.label?.includes('_')
+                          ? exp?.label
+                          : truncate(exp.value, 3)
+                        : getTokenSymbol(exp.value)}
+                    </LinkAtom>
+                    {i !== Number(value?.length) - 1 ? ',' : null}
+                  </Fragment>
+                ) : null}
+              </span>
+            ) : null,
+          )}
         </Stack>
       );
     },
@@ -186,7 +214,9 @@ export default function VaultAllocation(
 
   return (
     <Stack gap={3} direction="column">
-      <Typography variant="h6">Vault Allocation Breakdown</Typography>
+      <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
+        Vault Allocation Breakdown
+      </Typography>
 
       <DataGrid
         loading={props.loading || isLoading}

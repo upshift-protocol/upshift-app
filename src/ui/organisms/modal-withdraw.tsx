@@ -22,7 +22,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
     <ModalAtom
       title="Withdraw"
       buttonProps={{
-        children: 'Withdraw',
+        children: 'Request Redeem',
         variant: 'outlined',
         color: 'error',
         disabled: !props?.address,

@@ -62,6 +62,8 @@ const ChainDropdown = () => {
           renderValue={renderer}
           onChange={handleChange}
           size="small"
+          variant="outlined"
+          color="primary"
           placeholder="Select Network"
         >
           {chains?.map((chain, i) => (

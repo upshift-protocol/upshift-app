@@ -54,7 +54,7 @@ export function getChainNameById(chainId?: number | string) {
 }
 
 export function getTokenSymbol(address: string, chainId?: number | string) {
-  const lowercaseAddress = address.toLowerCase();
+  const lowercaseAddress = address?.toLowerCase();
   if (lowercaseAddress === zeroAddress) return 'ETH';
   switch (Number(chainId)) {
     case 42161: {

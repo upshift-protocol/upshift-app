@@ -9,8 +9,9 @@ import Typography from '@mui/material/Typography';
 import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants/ui';
 import { useThemeMode } from '@/stores/theme';
-import { Drawer, IconButton, Skeleton } from '@mui/material';
+import { Button, Drawer, IconButton, Skeleton } from '@mui/material';
 import { useState } from 'react';
+import Grid from '@mui/material/Grid';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
 
@@ -64,6 +65,7 @@ const HeaderSkeleton = () => {
               maxWidth: STYLE_VARS.widthWide,
               margin: '0 auto',
               width: '100%',
+              justifyContent: 'space-between',
             }}
           >
             {/* <IconButton
@@ -75,18 +77,18 @@ const HeaderSkeleton = () => {
           >
             <MenuIcon />
           </IconButton> */}
-            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              <LinkAtom
-                href="/"
-                target="_self"
-                style={{
-                  textDecoration: 'none',
-                  color: 'inherit',
-                }}
-              >
-                <span style={{ fontSize: '24px' }}>{appConfig.site_name}</span>
-              </LinkAtom>
-            </Typography>
+            <LinkAtom
+              href="/"
+              target="_self"
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+              }}
+            >
+              <Typography sx={{ textTransform: 'uppercase' }} variant="h5">
+                {appConfig.site_name}
+              </Typography>
+            </LinkAtom>
             {/* Desktop */}
             <Stack
               direction="row"
@@ -98,6 +100,7 @@ const HeaderSkeleton = () => {
               <DynamicChainBtn />
               <DynamicWalletBtn />
             </Stack>
+
             {/* Mobile */}
             <Stack
               direction="row"
@@ -111,7 +114,7 @@ const HeaderSkeleton = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-                sx={{ p: 1 }}
+                sx={{ p: 1, pr: 0 }}
               >
                 <svg
                   width={32}
@@ -142,18 +145,23 @@ const HeaderSkeleton = () => {
               </IconButton>
               <Drawer open={open} onClose={toggleDrawer(false)}>
                 <Box
-                  sx={{ width: 250, p: 2 }}
                   role="presentation"
                   onClick={toggleDrawer(false)}
+                  width="250px"
+                  padding={2}
+                  height="100%"
                 >
-                  <Stack gap={2}>
+                  <Stack gap={2} height="100%" justifyContent={'space-between'}>
                     <Stack
                       direction="row"
                       alignItems={'center'}
                       gap={2}
                       justifyContent={'space-between'}
                     >
-                      <Typography variant="h6">
+                      <Typography
+                        variant="h5"
+                        sx={{ textTransform: 'uppercase' }}
+                      >
                         {appConfig.site_name}
                       </Typography>
                       <IconButton
@@ -164,26 +172,43 @@ const HeaderSkeleton = () => {
                         sx={{ p: 1 }}
                       >
                         <svg
-                          width={18}
-                          height={18}
+                          width={20}
+                          height={20}
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
                             d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z"
-                            fill="#0F0F0F"
+                            fill="currentColor"
                           />
                         </svg>
                       </IconButton>
                     </Stack>
-                    <Stack direction="row" alignItems={'center'} gap={2}>
-                      <ThemeSwitch checked={isDark} onChange={toggleTheme} />
-                      <DynamicChainBtn />
+                    <Stack gap={2}>
+                      <Grid
+                        container
+                        rowSpacing={1}
+                        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                      >
+                        <Grid item xs={6}>
+                          <Button
+                            onClick={toggleTheme}
+                            variant="outlined"
+                            fullWidth
+                            sx={{ height: '100%' }}
+                          >
+                            {isDark ? 'Light' : 'Dark'}
+                          </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <DynamicChainBtn />
+                        </Grid>
+                      </Grid>
+                      <Box width="100%">
+                        <DynamicWalletBtn btnFullWidth />
+                      </Box>
                     </Stack>
-                    <Box width="fit-content">
-                      <DynamicWalletBtn />
-                    </Box>
                   </Stack>
                 </Box>
               </Drawer>

@@ -90,7 +90,30 @@ const columns: readonly IColumn[] = [
     value: 'Net APY',
     minWidth: 100,
     align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
+    format: (value: number) => value.toFixed(2),
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack alignItems="end">
+            <AmountDisplay>
+              {children?.[0] && children?.[0] !== '-'
+                ? `${children?.[0]}%`
+                : '-'}
+            </AmountDisplay>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
   {
     id: 'underlying',
@@ -149,7 +172,7 @@ export default function PoolsTableOrganism({
   return (
     <Box>
       {title ? (
-        <Typography variant="h6" mb={1}>
+        <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
           {title}
         </Typography>
       ) : null}

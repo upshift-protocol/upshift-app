@@ -137,12 +137,13 @@ export default function VaultInfo(
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography>Liquidity</Typography>
+            <Typography>Available Liquidity</Typography>
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
               <AmountDisplay symbol={props?.underlying?.symbol} round>
-                {props?.totalAssets?.normalized}
+                {Number(props?.totalAssets?.normalized) -
+                  Number(props?.totalBorrowed?.normalized)}
               </AmountDisplay>
             )}
           </Stack>

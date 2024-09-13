@@ -9,13 +9,12 @@ import Tooltip from '@mui/material/Tooltip';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
-import { getChainNameById, renderVariant } from '@/utils/helpers/ui';
+import { getChainNameById } from '@/utils/helpers/ui';
+import type { IWSTokenEntry } from '@augustdigital/sdk';
 import { round } from '@augustdigital/sdk';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
-import Chip from '@mui/material/Chip';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
-import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AmountDisplay from '../atoms/amount-display';
@@ -23,8 +22,8 @@ import AssetDisplay from '../atoms/asset-display';
 
 const columns: readonly IColumn[] = [
   {
-    id: 'token',
-    value: 'Token',
+    id: 'name',
+    value: 'Pool',
     minWidth: 180,
     component: ({
       children: {
@@ -39,14 +38,7 @@ const columns: readonly IColumn[] = [
         );
       return (
         <TableCell>
-          <AssetDisplay
-            symbol={String(children)}
-            img={
-              children && children !== '-'
-                ? `/assets/tokens/${String(children)}.png`
-                : FALLBACK_TOKEN_IMG
-            }
-          />
+          <AssetDisplay symbol={String(children)} />
         </TableCell>
       );
     },
@@ -88,9 +80,69 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'status',
-    value: 'Status',
+    id: 'underlying',
+    value: 'Deposit Token',
+    flex: 2,
+    component: ({ children }: { children?: IWSTokenEntry }) => {
+      if (!children?.symbol)
+        return (
+          <TableCell>
+            <Stack alignItems="center" gap={1} direction="row">
+              <Skeleton variant="circular" height={24} width={24} />
+              <Skeleton variant="text" height={36} width={48} />
+            </Stack>
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack alignItems="start">
+            <div onClick={(e) => e.stopPropagation()}>
+              <AssetDisplay
+                img={`/assets/tokens/${children.symbol}.png`}
+                imgSize={18}
+                symbol={children.symbol}
+                address={children.address}
+                chainId={children?.chain}
+              />
+            </div>
+          </Stack>
+        </TableCell>
+      );
+    },
+  },
+  // {
+  //   id: 'status',
+  //   value: 'Status',
+  //   flex: 1,
+  //   component: ({
+  //     children: {
+  //       props: { children },
+  //     },
+  //   }: any) => {
+  //     if (!children)
+  //       return (
+  //         <TableCell>
+  //           <Skeleton variant="text" height={36} />
+  //         </TableCell>
+  //       );
+  //     return (
+  //       <TableCell>
+  //         <Chip
+  //           label={String(children)}
+  //           color={renderVariant(children)}
+  //           variant="outlined"
+  //         />
+  //       </TableCell>
+  //     );
+  //   },
+  // },
+  // { id: 'position', value: 'Position', align: 'right', flex: 2 },
+  {
+    id: 'apy',
+    value: 'Net APY',
     flex: 1,
+    align: 'right',
+    format: (value: number) => value.toFixed(2),
     component: ({
       children: {
         props: { children },
@@ -104,22 +156,16 @@ const columns: readonly IColumn[] = [
         );
       return (
         <TableCell>
-          <Chip
-            label={String(children)}
-            color={renderVariant(children)}
-            variant="outlined"
-          />
+          <Stack alignItems="end">
+            <AmountDisplay>
+              {children?.[0] && children?.[0] !== '-'
+                ? `${children?.[0]}%`
+                : '-'}
+            </AmountDisplay>
+          </Stack>
         </TableCell>
       );
     },
-  },
-  { id: 'position', value: 'Position', align: 'right', flex: 2 },
-  {
-    id: 'apy',
-    value: 'Net APY',
-    flex: 1,
-    align: 'right',
-    format: (value: number) => round(value),
   },
   {
     id: 'walletBalance',
@@ -198,7 +244,7 @@ export default function MyPositionsTableOrganism({
   return (
     <Box>
       {title ? (
-        <Typography variant="h6" mb={1}>
+        <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
           {title}
         </Typography>
       ) : null}

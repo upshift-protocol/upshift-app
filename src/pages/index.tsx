@@ -37,7 +37,7 @@ const HomePage = () => {
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
       >
-        <Stack gap={{ sm: 3, md: 4, lg: 5, xl: 6 }}>
+        <Stack gap={{ xs: 3, sm: 3, md: 4, lg: 5, xl: 6 }}>
           <Collapse in={walletConnected && Boolean(positions?.length)}>
             <MyPositionsTableOrganism
               title="My Positions"

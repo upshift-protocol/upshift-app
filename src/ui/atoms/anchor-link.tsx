@@ -25,7 +25,7 @@ export default function LinkAtom(props: ILinkAtom) {
       component={Link}
       rel={!props.target ? 'noreferrer' : undefined}
     >
-      <Typography>{props.children}</Typography>
+      <Typography component={'span'}>{props.children}</Typography>
     </MUILink>
   );
 }

@@ -50,8 +50,15 @@ export default function ModalAtom({
   }, [closeWhen]);
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <Button {...buttonProps} onClick={buttonProps?.onClick ?? handleOpen}>
+    <Box
+      onClick={(e) => e.stopPropagation()}
+      sx={{ width: buttonProps?.fullWidth ? '100%' : 'auto' }}
+    >
+      <Button
+        {...buttonProps}
+        sx={{ width: buttonProps?.fullWidth ? '100%' : 'auto' }}
+        onClick={buttonProps?.onClick ?? handleOpen}
+      >
         {buttonProps.children}
       </Button>
       <MuiModal
@@ -99,6 +106,6 @@ export default function ModalAtom({
           </Box>
         </Fade>
       </MuiModal>
-    </div>
+    </Box>
   );
 }

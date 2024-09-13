@@ -1,7 +1,11 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import type { IAddress, IChainId } from '@augustdigital/sdk';
+import type {
+  IAddress,
+  IChainId,
+  IPoolWithUnderlying,
+} from '@augustdigital/sdk';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/table-loans';
@@ -57,6 +61,11 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
     wallet: address,
+    formatter(data) {
+      return data?.filter(
+        (p: IPoolWithUnderlying) => p.address === pool?.address,
+      );
+    },
   }) as UseQueryResult<any>; // TODO: interface
 
   useEffect(() => {

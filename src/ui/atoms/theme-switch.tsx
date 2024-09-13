@@ -4,7 +4,6 @@ import Switch from '@mui/material/Switch';
 export interface IThemeSwitch {
   value: number | string;
   unit: string;
-  variant?: 'outlined';
 }
 
 const ThemeSwitchAtom = styled(Switch)<any>(({ theme, checked }) => ({

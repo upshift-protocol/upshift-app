@@ -18,7 +18,7 @@ import Image from 'next/image';
 import type { SyntheticEvent } from 'react';
 import { truncate } from '@/utils/helpers/string';
 import React from 'react';
-import { Chip, Link, Stack, Typography } from '@mui/material';
+import { Chip, Link, Stack, Typography, useMediaQuery } from '@mui/material';
 import { mainnet } from 'wagmi/chains';
 import { LINKS } from '@/utils/constants/links';
 import { useThemeMode } from '@/stores/theme';
@@ -59,6 +59,7 @@ const ConnectWalletMolecule = ({
   const { address } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  const isLarge = useMediaQuery('(min-width: 768px)');
 
   const [selectedConnector, setSelectedConnector] =
     React.useState<Partial<Connector> | null>(null);
@@ -69,7 +70,12 @@ const ConnectWalletMolecule = ({
   React.useEffect(() => {
     setHydrated(true);
   }, []);
-  if (!hydrated) return <Button variant="outlined">Connect Wallet</Button>;
+  if (!hydrated)
+    return (
+      <Button variant="outlined">
+        {isLarge ? 'Connect Wallet' : 'Connect'}
+      </Button>
+    );
 
   async function handleConnect(e: SyntheticEvent) {
     e.preventDefault();
@@ -113,7 +119,7 @@ const ConnectWalletMolecule = ({
     <Modal
       title="Connect Wallet"
       buttonProps={{
-        fullWidth: btnFullWidth ?? false,
+        fullWidth: !!btnFullWidth,
         variant: variant ?? (address ? 'contained' : 'outlined'),
         color: color ?? (address ? 'primary' : 'inherit'),
         size: 'large',
