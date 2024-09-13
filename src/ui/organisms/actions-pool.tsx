@@ -8,9 +8,11 @@ import RedeemModalMolecule from './modal-redeem';
 export default function PoolActionsMolecule({
   pool,
   gap,
+  type,
 }: {
   pool: IPoolWithUnderlying;
   gap?: number;
+  type?: 'positions' | 'pools';
 }) {
   return (
     <Stack
@@ -23,7 +25,7 @@ export default function PoolActionsMolecule({
         <RedeemModalMolecule {...pool} />
       ) : (
         <Fragment>
-          <DepositModalMolecule {...pool} />
+          {type !== 'positions' ? <DepositModalMolecule {...pool} /> : null}
           <WithdrawModalMolecule {...pool} />
         </Fragment>
       )}

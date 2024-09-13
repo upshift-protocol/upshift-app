@@ -6,12 +6,9 @@ import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 
-import type { UseQueryResult } from '@tanstack/react-query';
-import useFetcher from '@/hooks/use-fetcher';
 import { getChainNameById } from '@/utils/helpers/ui';
 import type { IWSTokenEntry } from '@augustdigital/sdk';
 import { round } from '@augustdigital/sdk';
-import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { Paper, useTheme } from '@mui/material';
@@ -237,12 +234,6 @@ export default function MyPositionsTableOrganism({
 }) {
   const { palette } = useTheme();
   const { isDark } = useThemeMode();
-  const { address } = useAccount();
-  const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions'],
-    wallet: address,
-    enabled: typeof data === 'undefined' && !loading,
-  }) as UseQueryResult<any>;
 
   return (
     <Paper
@@ -262,10 +253,12 @@ export default function MyPositionsTableOrganism({
       ) : null}
       <TableMolecule
         columns={columns}
-        data={data ?? positions}
+        data={data}
         uidKey="address"
-        loading={loading ?? +positionsLoading}
-        action={(rowData: any) => PoolActionsMolecule({ pool: rowData })}
+        loading={loading}
+        action={(rowData: any) =>
+          PoolActionsMolecule({ pool: rowData, type: 'positions' })
+        }
         pagination={false}
         emptyText="No positions available"
       />

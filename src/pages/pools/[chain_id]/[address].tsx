@@ -59,8 +59,10 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   }) as UseQueryResult<any>; // TODO: interface
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions'],
+    queryKey: ['my-positions', params.pool],
     wallet: address,
+    enabled: walletConnected && !!pool?.address,
+    initialData: [],
     formatter(data) {
       return data?.filter(
         (p: IPoolWithUnderlying) => p.address === pool?.address,

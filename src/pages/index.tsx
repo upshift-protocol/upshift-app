@@ -21,6 +21,7 @@ const HomePage = () => {
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
     wallet: address,
+    enabled: walletConnected,
   }) as UseQueryResult<any>;
 
   useEffect(() => {

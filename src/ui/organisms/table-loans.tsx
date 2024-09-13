@@ -105,7 +105,9 @@ const columns: GridColDef<any[number]>[] = [
                       style={{ borderRadius: '50%' }}
                     />
                   </Tooltip>
-                ) : !isAddress(exp.label) ? (
+                ) : !isAddress(exp.label) &&
+                  isAddress(exp.value) &&
+                  getTokenSymbol(exp?.value)?.length < 30 ? (
                   <Fragment>
                     <LinkAtom
                       href={explorerLink(
@@ -114,7 +116,7 @@ const columns: GridColDef<any[number]>[] = [
                         'address',
                       )}
                     >
-                      {getTokenSymbol(exp?.value)?.length > 20
+                      {getTokenSymbol(exp?.value)?.length > 30
                         ? !exp?.label?.includes('_')
                           ? exp?.label
                           : truncate(exp.value, 3)
@@ -235,7 +237,7 @@ export default function VaultAllocation(
         slots={{
           noRowsOverlay: () => (
             <Stack height="100%" alignItems="center" justifyContent="center">
-              No loans available
+              No active loans available
             </Stack>
           ),
           noResultsOverlay: () => (

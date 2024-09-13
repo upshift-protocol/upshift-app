@@ -142,7 +142,7 @@ export default function VaultInfo(
               <Skeleton variant="text" width={100} />
             ) : (
               <AmountDisplay symbol={props?.underlying?.symbol} round>
-                {Number(props?.totalAssets?.normalized) -
+                {Number(props?.totalSupply?.normalized) -
                   Number(props?.totalBorrowed?.normalized)}
               </AmountDisplay>
             )}
