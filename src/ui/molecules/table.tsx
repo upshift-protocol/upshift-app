@@ -149,18 +149,21 @@ export default function TableMolecule({
     <Box>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead>
+          <TableHead sx={{ bgcolor: 'transparent' }}>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
+                  sx={{ bgcolor: 'transparent' }}
                 >
                   {column.value}
                 </TableCell>
               ))}
-              {action || type === 'pools' ? <TableCell /> : null}
+              {action || type === 'pools' ? (
+                <TableCell sx={{ bgcolor: 'transparent' }} />
+              ) : null}
             </TableRow>
           </TableHead>
           <TableBody>

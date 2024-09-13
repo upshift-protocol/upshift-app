@@ -21,8 +21,8 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
       title="Redeem"
       buttonProps={{
         children: 'Redeem',
-        variant: 'outlined',
-        color: 'warning',
+        variant: 'contained',
+        color: 'primary',
         disabled: !props?.address,
       }}
       closeWhen={isSuccess}

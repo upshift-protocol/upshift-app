@@ -1,7 +1,6 @@
 import type { IColumn } from '@/utils/types';
 
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
@@ -15,6 +14,8 @@ import { round } from '@augustdigital/sdk';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { Paper, useTheme } from '@mui/material';
+import { useThemeMode } from '@/stores/theme';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AmountDisplay from '../atoms/amount-display';
@@ -234,6 +235,8 @@ export default function MyPositionsTableOrganism({
   data?: any;
   loading?: number;
 }) {
+  const { palette } = useTheme();
+  const { isDark } = useThemeMode();
   const { address } = useAccount();
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],
@@ -242,7 +245,16 @@ export default function MyPositionsTableOrganism({
   }) as UseQueryResult<any>;
 
   return (
-    <Box>
+    <Paper
+      className="glass-light"
+      sx={{
+        px: 4,
+        py: 3,
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderColor: isDark ? palette.grey[800] : palette.divider,
+      }}
+    >
       {title ? (
         <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
           {title}
@@ -257,6 +269,6 @@ export default function MyPositionsTableOrganism({
         pagination={false}
         emptyText="No positions available"
       />
-    </Box>
+    </Paper>
   );
 }
