@@ -17,7 +17,7 @@ const LOCAL_KEY = 'theme-color';
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 const ThemeProvider = ({ children }: IChildren) => {
-  const [theme, setTheme] = useState<ITheme>('light');
+  const [theme, setTheme] = useState<ITheme>('dark');
 
   const toggleTheme = () => {
     setTheme((prevTheme) => {

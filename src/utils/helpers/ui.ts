@@ -16,13 +16,14 @@ export function formatCompactNumber(
   number: number,
   options?: { symbol?: boolean },
 ) {
+  const isBigNumber = number > 10_000;
   const formatter = Intl.NumberFormat('en-US', {
     notation: 'compact',
     currencySign: 'standard',
     style: options?.symbol ? 'currency' : undefined,
     currency: 'USD',
-    minimumSignificantDigits: 6,
-    maximumSignificantDigits: 6,
+    minimumFractionDigits: options?.symbol || isBigNumber ? 2 : 4,
+    maximumFractionDigits: options?.symbol || isBigNumber ? 2 : 4,
   });
   return formatter.format(number);
 }
@@ -68,4 +69,12 @@ export function getTokenSymbol(address: string, chainId?: number | string) {
       return address;
     }
   }
+}
+
+export function formatUsd(value: string | number) {
+  const formatCurrency = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'USD',
+  });
+  return formatCurrency.format(Number(value));
 }

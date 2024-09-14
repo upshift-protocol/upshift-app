@@ -1,16 +1,25 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { round } from '@augustdigital/sdk';
 import Tooltip from '@mui/material/Tooltip';
+import { formatCompactNumber } from '@/utils/helpers/ui';
+import useFetcher from '@/hooks/use-fetcher';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 type IAmountDisplay = {
   symbol?: string;
   children: string | number;
   round?: boolean;
   size?: `${string}px`;
+  usd?: boolean;
 };
 
 export default function AmountDisplay(props: IAmountDisplay) {
+  const { data: usdValue } = useFetcher({
+    queryKey: ['price', props?.symbol || ''],
+    enabled: !!props.symbol && props?.usd,
+    initialData: '',
+  }) as UseQueryResult<number>;
+
   if (props.round) {
     return (
       <Tooltip
@@ -21,22 +30,54 @@ export default function AmountDisplay(props: IAmountDisplay) {
         placement="top"
         arrow
       >
-        <span style={{ fontSize: props?.size || '16px' }}>
-          <span style={{ fontFamily: 'monospace' }}>
-            {round(props.children)}
-          </span>
-          {props.symbol ? <span> {props.symbol}</span> : null}
-        </span>
+        <Stack alignItems="end">
+          <Typography
+            component={'span'}
+            width={'fit-content'}
+            whiteSpace={'nowrap'}
+            fontSize={props?.size || '16px'}
+          >
+            <Typography component={'span'} fontFamily={'monospace'}>
+              {formatCompactNumber(Number(props.children))}
+            </Typography>
+            {props.symbol ? (
+              <Typography component={'span'}> {props.symbol}</Typography>
+            ) : null}
+          </Typography>
+          {props?.usd && usdValue ? (
+            <Typography component="span" variant="caption">
+              {formatCompactNumber(Number(props?.children) * usdValue, {
+                symbol: true,
+              })}
+            </Typography>
+          ) : null}
+        </Stack>
       </Tooltip>
     );
   }
   return (
-    <Stack direction="row" gap={1} alignItems="center">
-      <Typography fontFamily="monospace" fontSize={props?.size}>
-        {props.children}
-      </Typography>
-      {props.symbol ? (
-        <Typography fontSize={props?.size}>{props.symbol}</Typography>
+    <Stack alignItems={'end'}>
+      <Stack direction="row" gap={1} alignItems="center">
+        <Typography
+          fontFamily="monospace"
+          component={'span'}
+          fontSize={props?.size}
+          whiteSpace={'nowrap'}
+        >
+          {props.children}
+        </Typography>
+        {props.symbol ? (
+          <Typography component="span" fontSize={props?.size}>
+            {props.symbol}
+          </Typography>
+        ) : null}
+      </Stack>
+      {props?.usd && usdValue ? (
+        <Typography component="span" variant="caption">
+          {formatCompactNumber(Number(props?.children) * usdValue, {
+            symbol: true,
+          })}
+        </Typography>
       ) : null}
     </Stack>
   );

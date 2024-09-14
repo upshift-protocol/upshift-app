@@ -156,7 +156,7 @@ const columns: GridColDef<any[number]>[] = [
       if (!value) return '-';
       return (
         <Stack alignItems="end" justifyContent="center" height="100%">
-          <AmountDisplay symbol={row?.underlying || 'N/A'} round size="14px">
+          <AmountDisplay usd symbol={row?.underlying} round size="14px">
             {value}
           </AmountDisplay>
         </Stack>

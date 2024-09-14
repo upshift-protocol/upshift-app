@@ -185,7 +185,7 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack alignItems="end">
-            <AmountDisplay symbol={children?.[2]} round>
+            <AmountDisplay symbol={children?.[2]} round usd>
               {children?.[0] || '-'}
             </AmountDisplay>
           </Stack>
@@ -213,7 +213,7 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack alignItems="end">
-            <AmountDisplay symbol={children?.[2]} round>
+            <AmountDisplay symbol={children?.[2]} round usd>
               {children?.[0] || '-'}
             </AmountDisplay>
           </Stack>
@@ -237,14 +237,12 @@ export default function MyPositionsTableOrganism({
 
   return (
     <Paper
-      className="glass-light"
       sx={{
         px: 4,
         py: 3,
-        borderWidth: 2,
-        borderStyle: 'solid',
-        borderColor: isDark ? palette.grey[800] : palette.divider,
+        bgcolor: isDark ? palette.grey[900] : palette.grey[100],
       }}
+      variant="outlined"
     >
       {title ? (
         <Typography variant="h6" mb={{ xs: 0, md: 1 }}>

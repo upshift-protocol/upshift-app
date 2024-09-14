@@ -1,4 +1,4 @@
-import { blueGrey, blue, red, teal, pink, yellow } from '@mui/material/colors';
+import { red, pink, yellow } from '@mui/material/colors';
 import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import { roboto } from './font';
@@ -31,10 +31,10 @@ export const lightTheme = createTheme({
   ...baseTheme,
   palette: {
     primary: {
-      main: blue[500],
+      main: '#00c260',
     },
     secondary: {
-      main: blueGrey.A100,
+      main: '#dfe200',
     },
     error: {
       main: red.A200,
@@ -46,6 +46,9 @@ export const lightTheme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
+        contained: {
+          color: '#fff',
+        },
         outlined: {
           backdropFilter: 'blur(4px)',
           background: 'rgba(255, 255, 255, 0.2)',
@@ -60,10 +63,10 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: teal.A200,
+      main: '#00FF7E',
     },
     secondary: {
-      main: blueGrey.A100,
+      main: '#FCFF00',
     },
     error: {
       main: pink[400],

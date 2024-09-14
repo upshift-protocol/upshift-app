@@ -4,9 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 
-import appConfig from '@/config/app';
 import { STYLE_VARS } from '@/utils/constants/ui';
 import { useThemeMode } from '@/stores/theme';
 import { Button, Drawer, IconButton, Skeleton } from '@mui/material';
@@ -14,6 +12,7 @@ import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
+import Logo from './Logo';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: (_props) =>
@@ -83,12 +82,13 @@ const HeaderSkeleton = () => {
               style={{
                 textDecoration: 'none',
                 color: 'inherit',
+                display: 'flex',
               }}
+              noSpan
             >
-              <Typography sx={{ textTransform: 'uppercase' }} variant="h5">
-                {appConfig.site_name}
-              </Typography>
+              <Logo />
             </LinkAtom>
+
             {/* Desktop */}
             <Stack
               direction="row"
@@ -158,12 +158,7 @@ const HeaderSkeleton = () => {
                       gap={2}
                       justifyContent={'space-between'}
                     >
-                      <Typography
-                        variant="h5"
-                        sx={{ textTransform: 'uppercase' }}
-                      >
-                        {appConfig.site_name}
-                      </Typography>
+                      <Logo />
                       <IconButton
                         edge="start"
                         color="inherit"

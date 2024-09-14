@@ -12,6 +12,7 @@ type ILinkAtom = {
   style?: CSSProperties;
   overflow?: 'hidden' | 'auto' | 'clip';
   target?: IHrefTarget;
+  noSpan?: boolean;
 };
 
 export default function LinkAtom(props: ILinkAtom) {
@@ -25,7 +26,11 @@ export default function LinkAtom(props: ILinkAtom) {
       component={Link}
       rel={!props.target ? 'noreferrer' : undefined}
     >
-      <Typography component={'span'}>{props.children}</Typography>
+      {props?.noSpan ? (
+        props?.children
+      ) : (
+        <Typography component={'span'}>{props.children}</Typography>
+      )}
     </MUILink>
   );
 }

@@ -77,7 +77,7 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack alignItems="end">
-            <AmountDisplay symbol={children?.[2]} round>
+            <AmountDisplay symbol={children?.[2]} round usd>
               {children?.[0] || '-'}
             </AmountDisplay>
           </Stack>
