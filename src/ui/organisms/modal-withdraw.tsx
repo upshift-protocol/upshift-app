@@ -91,6 +91,8 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
             </Typography>
           </Stack>
         </Card>
+      </Stack>
+      <Stack mt={1}>
         <Web3Button
           style={{ marginTop: '1rem' }}
           size="large"

@@ -222,7 +222,8 @@ const ConnectWalletMolecule = ({
         size="large"
         variant="contained"
         color="primary"
-        startIcon={connectPending ? <CircularProgress size={24} /> : null}
+        sx={{ mt: 1 }}
+        startIcon={connectPending ? <CircularProgress size={20} /> : null}
       >
         {connectPending ? 'Connecting...' : 'Connect'}
       </Button>

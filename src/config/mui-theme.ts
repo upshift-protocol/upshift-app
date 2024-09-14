@@ -3,6 +3,8 @@ import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import { roboto } from './font';
 
+const borderRadius = '16rem';
+
 const baseTheme: ThemeOptions = {
   typography: {
     fontFamily: roboto.style.fontFamily,
@@ -14,8 +16,18 @@ const baseTheme: ThemeOptions = {
     },
   },
   components: {
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius,
+        },
         contained: {
           boxShadow: 'none',
           ':hover': {
@@ -44,8 +56,18 @@ export const lightTheme = createTheme({
     },
   },
   components: {
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius,
+        },
         contained: {
           color: '#fff',
         },
@@ -73,8 +95,18 @@ export const darkTheme = createTheme({
     },
   },
   components: {
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius,
+        },
         outlined: {
           backdropFilter: 'blur(4px)',
           background: 'rgba(0, 0, 0, 0.2)',

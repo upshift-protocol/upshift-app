@@ -114,7 +114,7 @@ const HeaderSkeleton = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-                sx={{ p: 1, pr: 0 }}
+                sx={{ p: 1 }}
               >
                 <svg
                   width={32}
@@ -146,7 +146,7 @@ const HeaderSkeleton = () => {
               <Drawer open={open} onClose={toggleDrawer(false)}>
                 <Box
                   role="presentation"
-                  onClick={toggleDrawer(false)}
+                  // onClick={toggleDrawer(false)}
                   width="250px"
                   padding={2}
                   height="100%"
@@ -158,7 +158,7 @@ const HeaderSkeleton = () => {
                       gap={2}
                       justifyContent={'space-between'}
                     >
-                      <Logo />
+                      <Logo width={80} height={40} />
                       <IconButton
                         edge="start"
                         color="inherit"
@@ -188,7 +188,10 @@ const HeaderSkeleton = () => {
                       >
                         <Grid item xs={6}>
                           <Button
-                            onClick={toggleTheme}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleTheme();
+                            }}
                             variant="outlined"
                             fullWidth
                             sx={{ height: '100%' }}

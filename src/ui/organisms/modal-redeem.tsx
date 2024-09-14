@@ -47,6 +47,8 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           loading={+expected.loading}
           pool={pool}
         />
+      </Stack>
+      <Stack mt={1}>
         <Web3Button
           style={{ marginTop: '1rem' }}
           size="large"

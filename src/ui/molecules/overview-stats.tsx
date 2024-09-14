@@ -66,11 +66,11 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalSupplied) * Number(ethPrice), { symbol: !displayEth })} ${displayEth ? 'ETH' : ''}`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalSupplied) * Number(ethPrice), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
           </Tooltip>
         }
-        unit="Total Deposits"
-        variant="outlined"
+        unit="Total Deposited"
+        variant="inverse"
         loading={loading || +isLoading || +isFetching}
       />
       <CustomStat
@@ -82,11 +82,11 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalBorrowed) * Number(ethPrice), { symbol: !displayEth })} ${displayEth ? 'ETH' : ''}`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalBorrowed) * Number(ethPrice), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
           </Tooltip>
         }
         unit="Total Borrowed"
-        variant="outlined"
+        variant="inverse"
       />
     </ResponsiveStack>
   );

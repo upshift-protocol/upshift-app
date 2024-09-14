@@ -14,7 +14,7 @@ export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
 
 export function formatCompactNumber(
   number: number,
-  options?: { symbol?: boolean },
+  options?: { symbol?: boolean; decimals?: number },
 ) {
   const isBigNumber = number > 10_000;
   const formatter = Intl.NumberFormat('en-US', {
@@ -22,8 +22,16 @@ export function formatCompactNumber(
     currencySign: 'standard',
     style: options?.symbol ? 'currency' : undefined,
     currency: 'USD',
-    minimumFractionDigits: options?.symbol || isBigNumber ? 2 : 4,
-    maximumFractionDigits: options?.symbol || isBigNumber ? 2 : 4,
+    minimumFractionDigits: options?.decimals
+      ? options?.decimals
+      : options?.symbol || isBigNumber
+        ? 2
+        : 4,
+    maximumFractionDigits: options?.decimals
+      ? options?.decimals
+      : options?.symbol || isBigNumber
+        ? 2
+        : 4,
   });
   return formatter.format(number);
 }

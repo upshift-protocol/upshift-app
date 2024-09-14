@@ -43,6 +43,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
         style={{
           padding: renderVariant().padding,
           width: 'fit-content',
+          borderRadius: '4px',
         }}
         className={renderVariant().wrapperCss}
       >

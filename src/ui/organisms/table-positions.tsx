@@ -61,20 +61,20 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
-            <Tooltip
-              title={getChainNameById(children?.[0])}
-              arrow
-              placement="top"
-            >
-              <Background color="white" variant="circular">
+            <Background color="white" variant="circular">
+              <Tooltip
+                title={getChainNameById(children?.[0])}
+                arrow
+                placement="top"
+              >
                 <Image
                   src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
                   alt={children?.[0]}
                   height={20}
                   width={20}
                 />
-              </Background>
-            </Tooltip>
+              </Tooltip>
+            </Background>
           </Stack>
         </TableCell>
       );

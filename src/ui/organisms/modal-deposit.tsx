@@ -59,6 +59,8 @@ export default function DepositModalMolecule(
             collateral: props?.collateral,
           }}
         />
+      </Stack>
+      <Stack mt={3}>
         <Web3Button
           onClick={handleDeposit}
           size="large"
