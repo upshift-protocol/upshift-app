@@ -85,7 +85,7 @@ export default function ModalAtom({
                 justifyContent="space-between"
                 width="100%"
               >
-                <Stack mb={1}>
+                <Stack mb={3}>
                   <Typography variant="h5">{title}</Typography>
                   {description ? (
                     <Typography variant="caption">{description}</Typography>

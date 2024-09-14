@@ -11,9 +11,13 @@ type IAmountDisplay = {
   round?: boolean;
   size?: `${string}px`;
   usd?: boolean;
+  direction?: 'row' | 'column';
 };
 
-export default function AmountDisplay(props: IAmountDisplay) {
+export default function AmountDisplay({
+  direction = 'column',
+  ...props
+}: IAmountDisplay) {
   const { data: usdValue } = useFetcher({
     queryKey: ['price', props?.symbol || ''],
     enabled: !!props.symbol && props?.usd,
@@ -30,7 +34,24 @@ export default function AmountDisplay(props: IAmountDisplay) {
         placement="top"
         arrow
       >
-        <Stack alignItems="end">
+        <Stack
+          alignItems={direction === 'row' ? 'center' : 'end'}
+          direction={direction}
+          gap={direction === 'row' ? 1 : 0}
+        >
+          {props?.usd && usdValue && direction === 'row' ? (
+            <Typography
+              sx={{ opacity: '0.9' }}
+              component="span"
+              variant="caption"
+            >
+              ({' '}
+              {formatCompactNumber(Number(props?.children) * usdValue, {
+                symbol: true,
+              })}{' '}
+              )
+            </Typography>
+          ) : null}
           <Typography
             component={'span'}
             width={'fit-content'}
@@ -44,7 +65,7 @@ export default function AmountDisplay(props: IAmountDisplay) {
               <Typography component={'span'}> {props.symbol}</Typography>
             ) : null}
           </Typography>
-          {props?.usd && usdValue ? (
+          {props?.usd && usdValue && direction === 'column' ? (
             <Typography component="span" variant="caption">
               {formatCompactNumber(Number(props?.children) * usdValue, {
                 symbol: true,
@@ -56,7 +77,7 @@ export default function AmountDisplay(props: IAmountDisplay) {
     );
   }
   return (
-    <Stack alignItems={'end'}>
+    <Stack alignItems={'end'} direction={direction}>
       <Stack direction="row" gap={1} alignItems="center">
         <Typography
           fontFamily="monospace"

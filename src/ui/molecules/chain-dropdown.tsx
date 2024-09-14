@@ -16,6 +16,7 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useChainId, useChains, useSwitchChain } from 'wagmi';
+import Background from '../atoms/background';
 
 const ChainDropdown = () => {
   const { switchChain } = useSwitchChain();
@@ -29,14 +30,14 @@ const ChainDropdown = () => {
     const value = chains?.find((chain) => chain.id === Number(_value))?.name;
     if (!value) return 'Unknown';
     return (
-      <Stack justifyContent={'center'} alignItems={'center'}>
+      <Background color="white" variant="circular">
         <Image
           src={formatChainForImg(Number(_value), chains).formatted}
           alt={value}
-          height={20}
-          width={20}
+          height={22}
+          width={22}
         />
-      </Stack>
+      </Background>
     );
   }
 
@@ -68,14 +69,21 @@ const ChainDropdown = () => {
         >
           {chains?.map((chain, i) => (
             <MenuItem key={`chain-dropdown-${i}`} value={chain.id}>
-              <Stack flexDirection={'row'} gap={1} alignItems={'center'}>
-                <Image
-                  src={formatChainForImg(Number(chain.id), chains).formatted}
-                  alt={chain.name}
-                  height={20}
-                  width={20}
-                />
-                <Typography> {chain.name} </Typography>
+              <Stack
+                flexDirection={'row'}
+                gap={1.5}
+                py={0.5}
+                alignItems={'center'}
+              >
+                <Background color="white" variant="circular">
+                  <Image
+                    src={formatChainForImg(Number(chain.id), chains).formatted}
+                    alt={chain.name}
+                    height={22}
+                    width={22}
+                  />
+                </Background>
+                <Typography variant="button"> {chain.name} </Typography>
               </Stack>
             </MenuItem>
           ))}

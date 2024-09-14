@@ -78,9 +78,16 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <AmountDisplay symbol={props?.underlying?.symbol} round>
-                {props?.totalSupply?.normalized}
-              </AmountDisplay>
+              <Stack direction="row" gap={1}>
+                <AmountDisplay
+                  symbol={props?.underlying?.symbol}
+                  round
+                  usd
+                  direction="row"
+                >
+                  {props?.totalSupply?.normalized}
+                </AmountDisplay>
+              </Stack>
             )}
           </Stack>
         </Grid>
@@ -141,7 +148,12 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
-              <AmountDisplay symbol={props?.underlying?.symbol} round>
+              <AmountDisplay
+                symbol={props?.underlying?.symbol}
+                usd
+                direction="row"
+                round
+              >
                 {Number(props?.totalSupply?.normalized) -
                   Number(props?.totalBorrowed?.normalized)}
               </AmountDisplay>

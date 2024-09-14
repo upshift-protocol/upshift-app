@@ -137,6 +137,7 @@ const columns: GridColDef<any[number]>[] = [
     headerName: 'Allocation',
     description: 'Proportion of the vault supply allocated to this market.',
     flex: 1,
+    sortable: true,
     type: 'number',
     editable: true,
     renderCell({ value }) {

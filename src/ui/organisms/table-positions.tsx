@@ -17,6 +17,7 @@ import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AmountDisplay from '../atoms/amount-display';
 import AssetDisplay from '../atoms/asset-display';
+import Background from '../atoms/background';
 
 const columns: readonly IColumn[] = [
   {
@@ -65,12 +66,14 @@ const columns: readonly IColumn[] = [
               arrow
               placement="top"
             >
-              <Image
-                src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
-                alt={children?.[0]}
-                height={20}
-                width={20}
-              />
+              <Background color="white" variant="circular">
+                <Image
+                  src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
+                  alt={children?.[0]}
+                  height={20}
+                  width={20}
+                />
+              </Background>
             </Tooltip>
           </Stack>
         </TableCell>
@@ -97,7 +100,7 @@ const columns: readonly IColumn[] = [
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
                 img={`/assets/tokens/${children.symbol}.png`}
-                imgSize={18}
+                imgSize={20}
                 symbol={children.symbol}
                 address={children.address}
                 chainId={children?.chain}

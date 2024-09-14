@@ -187,7 +187,7 @@ const ConnectWalletMolecule = ({
       </List>
 
       <FormControlLabel
-        sx={{ mb: 1 }}
+        sx={{ my: 1, pl: 1 }}
         control={
           <Checkbox
             checked={agreeToTerms}
