@@ -11,6 +11,9 @@ import '@/styles/global.css';
 import '@/styles/toast.css';
 import { ThemeProvider } from '@/stores/theme';
 import DevtoolsSkeleton from '@/ui/skeletons/devtools';
+import { NextSeo } from 'next-seo';
+import appConfig from '@/config/app';
+// import { GoogleAnalytics } from "@next/third-parties/google";
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -20,15 +23,20 @@ const MyApp = (props: AppProps) => {
   // }, []);
 
   return (
-    <ThemeProvider>
-      <WagmiProvider config={walletConfig}>
-        <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
+    <>
+      <ThemeProvider>
+        <WagmiProvider config={walletConfig}>
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
 
-          <DevtoolsSkeleton />
-        </QueryClientProvider>
-      </WagmiProvider>
-    </ThemeProvider>
+            <DevtoolsSkeleton />
+          </QueryClientProvider>
+        </WagmiProvider>
+      </ThemeProvider>
+
+      <NextSeo {...appConfig} />
+      {/* <GoogleAnalytics gaId="G-9GMJ41R7K2" /> */}
+    </>
   );
 };
 
