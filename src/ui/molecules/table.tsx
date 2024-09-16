@@ -156,7 +156,7 @@ export default function TableMolecule({
                   key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
-                  sx={{ bgcolor: 'transparent' }}
+                  sx={{ bgcolor: 'transparent', fontSize: '18px' }}
                 >
                   {column.value}
                 </TableCell>
