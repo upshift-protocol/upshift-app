@@ -18,14 +18,15 @@ export default function AssetDisplay(props: IAssetDisplay) {
 
   function renderVariant(): {
     wrapperCss: string;
-    textVariant: TypographyVariant;
+    textVariant?: TypographyVariant;
     padding?: string;
+    fontSize?: string;
   } {
     switch (props.variant) {
       case 'glass':
         return {
           wrapperCss: 'glass',
-          textVariant: 'h6',
+          fontSize: '1.25rem',
           padding: '0.35rem 0.7rem',
         };
       default:

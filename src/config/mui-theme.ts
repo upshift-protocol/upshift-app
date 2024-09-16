@@ -1,18 +1,38 @@
 import { red, pink, yellow } from '@mui/material/colors';
 import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { roboto } from './font';
+import { dinCondensed, titlingGothic } from './fonts';
 
 const borderRadius = '16rem';
 
 const baseTheme: ThemeOptions = {
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily: dinCondensed.style.fontFamily,
     h1: {
       fontSize: '48px',
+      fontFamily: titlingGothic.style.fontFamily,
+      textTransform: 'uppercase',
     },
     h2: {
       fontSize: '36px',
+      fontFamily: titlingGothic.style.fontFamily,
+      textTransform: 'uppercase',
+    },
+    h3: {
+      fontFamily: titlingGothic.style.fontFamily,
+      textTransform: 'uppercase',
+    },
+    h4: {
+      fontFamily: titlingGothic.style.fontFamily,
+      textTransform: 'uppercase',
+    },
+    h5: {
+      fontFamily: titlingGothic.style.fontFamily,
+      textTransform: 'uppercase',
+    },
+    h6: {
+      fontFamily: titlingGothic.style.fontFamily,
+      textTransform: 'uppercase',
     },
   },
   components: {
