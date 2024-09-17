@@ -18,7 +18,7 @@ interface StatOwnerState extends StatProps {
 const StatRoot = styled('div', {
   name: 'MuiStat',
   slot: 'root',
-})<{ ownerState: StatOwnerState; isdark?: boolean }>(
+})<{ ownerState: StatOwnerState; isdark?: number }>(
   ({ theme, ownerState, isdark }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -47,7 +47,7 @@ const StatRoot = styled('div', {
 const StatValue = styled('div', {
   name: 'MuiStat',
   slot: 'value',
-})<{ ownerState: StatOwnerState; isdark?: boolean }>(
+})<{ ownerState: StatOwnerState; isdark?: number }>(
   ({ theme, ownerState, isdark }) => ({
     ...theme.typography.h4,
     fontSize: '2.25rem',
@@ -61,7 +61,7 @@ const StatValue = styled('div', {
 const StatUnit = styled('div', {
   name: 'MuiStat',
   slot: 'unit',
-})<{ ownerState: StatOwnerState; isdark?: boolean }>(
+})<{ ownerState: StatOwnerState; isdark?: number }>(
   ({ theme, ownerState, isdark }) => ({
     ...theme.typography.body2,
     textTransform: 'uppercase',
@@ -87,7 +87,7 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
         ownerState={ownerState}
         {...other}
         style={{ minWidth: '300px' }}
-        isdark={isDark}
+        isdark={+isDark}
       >
         {props.loading ? (
           <Skeleton
@@ -100,12 +100,12 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
           <StatValue
             ownerState={ownerState}
             style={{ fontFamily: 'monospace' }}
-            isdark={isDark}
+            isdark={+isDark}
           >
             {value}
           </StatValue>
         )}
-        <StatUnit isdark={isDark} ownerState={ownerState}>
+        <StatUnit isdark={+isDark} ownerState={ownerState}>
           {unit}
         </StatUnit>
       </StatRoot>

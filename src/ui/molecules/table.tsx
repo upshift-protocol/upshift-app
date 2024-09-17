@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress, zeroAddress } from 'viem';
 import { truncate } from '@/utils/helpers/string';
-import { Skeleton, Stack, Typography } from '@mui/material';
+import { Skeleton, Stack, Typography, useMediaQuery } from '@mui/material';
 import { explorerLink } from '@augustdigital/sdk';
 import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
@@ -53,6 +53,7 @@ export default function TableMolecule({
   const chainId = useChainId();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const isLarge = useMediaQuery('(min-width: 768px)');
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -158,7 +159,11 @@ export default function TableMolecule({
                   style={{ minWidth: column.minWidth }}
                   sx={{ bgcolor: 'transparent', fontSize: '18px' }}
                 >
-                  {column.value}
+                  {isLarge
+                    ? column.value
+                    : column?.value?.includes(' ')
+                      ? column?.value?.split(' ')[1]
+                      : column.value}
                 </TableCell>
               ))}
               {action || type === 'pools' ? (

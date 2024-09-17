@@ -15,7 +15,9 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  minWidth: 300,
+  width: '95%',
+  maxWidth: 500,
   boxShadow: 12,
 };
 
@@ -58,7 +60,10 @@ export default function ModalAtom({
     >
       <Button
         {...buttonProps}
-        sx={{ width: buttonProps?.fullWidth ? '100%' : 'auto' }}
+        sx={{
+          width: buttonProps?.fullWidth ? '100%' : 'auto',
+          whiteSpace: 'nowrap',
+        }}
         onClick={buttonProps?.onClick ?? handleOpen}
       >
         {buttonProps.children}
