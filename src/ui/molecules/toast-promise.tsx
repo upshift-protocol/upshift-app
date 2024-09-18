@@ -44,6 +44,7 @@ export default function ToastPromise(
       type: 'success',
       isLoading: false,
       closeButton: true,
+      autoClose: 5000,
     });
   } else {
     toast.update(toastId, {
@@ -58,6 +59,7 @@ export default function ToastPromise(
       type: 'error',
       isLoading: false,
       closeButton: true,
+      autoClose: 5000,
     });
   }
 }
