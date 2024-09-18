@@ -49,6 +49,8 @@
   --toastify-color-progress-bgo: .2;
 
   --toastify-toast-bd-radius: 4px;
+}
 
-  --toastify-font-family: var(--font-din-condensed);
+.Toastify__toast {
+  font-family: var(--font-din-condensed)
 }
