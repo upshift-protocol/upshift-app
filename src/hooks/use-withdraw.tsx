@@ -1,13 +1,13 @@
 import { queryClient } from '@/config/react-query';
-import Toast from '@/ui/atoms/toast';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { TIMES } from '@/utils/constants/time';
 import type { IAddress } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
+import type { Id } from 'react-toastify';
 import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
-import { readContract, waitForTransactionReceipt } from 'viem/actions';
+import { readContract, simulateContract } from 'viem/actions';
 import {
   useAccount,
   usePublicClient,
@@ -17,6 +17,7 @@ import {
   useWalletClient,
 } from 'wagmi';
 import { SHOW_LOGS } from '@/utils/constants/web3';
+import ToastPromise from '@/ui/molecules/toast-promise';
 
 type IUseDepositProps = {
   value?: string;
@@ -76,6 +77,7 @@ export default function useWithdraw(props: IUseDepositProps) {
 
   // Functions
   async function requestWithdraw() {
+    // checks
     if (!(address && provider)) {
       console.warn('#requestWithdraw: no wallet is connected');
       return;
@@ -92,14 +94,18 @@ export default function useWithdraw(props: IUseDepositProps) {
       console.warn('#requestWithdraw: amount input is undefined');
       return;
     }
+    // normalize input amount
     const normalized = toNormalizedBn(props.value, decimals);
-
     if (BigInt(normalized.raw || 0) === BigInt(0)) {
       console.warn('#requestWithdraw: amount input is zero');
       return;
     }
 
+    let redeemToastId: Id = 0;
+
+    // functionality
     try {
+      // switch chains if necessary
       if (props?.chainId && props?.chainId !== provider.chain.id) {
         await switchChainAsync({ chainId: props?.chainId });
         return;
@@ -109,30 +115,23 @@ export default function useWithdraw(props: IUseDepositProps) {
       setError('');
 
       // Request withdrawal of input amount
+      redeemToastId = toast.loading(
+        `Submitted redeem for ${normalized.normalized} ${symbol}`,
+        {
+          closeButton: true,
+        },
+      );
       setButton({ text: BUTTON_TEXTS.submitting, disabled: true });
-      const redeemHash = await signer?.writeContract({
+
+      const prepareRedeem = await simulateContract(provider, {
         account: address,
         address: props.pool,
         abi: ABI_LENDING_POOLS,
         functionName: 'requestRedeem',
         args: [BigInt(normalized.raw), address, address],
       });
-      await toast.promise(
-        waitForTransactionReceipt(provider, { hash: redeemHash! }),
-        {
-          success: {
-            render: (
-              <Toast
-                msg={`Successfully requested ${normalized.normalized} ${symbol} to be withdrawn:`}
-                hash={redeemHash}
-              />
-            ),
-            type: 'success',
-          },
-          error: `Error requesting a ${normalized.normalized} ${symbol} withdrawal`,
-          pending: `Submitted withdrawal request for ${normalized.normalized} ${symbol}`,
-        },
-      );
+      const redeemHash = await signer?.writeContract(prepareRedeem.request);
+      ToastPromise('redeem', normalized, redeemToastId, symbol, redeemHash);
 
       // Refetch queries
       queryClient.refetchQueries();
@@ -163,10 +162,12 @@ export default function useWithdraw(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
+      toast.dismiss(redeemToastId);
     }
   }
 
   async function handleWithdraw() {
+    // checks
     if (!(address && provider)) {
       console.warn('#handleWithdraw: no wallet is connected');
       return;
@@ -183,16 +184,18 @@ export default function useWithdraw(props: IUseDepositProps) {
       console.warn('#handleWithdraw: amount input is undefined');
       return;
     }
+    // normalize input amount
     const normalized = toNormalizedBn(props.value, decimals);
-
     if (BigInt(normalized.raw) === BigInt(0)) {
       console.warn('#requestWithdraw: amount input is zero');
       return;
     }
 
+    // find appropriate redemptions
     const foundRedemption = props.redemptions?.find(
       (redemption: any) => redemption.amount.raw === normalized.raw,
     );
+    // if redemption not found
     if (!foundRedemption) {
       console.error(
         '#requestWithdraw: could not find redemption',
@@ -201,7 +204,11 @@ export default function useWithdraw(props: IUseDepositProps) {
       return;
     }
 
+    let withdrawToastId: Id = 0;
+
+    // if all is well
     try {
+      // switch chain if necessary
       if (props?.chainId && props?.chainId !== provider.chain.id) {
         await switchChainAsync({ chainId: props?.chainId });
         return;
@@ -210,9 +217,16 @@ export default function useWithdraw(props: IUseDepositProps) {
       setIsLoading(true);
       setError('');
 
+      withdrawToastId = toast.loading(
+        `Submitted withdraw for ${normalized.normalized} ${symbol}`,
+        {
+          closeButton: true,
+        },
+      );
+
       // Claim of input amount
       setButton({ text: BUTTON_TEXTS.submitting, disabled: true });
-      const redeemHash = await signer?.writeContract({
+      const prepareWithdraw = await simulateContract(provider, {
         account: address,
         address: props.pool,
         abi: ABI_LENDING_POOLS,
@@ -225,21 +239,13 @@ export default function useWithdraw(props: IUseDepositProps) {
           address,
         ],
       });
-      await toast.promise(
-        waitForTransactionReceipt(provider, { hash: redeemHash! }),
-        {
-          success: {
-            render: (
-              <Toast
-                msg={`Successfully requested ${normalized.normalized} ${symbol} to be withdrawn:`}
-                hash={redeemHash}
-              />
-            ),
-            type: 'success',
-          },
-          error: `Error requesting a ${normalized.normalized} ${symbol} withdrawal`,
-          pending: `Submitted withdrawal request for ${normalized.normalized} ${symbol}`,
-        },
+      const withdrawHash = await signer?.writeContract(prepareWithdraw.request);
+      ToastPromise(
+        'withdraw',
+        normalized,
+        withdrawToastId,
+        symbol,
+        withdrawHash,
       );
 
       // Refetch queries
@@ -251,7 +257,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       if (SHOW_LOGS) {
         console.log(
           '#requestWithdraw: successfully executed transaction',
-          redeemHash,
+          withdrawHash,
         );
       }
     } catch (e) {
@@ -271,6 +277,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
+      toast.dismiss(withdrawToastId);
     }
   }
 

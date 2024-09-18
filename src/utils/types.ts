@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
 
+export type IActions = 'deposit' | 'approve' | 'withdraw' | 'redeem';
+
 export type IHrefTarget = '_blank' | '_self';
 
 export type INavItem = {

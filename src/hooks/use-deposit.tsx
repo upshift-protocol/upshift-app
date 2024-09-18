@@ -1,5 +1,5 @@
 import { queryClient } from '@/config/react-query';
-import Toast from '@/ui/atoms/toast';
+import ToastPromise from '@/ui/molecules/toast-promise';
 import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { SHOW_LOGS } from '@/utils/constants/web3';
@@ -62,6 +62,7 @@ export default function useDeposit(props: IUseDepositProps) {
 
   // Functions
   async function handleDeposit() {
+    // checks
     if (!(address && provider)) {
       console.warn('#handleDeposit: no wallet is connected');
       return;
@@ -78,15 +79,18 @@ export default function useDeposit(props: IUseDepositProps) {
       console.warn('#handleDeposit: amount input is undefined');
       return;
     }
+    // convert to normalized
     const normalized = toNormalizedBn(props.value, decimals);
-
     if (BigInt(normalized.raw) === BigInt(0)) {
       console.warn('#handleDeposit: amount input is zero');
       return;
     }
 
+    // unassigned vars
     let approvalToastId: Id = 0;
     let depositToastId: Id = 1;
+
+    // functionality
     try {
       if (props?.chainId && props?.chainId !== provider.chain.id) {
         await switchChainAsync({ chainId: props?.chainId });
@@ -120,35 +124,13 @@ export default function useDeposit(props: IUseDepositProps) {
           args: [props.pool, BigInt(normalized.raw)],
         });
         const approveHash = await signer?.writeContract(prepareTx.request);
-        if (approveHash) {
-          toast.update(approvalToastId, {
-            render(_props) {
-              return (
-                <Toast
-                  msg={`Successfully approved ${normalized.normalized} ${symbol}:`}
-                  hash={approveHash}
-                />
-              );
-            },
-            type: 'success',
-            isLoading: false,
-            closeButton: true,
-          });
-        } else {
-          toast.update(approvalToastId, {
-            render(_props) {
-              return (
-                <Toast
-                  msg={`Error approving ${normalized.normalized} ${symbol}:`}
-                  hash={approveHash}
-                />
-              );
-            },
-            type: 'error',
-            isLoading: false,
-            closeButton: true,
-          });
-        }
+        ToastPromise(
+          'approve',
+          normalized,
+          approvalToastId,
+          symbol,
+          approveHash,
+        );
       }
 
       // Deposit input amount
@@ -165,35 +147,7 @@ export default function useDeposit(props: IUseDepositProps) {
         args: [BigInt(normalized.raw), address],
       });
       const depositHash = await signer?.writeContract(prepareDeposit.request);
-      if (depositHash) {
-        toast.update(depositToastId, {
-          render(_props) {
-            return (
-              <Toast
-                msg={`Successfully deposited ${normalized.normalized} ${symbol}:`}
-                hash={depositHash}
-              />
-            );
-          },
-          type: 'success',
-          isLoading: false,
-          closeButton: true,
-        });
-      } else {
-        toast.update(depositToastId, {
-          render(_props) {
-            return (
-              <Toast
-                msg={`Error depositing ${normalized.normalized} ${symbol}:`}
-                hash={depositHash}
-              />
-            );
-          },
-          type: 'error',
-          isLoading: false,
-          closeButton: true,
-        });
-      }
+      ToastPromise('deposit', normalized, depositToastId, symbol, depositHash);
 
       // Refetch queries
       queryClient.refetchQueries();
