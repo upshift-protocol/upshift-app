@@ -89,10 +89,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Section
         id="earn-table"
         title={pool?.name ?? ' '}
-        description={
-          (pool as any)?.description ??
-          `The ${pool?.name ?? ''} vault aims to optimize yields by lending ${pool?.underlying?.symbol ?? ''} against blue chip crypto and real world asset (RWA) collateral markets, depending on market conditions. We call this the “dual engine”.`
-        }
+        description={pool?.description}
         // breadcrumbs={buildCrumbs()}
         loading={+poolLoading}
         chainId={pool?.chainId}

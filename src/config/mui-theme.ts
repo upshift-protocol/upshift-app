@@ -34,6 +34,9 @@ const baseTheme: ThemeOptions = {
       fontFamily: titlingGothic.style.fontFamily,
       textTransform: 'uppercase',
     },
+    body1: {
+      fontSize: 18,
+    },
   },
   components: {
     MuiSelect: {

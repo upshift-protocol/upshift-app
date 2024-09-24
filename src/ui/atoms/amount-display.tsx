@@ -35,9 +35,11 @@ export default function AmountDisplay({
         arrow
       >
         <Stack
+          display="flex"
           alignItems={direction === 'row' ? 'center' : 'end'}
           direction={direction}
           gap={direction === 'row' ? 1 : 0}
+          component="span"
         >
           {props?.usd && usdValue && direction === 'row' ? (
             <Typography

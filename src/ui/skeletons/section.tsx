@@ -79,7 +79,6 @@ const SectionSkeleton = (props: ISectionProps) => {
                   )}
                   {props?.chainId ? (
                     <Chip
-                      sx={{ mt: 0.5 }}
                       label={
                         <span
                           style={{
@@ -110,14 +109,27 @@ const SectionSkeleton = (props: ISectionProps) => {
                 </Stack>
               </Fragment>
             )}
-            {props.description && (
-              <Typography
-                variant="body1"
-                fontSize={18}
-                maxWidth={STYLE_VARS.descriptionWidth}
-              >
-                {props.description}
-              </Typography>
+            {(props.description || props?.loading) && (
+              <Fragment>
+                {props.loading ? (
+                  <Stack marginBottom={1} gap={1}>
+                    <Skeleton
+                      variant="text"
+                      style={{ transform: 'none' }}
+                      width={'100%'}
+                      height={18}
+                    />
+                  </Stack>
+                ) : (
+                  <Typography
+                    variant="body1"
+                    maxWidth={STYLE_VARS.descriptionWidth}
+                    marginBottom={1}
+                  >
+                    {props.description}
+                  </Typography>
+                )}
+              </Fragment>
             )}
           </Box>
           {props?.action ? <Box flex="none">{props.action}</Box> : null}

@@ -25,6 +25,9 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
+  /**
+   * @todo multiply by actual token instead of assuming ETH
+   */
   const {
     data: ethPrice,
     isError,

@@ -144,23 +144,20 @@ const columns: readonly IColumn[] = [
     flex: 1,
     align: 'right',
     format: (value: number) => value.toFixed(2),
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
-      if (!children)
+    component: ({ children }: any) => {
+      if (!children?.props?.children)
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
+      const { children: subchildren } = children.props;
       return (
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay>
-              {children?.[0] && children?.[0] !== '-'
-                ? `${children?.[0]}%`
+              {subchildren?.[0] && subchildren?.[0] !== '-'
+                ? `${subchildren?.[0]}%`
                 : '-'}
             </AmountDisplay>
           </Stack>
