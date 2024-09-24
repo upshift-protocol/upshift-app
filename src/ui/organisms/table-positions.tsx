@@ -139,8 +139,9 @@ const columns: readonly IColumn[] = [
   // },
   // { id: 'position', value: 'Position', align: 'right', flex: 2 },
   {
-    id: 'apy',
-    value: 'Net APY',
+    // id: 'apy',
+    id: 'hardcodedApy',
+    value: 'Avg. APY',
     flex: 1,
     align: 'right',
     format: (value: number) => value.toFixed(2),

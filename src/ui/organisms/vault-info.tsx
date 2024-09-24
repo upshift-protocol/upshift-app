@@ -97,9 +97,13 @@ export default function VaultInfo(
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography>Net APY</Typography>
+            <Typography>Avg. APY</Typography>
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
+            ) : props?.hardcodedApy ? (
+              <Typography fontFamily={'monospace'} display="flex">
+                {props?.hardcodedApy}
+              </Typography>
             ) : (
               <Typography fontFamily={'monospace'} display="flex">
                 <AmountDisplay round>{`${props?.apy || '0.00'}`}</AmountDisplay>

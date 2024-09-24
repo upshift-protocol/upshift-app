@@ -21,6 +21,7 @@ export type IPoolMetadata = {
   lockTime?: INormalizedNumber;
   loading?: boolean;
   apy?: string | number;
+  hardcodedApy?: string; // @todo remove once we don't hardcode anymore
   collateral?: string[];
 };
 
