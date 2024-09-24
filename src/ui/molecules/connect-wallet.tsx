@@ -32,20 +32,20 @@ type IConnectWallet = {
   onClose?: (() => void) | undefined;
 };
 
-const connectorsList: Partial<Connector>[] = [
-  {
-    name: 'Metamask',
-    id: 'io.metamask',
-  },
-  {
-    name: 'Wallet Connect',
-    id: 'walletConnect',
-  },
-  {
-    name: 'Coinbase Wallet',
-    id: 'coinbaseWalletSDK',
-  },
-];
+// const connectorsList: Partial<Connector>[] = [
+//   {
+//     name: 'Metamask',
+//     id: 'io.metamask',
+//   },
+//   {
+//     name: 'Wallet Connect',
+//     id: 'walletConnect',
+//   },
+//   {
+//     name: 'Coinbase Wallet',
+//     id: 'coinbaseWalletSDK',
+//   },
+// ];
 
 const ConnectWalletMolecule = ({
   btnFullWidth,
@@ -132,7 +132,7 @@ const ConnectWalletMolecule = ({
     >
       <List>
         {/* Default connectors */}
-        {connectorsList
+        {connectors
           .filter((c) => c.id !== 'injected')
           .map((connector, index) => (
             <ListItem key={`connector-${index}`} sx={{ px: '0px' }}>
@@ -151,6 +151,7 @@ const ConnectWalletMolecule = ({
                     height={28}
                     width={28}
                     alt={connector.name || connector.id || 'wallet connector'}
+                    style={{ borderRadius: '50%' }}
                   />
                 }
               >
