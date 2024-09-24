@@ -1,6 +1,6 @@
 export function buildQueryKey(
   unique: string,
-  chainId: number | string,
+  chainId?: number | string,
   address?: string,
 ) {
   const stringChain = String(chainId);

@@ -7,7 +7,12 @@ import { useQuery } from '@tanstack/react-query';
 import { isAddress } from 'viem';
 import { useChainId } from 'wagmi';
 
-type IFetchTypes = 'lending-pools' | 'lending-pool' | 'price' | 'my-positions';
+type IFetchTypes =
+  | 'lending-pools'
+  | 'lending-pool'
+  | 'price'
+  | 'my-positions'
+  | 'all-prices';
 
 interface IUseFetcher extends UndefinedInitialDataOptions {
   queryKey: (IFetchTypes | string)[];

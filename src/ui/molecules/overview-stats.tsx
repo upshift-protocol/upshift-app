@@ -3,8 +3,8 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Fragment, useMemo } from 'react';
-import useFetcher from '@/hooks/use-fetcher';
 import { formatCompactNumber } from '@/utils/helpers/ui';
+import useTokens from '@/hooks/use-tokens';
 import CustomStat from '../atoms/stat';
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -25,40 +25,31 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
-  /**
-   * @todo multiply by actual token instead of assuming ETH
-   */
-  const {
-    data: ethPrice,
-    isError,
-    isFetching,
-    isLoading,
-  } = useFetcher({
-    queryKey: ['price', 'eth'],
-    initialData: 1,
-  });
+  const { data: tokens, isError, isFetching, isLoading } = useTokens();
 
   const displayEth = isError || isFetching || isLoading;
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
-    let total = BigInt(0);
-    pools.forEach(({ totalSupply }) => {
-      total += totalSupply.raw ? BigInt(totalSupply.raw) : BigInt(0);
+    let total = 0;
+    pools.forEach(({ totalSupply, underlying }) => {
+      const foundToken = tokens?.find((t) => t.address === underlying.address);
+      total += Number(totalSupply?.normalized || 0) * (foundToken?.price || 0);
     });
-    // TODO: return USD amount
-    return toNormalizedBn(total).normalized;
-  }, [pools?.length]);
+    return String(total);
+  }, [pools?.length, tokens?.length]);
 
-  const totalBorrowed = useMemo(() => {
+  const totalBorrow = useMemo(() => {
     if (!pools?.length) return '0.0';
-    let total = BigInt(0);
-    pools.forEach((p) => {
-      total += p.totalBorrowed?.raw ? BigInt(p.totalBorrowed?.raw) : BigInt(0);
+    let total = 0;
+    pools.forEach(({ totalBorrowed, underlying }) => {
+      const foundToken = tokens?.find((t) => t.address === underlying.address);
+      total +=
+        Number(totalBorrowed?.normalized || 0) * (foundToken?.price || 0);
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
-  }, [pools?.length]);
+  }, [pools?.length, tokens?.length]);
   return (
     <ResponsiveStack>
       <CustomStat
@@ -69,7 +60,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalSupplied) * Number(ethPrice), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalSupplied), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
           </Tooltip>
         }
         unit="Total Deposited"
@@ -80,12 +71,12 @@ const OverviewStatsMolecule = ({
         loading={loading || +isLoading || +isFetching}
         value={
           <Tooltip
-            title={totalBorrowed}
-            disableHoverListener={totalBorrowed === '0'}
+            title={totalBorrow}
+            disableHoverListener={totalBorrow === '0'}
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalBorrowed) * Number(ethPrice), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
+            <Fragment>{`${formatCompactNumber(Number(totalBorrow), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
           </Tooltip>
         }
         unit="Total Borrowed"
