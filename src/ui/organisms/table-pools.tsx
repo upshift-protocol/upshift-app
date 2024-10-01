@@ -61,6 +61,37 @@ const columns: readonly IColumn[] = [
     },
   },
   {
+    id: 'underlying',
+    value: 'Deposit Token',
+    flex: 2,
+    component: ({ children }: { children?: IWSTokenEntry }) => {
+      if (!children?.symbol)
+        return (
+          <TableCell>
+            <Stack alignItems="center" gap={1} direction="row">
+              <Skeleton variant="circular" height={24} width={24} />
+              <Skeleton variant="text" height={36} width={48} />
+            </Stack>
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack alignItems="start">
+            <div onClick={(e) => e.stopPropagation()}>
+              <AssetDisplay
+                img={`/assets/tokens/${children.symbol}.png`}
+                imgSize={20}
+                symbol={children.symbol}
+                address={children.address}
+                chainId={children?.chain}
+              />
+            </div>
+          </Stack>
+        </TableCell>
+      );
+    },
+  },
+  {
     id: 'totalSupply',
     value: 'Total Supply',
     align: 'right',
@@ -117,37 +148,6 @@ const columns: readonly IColumn[] = [
             <AmountDisplay>
               {children && children !== '-' ? `${children}` : '-'}
             </AmountDisplay>
-          </Stack>
-        </TableCell>
-      );
-    },
-  },
-  {
-    id: 'underlying',
-    value: 'Deposit Token',
-    flex: 2,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children?.symbol)
-        return (
-          <TableCell>
-            <Stack alignItems="center" gap={1} direction="row">
-              <Skeleton variant="circular" height={24} width={24} />
-              <Skeleton variant="text" height={36} width={48} />
-            </Stack>
-          </TableCell>
-        );
-      return (
-        <TableCell>
-          <Stack alignItems="start">
-            <div onClick={(e) => e.stopPropagation()}>
-              <AssetDisplay
-                img={`/assets/tokens/${children.symbol}.png`}
-                imgSize={20}
-                symbol={children.symbol}
-                address={children.address}
-                chainId={children?.chain}
-              />
-            </div>
           </Stack>
         </TableCell>
       );
