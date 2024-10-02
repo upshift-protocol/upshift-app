@@ -18,6 +18,54 @@ import { Fragment } from 'react';
 import { isAddress } from 'viem';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
+import AssetDisplay from '../atoms/asset-display';
+
+const renderTokenExposure = (
+  exp: { value: IAddress; label: string },
+  row: any,
+  value: any,
+  index: number,
+) => {
+  function renderTokenLogo() {
+    if (getTokenSymbol(exp?.value)?.length > 30) {
+      if (!exp?.label?.includes('_')) {
+        return exp?.label;
+      }
+      return truncate(exp.value, 3);
+    }
+    return getTokenSymbol(exp.value);
+  }
+  if (!exp?.label?.includes('_')) {
+    return (
+      <AssetDisplay
+        tooltip
+        symbol={exp.label}
+        img={`/assets/tokens/${exp.label}.svg`}
+      />
+    );
+  }
+  if (
+    !isAddress(exp.label) &&
+    isAddress(exp.value) &&
+    getTokenSymbol(exp?.value)?.length < 30
+  ) {
+    return (
+      <Fragment>
+        <LinkAtom
+          href={explorerLink(
+            exp.value,
+            (row?.chainId, FALLBACK_CHAINID),
+            'address',
+          )}
+        >
+          {renderTokenLogo()}
+        </LinkAtom>
+        {index !== Number(value?.length) - 1 ? ',' : null}
+      </Fragment>
+    );
+  }
+  return null;
+};
 
 const columns: GridColDef<any[number]>[] = [
   {
@@ -87,44 +135,7 @@ const columns: GridColDef<any[number]>[] = [
                 key={`table-loans-${row.id}-${exp.value}-${i}`}
                 style={{ display: 'flex', alignItems: 'center' }}
               >
-                {!exp?.label?.includes('_') ? (
-                  <Tooltip
-                    title={exp?.label}
-                    placement="top"
-                    arrow
-                    sx={{
-                      left: -(i !== 0 ? i * 5 : 0),
-                      position: 'relative',
-                    }}
-                  >
-                    <Image
-                      src={`/assets/tokens/${exp.label}.svg`}
-                      alt={exp.value}
-                      height={24}
-                      width={24}
-                      style={{ borderRadius: '50%' }}
-                    />
-                  </Tooltip>
-                ) : !isAddress(exp.label) &&
-                  isAddress(exp.value) &&
-                  getTokenSymbol(exp?.value)?.length < 30 ? (
-                  <Fragment>
-                    <LinkAtom
-                      href={explorerLink(
-                        exp.value,
-                        (row?.chainId, FALLBACK_CHAINID),
-                        'address',
-                      )}
-                    >
-                      {getTokenSymbol(exp?.value)?.length > 30
-                        ? !exp?.label?.includes('_')
-                          ? exp?.label
-                          : truncate(exp.value, 3)
-                        : getTokenSymbol(exp.value)}
-                    </LinkAtom>
-                    {i !== Number(value?.length) - 1 ? ',' : null}
-                  </Fragment>
-                ) : null}
+                {renderTokenExposure(exp, row, value, i)}
               </span>
             ) : null,
           )}

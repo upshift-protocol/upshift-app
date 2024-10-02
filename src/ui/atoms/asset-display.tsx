@@ -1,6 +1,6 @@
 import { FALLBACK_TOKEN_IMG, STYLE_VARS } from '@/utils/constants/ui';
 import type { IAssetDisplay } from '@/utils/types';
-import type { TypographyVariant } from '@mui/material';
+import { Tooltip, type TypographyVariant } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -71,6 +71,27 @@ export default function AssetDisplay(props: IAssetDisplay) {
           ) : null}
         </Stack>
       </Box>
+    );
+  }
+
+  if (props.tooltip && props.symbol) {
+    return (
+      <Tooltip
+        title={props?.symbol}
+        placement="top"
+        arrow
+        sx={{
+          position: 'relative',
+        }}
+      >
+        <Image
+          src={imgSrc}
+          alt={props?.symbol ?? props?.address ?? ''}
+          height={props?.imgSize ?? 24}
+          width={props?.imgSize ?? 24}
+          onError={() => setImgSrc(FALLBACK_TOKEN_IMG)}
+        />
+      </Tooltip>
     );
   }
 

@@ -32,7 +32,7 @@ const OverviewStatsMolecule = ({
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = 0;
-    pools.forEach(({ totalSupply, underlying }) => {
+    pools?.forEach(({ totalSupply, underlying }) => {
       const foundToken = tokens?.find((t) => t.address === underlying.address);
       total += Number(totalSupply?.normalized || 0) * (foundToken?.price || 0);
     });
@@ -42,7 +42,7 @@ const OverviewStatsMolecule = ({
   const totalBorrow = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = 0;
-    pools.forEach(({ totalBorrowed, underlying }) => {
+    pools?.forEach(({ totalBorrowed, underlying }) => {
       const foundToken = tokens?.find((t) => t.address === underlying.address);
       total +=
         Number(totalBorrowed?.normalized || 0) * (foundToken?.price || 0);

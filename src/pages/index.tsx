@@ -49,7 +49,7 @@ const HomePage = () => {
           <PoolsTableOrganism
             title="Upshift Pools"
             data={allPools?.filter(
-              (p) => !p.name?.toLowerCase()?.includes('kelp'),
+              (p) => !p?.name?.toLowerCase()?.includes('kelp'),
             )}
             loading={+allPoolsLoading}
             pagination={false}
@@ -57,7 +57,7 @@ const HomePage = () => {
           <PoolsTableOrganism
             title="Partner Pools"
             data={allPools?.filter((p) =>
-              p.name?.toLowerCase()?.includes('kelp'),
+              p?.name?.toLowerCase()?.includes('kelp'),
             )}
             loading={+allPoolsLoading}
             pagination={false}

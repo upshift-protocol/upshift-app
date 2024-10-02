@@ -51,4 +51,5 @@ export type IAssetDisplay = {
   imgFallback?: boolean;
   loading?: boolean;
   chainId?: number;
+  tooltip?: boolean;
 };
