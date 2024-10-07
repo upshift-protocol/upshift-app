@@ -89,7 +89,10 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Section
         id="earn-table"
         title={pool?.name ?? ' '}
-        description={pool?.description}
+        description={
+          pool?.description ||
+          `${pool?.name} vault aims to optimize ${pool?.underlying?.symbol || 'its underlying deposit token'} yield by providing liquidity to blue chip DeFi protocols and maximizing future airdrop potential.`
+        }
         // breadcrumbs={buildCrumbs()}
         loading={+poolLoading}
         chainId={pool?.chainId}
