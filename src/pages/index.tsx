@@ -24,6 +24,18 @@ const HomePage = () => {
     enabled: walletConnected,
   }) as UseQueryResult<any>;
 
+  function filteredPools() {
+    const partnerPools = ['kelp gain', 'upshift lombard btc'];
+    return {
+      partners: allPools?.filter((p) =>
+        partnerPools.includes(p?.name?.toLowerCase()),
+      ),
+      upshift: allPools?.filter(
+        (p) => !partnerPools.includes(p?.name?.toLowerCase()),
+      ),
+    };
+  }
+
   useEffect(() => {
     if (address) setWalletConnected(true);
     else setWalletConnected(false);
@@ -48,17 +60,13 @@ const HomePage = () => {
           </Collapse>
           <PoolsTableOrganism
             title="Upshift Pools"
-            data={allPools?.filter(
-              (p) => !p?.name?.toLowerCase()?.includes('kelp'),
-            )}
+            data={filteredPools().upshift}
             loading={+allPoolsLoading}
             pagination={false}
           />
           <PoolsTableOrganism
             title="Partner Pools"
-            data={allPools?.filter((p) =>
-              p?.name?.toLowerCase()?.includes('kelp'),
-            )}
+            data={filteredPools().partners}
             loading={+allPoolsLoading}
             pagination={false}
           />
