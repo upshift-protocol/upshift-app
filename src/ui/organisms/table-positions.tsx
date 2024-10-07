@@ -157,9 +157,7 @@ const columns: readonly IColumn[] = [
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay>
-              {subchildren?.[0] && subchildren?.[0] !== '-'
-                ? `${subchildren?.[0]}%`
-                : '-'}
+              {subchildren && subchildren !== '-' ? `${subchildren}%` : '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
