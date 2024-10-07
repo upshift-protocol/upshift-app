@@ -25,7 +25,7 @@ const HomePage = () => {
   }) as UseQueryResult<any>;
 
   function filteredPools() {
-    const partnerPools = ['kelp gain', 'upshift lombard btc'];
+    const partnerPools = ['kelp gain', 'lombard lbtc'];
     return {
       partners: allPools?.filter((p) =>
         partnerPools.includes(p?.name?.toLowerCase()),
