@@ -1,4 +1,5 @@
 import { queryClient } from '@/config/react-query';
+import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import dynamic from 'next/dynamic';
@@ -15,7 +16,7 @@ const ReactQueryDevtoolsProduction = dynamic(() =>
 
 export default function DevtoolsSkeleton() {
   const [showQueryTools, setShowQueryTools] = useState(false);
-  if (!process.env.NEXT_PUBLIC_DEV) return null;
+  if (!DEVELOPMENT_MODE) return null;
   return (
     <Fragment>
       <Box position="fixed" bottom="1rem" right="1rem" zIndex={999}>

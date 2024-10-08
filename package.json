@@ -1,6 +1,9 @@
 {
   "name": "upshift-earn-app",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "NEXT_PUBLIC_DEV=1 next dev",
     "dev:local": "NEXT_PUBLIC_NETWORK=localhost pnpm dev",

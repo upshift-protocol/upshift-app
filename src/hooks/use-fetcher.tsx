@@ -1,5 +1,5 @@
 import { augustSdk } from '@/config/august-sdk';
-import { SHOW_LOGS } from '@/utils/constants/web3';
+import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import { buildQueryKey } from '@/utils/helpers/query';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import type { UndefinedInitialDataOptions } from '@tanstack/react-query';
@@ -38,7 +38,7 @@ export default function useFetcher({
     switch (type) {
       case 'lending-pool': {
         if (!(poolAddressOrSymbol && isAddress(poolAddressOrSymbol))) {
-          if (SHOW_LOGS)
+          if (DEVELOPMENT_MODE)
             console.warn(
               '#useFetcher::lending-pool:second query key in array must be an address',
               poolAddressOrSymbol,
@@ -57,7 +57,7 @@ export default function useFetcher({
       }
       case 'my-positions': {
         if (!(wallet && isAddress(wallet))) {
-          if (SHOW_LOGS)
+          if (DEVELOPMENT_MODE)
             console.warn(
               '#useFetcher::my-positions:connected address is undefined',
               wallet,
@@ -69,7 +69,7 @@ export default function useFetcher({
       }
       case 'price': {
         if (!poolAddressOrSymbol) {
-          if (SHOW_LOGS)
+          if (DEVELOPMENT_MODE)
             console.warn(
               '#useFetcher::price:query[1] is undefined',
               poolAddressOrSymbol,

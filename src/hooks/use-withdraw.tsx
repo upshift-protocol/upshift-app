@@ -16,7 +16,7 @@ import {
   useSwitchChain,
   useWalletClient,
 } from 'wagmi';
-import { SHOW_LOGS } from '@/utils/constants/web3';
+import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import ToastPromise from '@/ui/molecules/toast-promise';
 
 type IUseDepositProps = {
@@ -139,7 +139,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      if (SHOW_LOGS) {
+      if (DEVELOPMENT_MODE) {
         console.log(
           '#requestWithdraw: successfully executed transaction',
           redeemHash,
@@ -254,7 +254,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      if (SHOW_LOGS) {
+      if (DEVELOPMENT_MODE) {
         console.log(
           '#requestWithdraw: successfully executed transaction',
           withdrawHash,

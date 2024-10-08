@@ -2,7 +2,7 @@ import { queryClient } from '@/config/react-query';
 import ToastPromise from '@/ui/molecules/toast-promise';
 import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
-import { SHOW_LOGS } from '@/utils/constants/web3';
+import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
@@ -155,7 +155,7 @@ export default function useDeposit(props: IUseDepositProps) {
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
-      if (SHOW_LOGS) {
+      if (DEVELOPMENT_MODE) {
         console.log(
           '#handleDeposit: successfully executed transaction',
           depositHash,
