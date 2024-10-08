@@ -22,7 +22,7 @@ or copy and paste the `.env.sample` with your appropriate values
 
 Run the following command on your local environment:
 
-```
+```bash
 pnpm install
 ```
 
@@ -30,7 +30,7 @@ pnpm install
 
 Run the local developer server with:
 
-```
+```bash
 pnpm dev
 ```
 
@@ -75,9 +75,9 @@ To run the project using a diiferent network, you can either:
 
 You can see the results locally in production mode with:
 
-```
-$ pnpm build
-$ pnpm start
+```bash
+pnpm build
+pnpm start
 ```
 
 The generated HTML and CSS files are minified (built-in feature from Next js).
