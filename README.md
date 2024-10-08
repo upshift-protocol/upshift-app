@@ -13,7 +13,7 @@ Upshift pools generate yields from institutional loans on the August protocol.
 - [Deployment](https://github.com/lazarev-protocol/upshift-app?tab=readme-ov-file#deployment)
   - [Live Links](https://github.com/lazarev-protocol/upshift-app?tab=readme-ov-file#live)
 - [Contributions](https://github.com/lazarev-protocol/upshift-app?tab=readme-ov-file#contributions)
-- [License] (https://github.com/lazarev-protocol/upshift-app?tab=readme-ov-file#license)
+- [License](https://github.com/lazarev-protocol/upshift-app?tab=readme-ov-file#license)
 
 ## Getting Started
 
