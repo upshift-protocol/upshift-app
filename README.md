@@ -6,8 +6,8 @@ Upshift pools generate yields from institutional loans on the August protocol.
 
 #### Requirements
 
-- Node.js v18+
-- PNPM
+- [Node.js v18+](https://nodejs.org/)
+- [PNPM](https://pnpm.io/)
 
 #### Environment Variables
 
