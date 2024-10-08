@@ -1,6 +1,6 @@
 # Earn App
 
-Upshift pools generate yields from institutional loans on the August protocol.
+Upshift pools generate yields from institutional loans on the August protocol using the [August SDK](https://www.npmjs.com/package/@augustdigital/sdk).
 
 ## Table of Contents
 
