@@ -1,6 +1,13 @@
 # Earn App
 
-Upshift pools generate yields from institutional loans on the August protocol.
+Upshift pools generate yields from institutional loans on the August protocol. This frontend features:
+
+- [Typescript as the core language](https://www.typescriptlang.org/)
+- [NextJS to enable SSR](https://nextjs.org/)
+- [TailwindCSS to assist in styling](https://tailwindcss.com/)
+- [Prettier to keep code clean](https://prettier.io/)
+- [ESLint to ensure code builds](https://eslint.org/)
+- [Husky to automate git interactions](https://typicode.github.io/husky/)
 
 ## Getting Started
 
