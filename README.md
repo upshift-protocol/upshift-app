@@ -13,12 +13,12 @@ This frontend features:
 - [ESLint to ensure code builds](https://eslint.org/)
 - [Husky to automate git interactions](https://typicode.github.io/husky/)
 
-#### Requirements
+### Requirements
 
 - [Node.js v18+](https://nodejs.org/)
 - [PNPM](https://pnpm.io/)
 
-#### Environment Variables
+### Environment Variables
 
 Create a `.env` file to input the following variables:
 
@@ -27,7 +27,7 @@ Create a `.env` file to input the following variables:
 
 or copy and paste the `.env.sample` with your appropriate values
 
-#### Installation
+### Installation
 
 Run the following command on your local environment:
 
@@ -35,7 +35,7 @@ Run the following command on your local environment:
 pnpm install
 ```
 
-#### Development
+### Development
 
 Run the local developer server with:
 
@@ -99,7 +99,7 @@ pnpm build-prod
 
 Now, the app is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
 
-#### Live
+### Live
 
 The site is currently deployed using netlify on the following links:
 
