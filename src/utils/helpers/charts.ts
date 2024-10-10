@@ -9,6 +9,7 @@ export function getProtocolExposureData(pool: IPool) {
   loans.forEach((loan: IPoolLoan) => {
     if (!loan.positions || loan.positions.length === 0) return;
 
+    // @ts-expect-error
     loan.positions.forEach((position: { label: string; value: string }) => {
       protocolAllocation[position.label] =
         (protocolAllocation[position.label] || 0) + loan.allocation * 100;
@@ -78,6 +79,7 @@ export function getTokenExposureData(pool: IPool) {
   const tokenAllocation: { [token: string]: number } = {};
 
   pool.loans.forEach((loan: IPoolLoan) => {
+    // @ts-expect-error
     loan.exposure?.forEach((token: { value: string; label: string }) => {
       let tokenSymbol = getTokenSymbol(token.value, pool.chainId);
 
