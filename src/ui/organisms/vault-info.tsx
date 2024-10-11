@@ -158,7 +158,7 @@ export default function VaultInfo(
                 direction="row"
                 round
               >
-                {Number(props?.totalSupply?.normalized) -
+                {Number(props?.totalAssets?.normalized) -
                   Number(props?.totalBorrowed?.normalized)}
               </AmountDisplay>
             )}
