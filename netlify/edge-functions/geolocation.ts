@@ -1,30 +1,14 @@
 import type { Config, Context } from '@netlify/edge-functions';
 
-export default async (_request: Request, context: Context) => {
-  // Here's what's available on context.geo
+const TERMS_URL = 'https://terms.upshift.finance';
 
-  // context: {
-  //   geo: {
-  //     city?: string;
-  //     country?: {
-  //       code?: string;
-  //       name?: string;
-  //     },
-  //     subdivision?: {
-  //       code?: string;
-  //       name?: string;
-  //     },
-  //     latitude?: number;
-  //     longitude?: number;
-  //     timezone?: string;
-  //   }
-  // }
-
-  return Response.json({
-    geo: context.geo,
-  });
+export default async (request: Request, context: Context) => {
+  // block USA
+  const country = context.geo.country?.code;
+  if (country === 'US') return Response.redirect(TERMS_URL);
+  return new URL(request.url, request.url);
 };
 
 export const config: Config = {
-  path: '/geolocation',
+  path: '/*',
 };
