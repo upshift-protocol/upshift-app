@@ -2,11 +2,11 @@ import type { Config, Context } from '@netlify/edge-functions';
 
 const TERMS_URL = 'https://terms.upshift.finance';
 
-export default async (request: Request, context: Context) => {
+export default async (_request: Request, context: Context) => {
   // block USA
   const country = context.geo.country?.code;
   if (country === 'US') return Response.redirect(TERMS_URL);
-  return Response.redirect(request.url);
+  return;
 };
 
 export const config: Config = {
