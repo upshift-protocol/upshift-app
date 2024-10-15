@@ -165,23 +165,23 @@ export default function useDeposit(props: IUseDepositProps) {
       }
 
       // log to google sheet
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/log-action`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pool_address: props.pool,
-          pool_name: props.poolName,
-          token_address: props.asset,
-          token_symbol: symbol,
-          chain: props.chainId,
-          amount_native: normalized.normalized,
-          eoa: address,
-          tx_id: depositHash,
-        } as IDepositLogData),
-      });
-      console.log('#handleDeposit::logDeposit:', res.status);
+      // const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/log-action`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     pool_address: props.pool,
+      //     pool_name: props.poolName,
+      //     token_address: props.asset,
+      //     token_symbol: symbol,
+      //     chain: props.chainId,
+      //     amount_native: normalized.normalized,
+      //     eoa: address,
+      //     tx_id: depositHash,
+      //   } as IDepositLogData),
+      // });
+      // console.log('#handleDeposit::logDeposit:', res.status);
     } catch (e) {
       console.error('#handleDeposit:', e);
       if (String(e).toLowerCase().includes('user rejected')) {
