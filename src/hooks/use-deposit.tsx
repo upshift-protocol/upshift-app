@@ -3,7 +3,7 @@ import ToastPromise from '@/ui/molecules/toast-promise';
 import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
-import type { IDepositLogData } from '@/utils/types';
+// import type { IDepositLogData } from '@/utils/types';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
