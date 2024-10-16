@@ -17,9 +17,14 @@ import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
-import { Collapse } from '@mui/material';
+import { Collapse, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
+import PieChart from '@/ui/organisms/pie-charts';
+import {
+  getProtocolExposureData,
+  getTokenExposureData,
+} from '@/utils/helpers/charts';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -53,6 +58,8 @@ export const getStaticProps = (async (context) => {
 const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
+  const [protocolData, setProtocolData] = useState<any>(null);
+  const [tokenData, setTokenData] = useState<any>(null);
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
     queryKey: ['lending-pool', params.pool, String(params.chain_id)],
@@ -83,6 +90,16 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   //     },
   //   ];
   // }
+
+  useEffect(() => {
+    if (pool) {
+      const protocolExposureData = getProtocolExposureData(pool);
+      const tokenExposureData = getTokenExposureData(pool);
+
+      setProtocolData(protocolExposureData);
+      setTokenData(tokenExposureData);
+    }
+  }, [pool]);
 
   return (
     <Base>
@@ -126,6 +143,53 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
                 loading={+positionsLoading}
               />
             </Collapse>
+            {protocolData && tokenData && (
+              <Grid
+                container
+                spacing={4}
+                my={{
+                  xs: 2,
+                  md: 4,
+                }}
+                justifyContent="space-around"
+              >
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  style={{
+                    height: '400px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <PieChart data={protocolData} />
+                  <Typography variant="h6" mt={2} mb={{ xs: 0, md: 1 }}>
+                    Protocol Exposure
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  style={{
+                    height: '400px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <PieChart data={tokenData} />
+                  <Typography variant="h6" mt={2} mb={{ xs: 0, md: 1 }}>
+                    Token Exposure
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>
