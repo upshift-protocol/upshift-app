@@ -57,7 +57,7 @@ const logDeposit = async (data: IDepositLog) => {
       },
     });
 
-    return response.data.updates;
+    return response;
   } catch (error) {
     console.error('#logDeposit:', error);
   }
@@ -84,10 +84,10 @@ export default async function handler(
       eoa: `=HYPERLINK("${explorerLink(body.eoa, body.chain, 'address')}", "${truncate(body.eoa)}")`,
       tx_id: `=HYPERLINK("${explorerLink(body.tx_id as IAddress, body.chain, 'tx')}", "${truncate(body.tx_id)}")`,
     });
-    if (!deposit) {
+    if (!deposit?.status !== 200) {
       return res.status(500).json({
         ok: false,
-        error: '#logDeposit returned undefined',
+        error: deposit,
         data: null,
       });
     }
