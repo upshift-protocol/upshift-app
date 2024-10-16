@@ -57,7 +57,7 @@ const logDeposit = async (data: IDepositLog) => {
       },
     });
 
-    return response.status;
+    return response.data.updates;
   } catch (error) {
     console.error('#logDeposit:', error);
   }
@@ -87,17 +87,22 @@ export default async function handler(
     if (!deposit) {
       return res.status(500).json({
         ok: false,
+        error: '#logDeposit returned undefined',
+        data: null,
       });
     }
 
     return res.status(200).json({
       ok: true,
-      data: deposit?.updates?.updatedData?.range,
+      data: deposit,
+      error: undefined
     });
   } catch (e) {
     console.log('ERROR:', e);
     return res.status(500).json({
       ok: false,
+      data: null,
+      error: JSON.stringify(e)
     });
   }
 }
