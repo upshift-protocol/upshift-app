@@ -109,7 +109,6 @@ export default function useDeposit(props: IUseDepositProps) {
                 console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
                 const json = await res.json();
                 console.log("#handleDeposit::json:", json)
-                return
 
     // // unassigned vars
     // let approvalToastId: Id = 0;
