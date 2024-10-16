@@ -121,7 +121,7 @@ The site is currently deployed using AWS Amplify on the following links:
 
 ## Contributions
 
-Everyone is welcome to contribute to the Upshift web-app. Feel free to [open an issue](https://github.com/lazarev-protocol/earn-app/issues) if you have a proposal or found a bug. PR's should be made to `develop` branch and await approval from team which will go through a QA process before being merged to the production branch, `main`.
+Everyone is welcome to contribute to the Upshift web-app. Feel free to [open an issue](https://github.com/upshift-protocol/upshift-app/issues) if you have a proposal or found a bug. PR's should be made to `develop` branch and await approval from team which will go through a QA process before being merged to the production branch, `main`.
 
 ## License
 
