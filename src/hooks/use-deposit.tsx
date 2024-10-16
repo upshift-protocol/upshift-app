@@ -183,7 +183,7 @@ export default function useDeposit(props: IUseDepositProps) {
       };
       // log to google sheet
       const res = await fetch(
-        `https://lakejdgkzc.execute-api.eu-west-1.amazonaws.com/logUpshiftDeposit`,
+        `${process.env.NEXT_PUBLIC_LAMBDA_URL}/logUpshiftDeposit`,
         {
           method: 'POST',
           headers: {
