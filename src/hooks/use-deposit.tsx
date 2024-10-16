@@ -175,6 +175,7 @@ export default function useDeposit(props: IUseDepositProps) {
       const assetUsdPrice = await augustSdk.getPrice(symbol || 'usdc');
       const formattedData = {
         chain: getChainNameById(props.chainId || FALLBACK_CHAINID),
+        amount_native: normalized.normalized,
         amount_usd: String(assetUsdPrice * Number(normalized.normalized)),
         token: `=HYPERLINK("${explorerLink(props.asset, props.chainId || FALLBACK_CHAINID, 'token')}", "${symbol || truncate(props.asset)}")`,
         pool: `=HYPERLINK("${explorerLink(props.pool, props.chainId || FALLBACK_CHAINID, 'address')}", "${props.poolName || truncate(props.pool)}")`,
