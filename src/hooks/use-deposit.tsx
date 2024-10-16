@@ -182,7 +182,9 @@ export default function useDeposit(props: IUseDepositProps) {
                 tx_id: depositHash,
               } as IDepositLogData),
             });
-            console.log('#handleDeposit::logDeposit:', res.status);
+            console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
+            const json = await res.json();
+            console.log("#handleDeposit::json:", json)
     } catch (e) {
       console.error('#handleDeposit:', e);
       if (String(e).toLowerCase().includes('user rejected')) {
