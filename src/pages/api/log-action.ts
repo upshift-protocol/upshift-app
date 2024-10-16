@@ -1,18 +1,19 @@
 // @ts-nocheck
 import { augustSdk } from '@/config/august-sdk';
-import GSHEET from '@/utils/constants/credentials';
+import GSHEET from '@/utils/constants/google-credentials';
 import { getChainNameById } from '@/utils/helpers/ui';
 import type { IDepositLog, IDepositLogData } from '@/utils/types';
 import type { IAddress } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
-import { google } from 'googleapis';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const logDeposit = async (data: IDepositLog) => {
   try {
     // authenticate
     const auth = await GSHEET.getClient();
-    const sheets = google.sheets({ version: 'v4', auth });
+    const googleSheet = new GoogleSpreadsheet(GSHEET.id || '', auth);
+    await googleSheet.loadInfo();
     // props
     const { eoa, token, chain, amount_native, amount_usd, tx_id, pool } = data;
 
@@ -48,16 +49,17 @@ const logDeposit = async (data: IDepositLog) => {
 
     // insert new row into google sheet
     console.log('#logDeposit::gsheet:', GSHEET.id, GSHEET.range);
-    const response = await sheets.spreadsheets.values.append({
-      spreadsheetId: GSHEET.id,
-      range: GSHEET.range,
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values: [[pool, eoa, token, amount_usd, amount_native, chain, tx_id]],
-      },
+    const googleSheetTab = googleSheet.sheetsByIndex[0];
+    await googleSheetTab?.addRow({
+      pool,
+      eoa,
+      token,
+      amount_usd,
+      amount_native,
+      chain,
+      tx_id,
     });
-
-    return response.status;
+    return true;
   } catch (error) {
     console.error('#logDeposit:', error);
   }
@@ -87,17 +89,22 @@ export default async function handler(
     if (!deposit) {
       return res.status(500).json({
         ok: false,
+        error: deposit,
+        data: null,
       });
     }
 
     return res.status(200).json({
       ok: true,
-      data: deposit?.updates?.updatedData?.range,
+      data: deposit,
+      error: undefined,
     });
   } catch (e) {
     console.log('ERROR:', e);
     return res.status(500).json({
       ok: false,
+      data: null,
+      error: JSON.stringify(e),
     });
   }
 }

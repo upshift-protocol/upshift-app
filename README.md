@@ -114,14 +114,14 @@ Now, the app is ready to be deployed. All generated files are located at `out` f
 
 ### Live
 
-The site is currently deployed using netlify on the following links:
+The site is currently deployed using AWS Amplify on the following links:
 
-- https://upshift.netlify.app (`main`)
-- https://upshift-staging.netlify.app (`develop`)
+- https://app.upshift.finance (`main`)
+- https://app-staging.upshift.finance (`develop`)
 
 ## Contributions
 
-Everyone is welcome to contribute to the Upshift web-app. Feel free to [open an issue](https://github.com/lazarev-protocol/earn-app/issues) if you have a proposal or found a bug. PR's should be made to `develop` branch and await approval from team which will go through a QA process before being merged to the production branch, `main`.
+Everyone is welcome to contribute to the Upshift web-app. Feel free to [open an issue](https://github.com/upshift-protocol/upshift-app/issues) if you have a proposal or found a bug. PR's should be made to `develop` branch and await approval from team which will go through a QA process before being merged to the production branch, `main`.
 
 ## License
 
