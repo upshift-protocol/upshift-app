@@ -32,7 +32,10 @@ const ChainDropdown = () => {
     return (
       <Background color="white" variant="circular">
         <Image
-          src={formatChainForImg(Number(_value), chains).formatted}
+          src={formatChainForImg(
+            Number(_value),
+            chains,
+          )?.formatted?.toLowerCase()}
           alt={value}
           height={22}
           width={22}
