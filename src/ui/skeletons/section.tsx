@@ -88,10 +88,10 @@ const SectionSkeleton = (props: ISectionProps) => {
                           }}
                         >
                           <Image
-                            src={
-                              formatChainForImg(props?.chainId, chains)
-                                .formatted
-                            }
+                            src={formatChainForImg(
+                              props?.chainId,
+                              chains,
+                            )?.formatted?.toLowerCase()}
                             alt={String(props.chainId)}
                             height={16}
                             width={16}
