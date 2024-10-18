@@ -80,7 +80,10 @@ const ChainDropdown = () => {
               >
                 <Background color="white" variant="circular">
                   <Image
-                    src={formatChainForImg(Number(chain.id), chains).formatted}
+                    src={formatChainForImg(
+                      Number(chain.id),
+                      chains,
+                    )?.formatted?.toLowerCase()}
                     alt={chain.name}
                     height={22}
                     width={22}
