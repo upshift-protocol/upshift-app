@@ -17,7 +17,11 @@ import { useEffect, useRef, useState } from 'react';
 import type { Id } from 'react-toastify';
 import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
-import { readContract, simulateContract } from 'viem/actions';
+import {
+  readContract,
+  simulateContract,
+  waitForTransactionReceipt,
+} from 'viem/actions';
 import {
   useAccount,
   usePublicClient,
@@ -72,7 +76,7 @@ export default function useDeposit(props: IUseDepositProps) {
   // Functions
   async function handleDeposit() {
     // checks
-    if (!(address && provider)) {
+    if (!(address && provider && signer)) {
       console.warn('#handleDeposit: no wallet is connected');
       return;
     }
@@ -132,13 +136,16 @@ export default function useDeposit(props: IUseDepositProps) {
           functionName: 'approve',
           args: [props.pool, BigInt(normalized.raw)],
         });
-        const approveHash = await signer?.writeContract(prepareTx.request);
+        const approveHash = await signer.writeContract(prepareTx.request);
+        const approveReceipt = await waitForTransactionReceipt(provider, {
+          hash: approveHash,
+        });
         ToastPromise(
           'approve',
           normalized,
           approvalToastId,
           symbol,
-          approveHash,
+          approveReceipt.transactionHash,
         );
       }
 
@@ -155,7 +162,7 @@ export default function useDeposit(props: IUseDepositProps) {
         functionName: 'deposit',
         args: [BigInt(normalized.raw), address],
       });
-      const depositHash = await signer?.writeContract(prepareDeposit.request);
+      const depositHash = await signer.writeContract(prepareDeposit.request);
       ToastPromise('deposit', normalized, depositToastId, symbol, depositHash);
 
       // Refetch queries
