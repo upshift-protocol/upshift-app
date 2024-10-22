@@ -143,49 +143,50 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
                 loading={+positionsLoading}
               />
             </Collapse>
-            {protocolData && tokenData && (
-              <Grid container spacing={0} justifyContent="space-around">
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  style={{
-                    height: '280px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <DonutChart data={protocolData} />
-                  <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
-                    Protocol Exposure
-                  </Typography>
-                </Grid>
+            {protocolData?.labels?.length > 0 &&
+              tokenData?.labels?.length > 0 && (
+                <Grid container spacing={0} justifyContent="space-around">
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    style={{
+                      height: '280px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <DonutChart data={protocolData} />
+                    <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
+                      Protocol Exposure
+                    </Typography>
+                  </Grid>
 
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  style={{
-                    height: '280px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                  }}
-                  mt={{
-                    xs: 8,
-                    sm: 0,
-                  }}
-                >
-                  <DonutChart data={tokenData} />
-                  <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
-                    Token Exposure
-                  </Typography>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    style={{
+                      height: '280px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'column',
+                    }}
+                    mt={{
+                      xs: 8,
+                      sm: 0,
+                    }}
+                  >
+                    <DonutChart data={tokenData} />
+                    <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
+                      Token Exposure
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
-            )}
+              )}
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>

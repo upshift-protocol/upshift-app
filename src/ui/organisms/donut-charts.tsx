@@ -21,6 +21,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
         position: 'bottom' as const,
         labels: {
           padding: 20,
+          color: 'gray',
         },
       },
       tooltip: {
