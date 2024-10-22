@@ -77,6 +77,8 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
     },
   }) as UseQueryResult<any>; // TODO: interface
 
+  console.log('pool', { pool, positions });
+
   useEffect(() => {
     if (address) setWalletConnected(true);
     else setWalletConnected(false);
@@ -95,6 +97,8 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
     if (pool) {
       const protocolExposureData = getProtocolExposureData(pool);
       const tokenExposureData = getTokenExposureData(pool);
+
+      console.log({ protocolExposureData }, 'protocolExposureData');
 
       setProtocolData(protocolExposureData);
       setTokenData(tokenExposureData);
@@ -143,50 +147,53 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
                 loading={+positionsLoading}
               />
             </Collapse>
-            {protocolData?.labels?.length > 0 &&
-              tokenData?.labels?.length > 0 && (
-                <Grid container spacing={0} justifyContent="space-around">
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    style={{
-                      height: '280px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <DonutChart data={protocolData} />
-                    <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
-                      Protocol Exposure
-                    </Typography>
-                  </Grid>
+            <Grid
+              container
+              spacing={0}
+              justifyContent="space-around"
+              pb={4}
+              pt={4}
+            >
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                style={{
+                  height: '280px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                }}
+              >
+                <DonutChart data={protocolData} />
+                <Typography variant="h6" mt={4} mb={{ xs: 16, md: 0 }}>
+                  Protocol Exposure
+                </Typography>
+              </Grid>
 
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    style={{
-                      height: '280px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexDirection: 'column',
-                    }}
-                    mt={{
-                      xs: 8,
-                      sm: 0,
-                    }}
-                  >
-                    <DonutChart data={tokenData} />
-                    <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
-                      Token Exposure
-                    </Typography>
-                  </Grid>
-                </Grid>
-              )}
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                style={{
+                  height: '280px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                }}
+                mt={{
+                  xs: 8,
+                  sm: 0,
+                }}
+              >
+                <DonutChart data={tokenData} />
+                <Typography variant="h6" mt={4} mb={{ xs: 8, md: 0 }}>
+                  Token Exposure
+                </Typography>
+              </Grid>
+            </Grid>
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>

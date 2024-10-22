@@ -3,16 +3,19 @@ import { getTokenSymbol } from './ui';
 
 export function getProtocolExposureData(pool: IPool) {
   const protocolAllocation: { [key: string]: number } = {};
+  const logoDetails: { [key: string]: string } = {};
 
   const loans = pool.loans ? [...pool.loans] : [];
 
   loans.forEach((loan: IPoolLoan) => {
     if (!loan.positions || loan.positions.length === 0) return;
 
-    // @ts-expect-error
+    // @ts-ignore
     loan.positions.forEach((position: { label: string; value: string }) => {
       protocolAllocation[position.label] =
         (protocolAllocation[position.label] || 0) + loan.allocation * 100;
+
+      logoDetails[position.label] = position.value;
     });
   });
 
@@ -36,6 +39,7 @@ export function getProtocolExposureData(pool: IPool) {
       {
         label: '',
         data,
+        logoDetails,
         borderWidth: 0,
         backgroundColor: [
           '#333333',
@@ -73,6 +77,7 @@ export function getProtocolExposureData(pool: IPool) {
         ],
       },
     ],
+    logoDetails,
   };
 }
 
