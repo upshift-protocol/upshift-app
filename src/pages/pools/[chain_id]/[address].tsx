@@ -20,11 +20,11 @@ import { augustSdk } from '@/config/august-sdk';
 import { Collapse, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
-import PieChart from '@/ui/organisms/pie-charts';
 import {
   getProtocolExposureData,
   getTokenExposureData,
 } from '@/utils/helpers/charts';
+import DonutChart from '@/ui/organisms/donut-charts';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -144,29 +144,21 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               />
             </Collapse>
             {protocolData && tokenData && (
-              <Grid
-                container
-                spacing={4}
-                my={{
-                  xs: 2,
-                  md: 4,
-                }}
-                justifyContent="space-around"
-              >
+              <Grid container spacing={0} justifyContent="space-around">
                 <Grid
                   item
                   xs={12}
                   sm={6}
                   style={{
-                    height: '400px',
+                    height: '280px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
                   }}
                 >
-                  <PieChart data={protocolData} />
-                  <Typography variant="h6" mt={2} mb={{ xs: 0, md: 1 }}>
+                  <DonutChart data={protocolData} />
+                  <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
                     Protocol Exposure
                   </Typography>
                 </Grid>
@@ -176,15 +168,19 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
                   xs={12}
                   sm={6}
                   style={{
-                    height: '400px',
+                    height: '280px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
                   }}
+                  mt={{
+                    xs: 8,
+                    sm: 0,
+                  }}
                 >
-                  <PieChart data={tokenData} />
-                  <Typography variant="h6" mt={2} mb={{ xs: 0, md: 1 }}>
+                  <DonutChart data={tokenData} />
+                  <Typography variant="h6" mt={2} mb={{ xs: 8, md: 1 }}>
                     Token Exposure
                   </Typography>
                 </Grid>

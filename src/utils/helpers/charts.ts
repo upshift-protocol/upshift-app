@@ -36,35 +36,43 @@ export function getProtocolExposureData(pool: IPool) {
       {
         label: '',
         data,
+        borderWidth: 0,
         backgroundColor: [
-          '#003f5c',
-          '#58508d',
-          '#bc5090',
-          '#ff6361',
-          '#ffa600',
+          '#333333',
+          '#AAAAAA',
+          '#FFC107',
+          '#FF9800',
+          '#2196F3',
+          '#4CAF50',
+          '#F44336',
+          '#795548',
+          '#9C27B0',
+          '#03A9F4',
+          '#607D8B',
+          '#FFEB3B',
+          '#E91E63',
+          '#00BCD4',
+          '#CDDC39',
         ],
         hoverBackgroundColor: [
-          '#003f5c',
-          '#58508d',
-          '#bc5090',
-          '#ff6361',
-          '#ffa600',
+          '#444444',
+          '#E0E0E0',
+          '#FFC107',
+          '#FF9800',
+          '#2196F3',
+          '#4CAF50',
+          '#F44336',
+          '#8D6E63',
+          '#BA68C8',
+          '#4FC3F7',
+          '#78909C',
+          '#FFF176',
+          '#F06292',
+          '#26C6DA',
+          '#C0CA33',
         ],
       },
     ],
-    options: {
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label(context: any) {
-              const label = context.label || '';
-              const value = context.raw || 0;
-              return `${label}: ${value.toFixed(2)}%`; // Add % sign
-            },
-          },
-        },
-      },
-    },
   };
 }
 
@@ -103,34 +111,42 @@ export function getTokenExposureData(pool: IPool) {
       {
         label: '',
         data,
+        borderWidth: 0,
         backgroundColor: [
-          '#003f5c',
-          '#58508d',
-          '#bc5090',
-          '#ff6361',
-          '#ffa600',
+          '#333333',
+          '#AAAAAA',
+          '#FFC107',
+          '#FF9800',
+          '#2196F3',
+          '#4CAF50',
+          '#F44336',
+          '#795548',
+          '#9C27B0',
+          '#03A9F4',
+          '#607D8B',
+          '#FFEB3B',
+          '#E91E63',
+          '#00BCD4',
+          '#CDDC39',
         ],
         hoverBackgroundColor: [
-          '#003f5c',
-          '#58508d',
-          '#bc5090',
-          '#ff6361',
-          '#ffa600',
+          '#444444',
+          '#E0E0E0',
+          '#FFC107',
+          '#FF9800',
+          '#2196F3',
+          '#4CAF50',
+          '#F44336',
+          '#8D6E63',
+          '#BA68C8',
+          '#4FC3F7',
+          '#78909C',
+          '#FFF176',
+          '#F06292',
+          '#26C6DA',
+          '#C0CA33',
         ],
       },
     ],
-    options: {
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label(context: any) {
-              const label = context.label || '';
-              const value = context.raw || 0;
-              return `${label}: ${value.toFixed(2)}%`; // Add % sign
-            },
-          },
-        },
-      },
-    },
   };
 }
