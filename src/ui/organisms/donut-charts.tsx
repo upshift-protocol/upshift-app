@@ -24,6 +24,8 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
         labels: {
           padding: 20,
           color: isDark ? 'white' : 'black',
+          usePointStyle: true,
+          pointStyle: 'circle',
         },
       },
       tooltip: {
@@ -37,7 +39,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
         },
       },
     },
-    cutout: '70%',
+    cutout: '55%',
   };
 
   // If no data is passed, show an empty doughnut chart
@@ -49,7 +51,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
         data: [100], // Single value filling the entire chart
         backgroundColor: ['#e0e0e0'], // Gray color for the empty chart
         borderWidth: 4,
-        borderColor: !isDark ? 'white' : 'rgb(18,18,18)',
+        borderColor: !isDark ? 'white' : '#1E1E1E',
       },
     ],
   };
@@ -62,7 +64,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
           datasets: data.datasets.map((dataset) => ({
             ...dataset,
             borderWidth: 4,
-            borderColor: !isDark ? 'white' : 'rgb(18,18,18)',
+            borderColor: !isDark ? 'white' : '#1E1E1E',
           })),
         }
       : emptyData;
@@ -80,8 +82,8 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
               plugins: { ...options.plugins, legend: { display: false } },
             }
       }
-      width={400}
-      height={400}
+      width={240}
+      height={240}
     />
   );
 };

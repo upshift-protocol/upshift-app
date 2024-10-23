@@ -17,7 +17,7 @@ import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
-import { Collapse, Grid, Typography } from '@mui/material';
+import { Card, Collapse, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
 import {
@@ -147,53 +147,60 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
                 loading={+positionsLoading}
               />
             </Collapse>
-            <Grid
-              container
-              spacing={0}
-              justifyContent="space-around"
-              pb={4}
-              pt={4}
+
+            <Card
+              sx={{
+                padding: '2rem',
+              }}
             >
               <Grid
-                item
-                xs={12}
-                sm={6}
-                style={{
-                  height: '280px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                }}
+                container
+                spacing={0}
+                justifyContent="space-around"
+                pb={4}
+                pt={4}
               >
-                <DonutChart data={protocolData} />
-                <Typography variant="h6" mt={4} mb={{ xs: 16, md: 0 }}>
-                  Protocol Exposure
-                </Typography>
-              </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  style={{
+                    height: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <DonutChart data={protocolData} />
+                  <Typography variant="h6" mt={4} mb={{ xs: 16, md: 0 }}>
+                    Protocol Exposure
+                  </Typography>
+                </Grid>
 
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                style={{
-                  height: '280px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                }}
-                mt={{
-                  xs: 8,
-                  sm: 0,
-                }}
-              >
-                <DonutChart data={tokenData} />
-                <Typography variant="h6" mt={4} mb={{ xs: 8, md: 0 }}>
-                  Token Exposure
-                </Typography>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  style={{
+                    height: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                  }}
+                  mt={{
+                    xs: 8,
+                    sm: 0,
+                  }}
+                >
+                  <DonutChart data={tokenData} />
+                  <Typography variant="h6" mt={4} mb={{ xs: 8, md: 0 }}>
+                    Token Exposure
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
+            </Card>
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>
