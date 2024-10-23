@@ -17,14 +17,11 @@ import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
-import { Card, Collapse, Grid, Typography } from '@mui/material';
+import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
-import {
-  getProtocolExposureData,
-  getTokenExposureData,
-} from '@/utils/helpers/charts';
-import DonutChart from '@/ui/organisms/donut-charts';
+
+import ExposureCharts from '@/ui/organisms/exposure-charts';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -58,8 +55,6 @@ export const getStaticProps = (async (context) => {
 const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
-  const [protocolData, setProtocolData] = useState<any>(null);
-  const [tokenData, setTokenData] = useState<any>(null);
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
     queryKey: ['lending-pool', params.pool, String(params.chain_id)],
@@ -77,8 +72,6 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
     },
   }) as UseQueryResult<any>; // TODO: interface
 
-  console.log('pool', { pool, positions });
-
   useEffect(() => {
     if (address) setWalletConnected(true);
     else setWalletConnected(false);
@@ -92,18 +85,6 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   //     },
   //   ];
   // }
-
-  useEffect(() => {
-    if (pool) {
-      const protocolExposureData = getProtocolExposureData(pool);
-      const tokenExposureData = getTokenExposureData(pool);
-
-      console.log({ protocolExposureData }, 'protocolExposureData');
-
-      setProtocolData(protocolExposureData);
-      setTokenData(tokenExposureData);
-    }
-  }, [pool]);
 
   return (
     <Base>
@@ -138,7 +119,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         }
       >
         <Stack gap={3}>
-          <Stack direction="column" gap={6} mt={2}>
+          <Stack direction="column" gap={4} mt={2}>
             <VaultInfo {...pool} loading={+poolLoading} />
             <Collapse in={walletConnected && Boolean(positions?.length)}>
               <MyPositionsTableOrganism
@@ -148,59 +129,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               />
             </Collapse>
 
-            <Card
-              sx={{
-                padding: '2rem',
-              }}
-            >
-              <Grid
-                container
-                spacing={0}
-                justifyContent="space-around"
-                pb={4}
-                pt={4}
-              >
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  style={{
-                    height: '200px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <DonutChart data={protocolData} />
-                  <Typography variant="h6" mt={4} mb={{ xs: 16, md: 0 }}>
-                    Protocol Exposure
-                  </Typography>
-                </Grid>
-
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  style={{
-                    height: '200px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                  }}
-                  mt={{
-                    xs: 8,
-                    sm: 0,
-                  }}
-                >
-                  <DonutChart data={tokenData} />
-                  <Typography variant="h6" mt={4} mb={{ xs: 8, md: 0 }}>
-                    Token Exposure
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Card>
+            <ExposureCharts pool={pool} />
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>

@@ -3,15 +3,16 @@ import { Doughnut } from 'react-chartjs-2';
 import type { ChartData } from 'chart.js';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useThemeMode } from '@/stores/theme';
+import { Skeleton } from '@mui/material';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DonutChartProps {
-  data?: ChartData<'doughnut'>; // Make data optional to handle empty state
+  data?: ChartData<'doughnut'>;
+  isLoading?: boolean;
 }
 
-const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
-  console.log({ data });
+const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
   const { isDark } = useThemeMode();
 
   const options = {
@@ -42,14 +43,13 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
     cutout: '55%',
   };
 
-  // If no data is passed, show an empty doughnut chart
   const emptyData = {
     labels: ['Empty'],
     empty: true,
     datasets: [
       {
-        data: [100], // Single value filling the entire chart
-        backgroundColor: ['#e0e0e0'], // Gray color for the empty chart
+        data: [100],
+        backgroundColor: ['#e0e0e0'],
         borderWidth: 4,
         borderColor: !isDark ? 'white' : '#1E1E1E',
       },
@@ -69,7 +69,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
         }
       : emptyData;
 
-  console.log({ modifiedData });
+  if (isLoading)
+    return (
+      <Skeleton variant="circular" width={250} height={250} animation="wave" />
+    );
+
   return (
     <Doughnut
       data={modifiedData}
@@ -82,8 +86,6 @@ const DonutChart: React.FC<DonutChartProps> = ({ data }) => {
               plugins: { ...options.plugins, legend: { display: false } },
             }
       }
-      width={240}
-      height={240}
     />
   );
 };
