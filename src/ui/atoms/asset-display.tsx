@@ -90,6 +90,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
           height={props?.imgSize ?? 24}
           width={props?.imgSize ?? 24}
           onError={() => setImgSrc(FALLBACK_TOKEN_IMG)}
+          style={{ backgroundColor: 'white', borderRadius: '50%' }}
         />
       </Tooltip>
     );
