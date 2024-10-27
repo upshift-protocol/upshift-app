@@ -45,11 +45,9 @@ export function formatChainForImg(chainId?: number, chains?: any) {
       chainId,
       formatted: '/img/chains/unknown.svg',
     };
-  let formatted: string = value;
-  if (value?.includes(' ')) formatted = value?.replaceAll(' ', '-');
   return {
     chainId,
-    formatted: `/img/chains/${formatted && formatted !== '-' ? formatted : FALLBACK_CHAINID}.svg`,
+    formatted: `/img/chains/${chainId || FALLBACK_CHAINID}.svg`,
   };
 }
 
