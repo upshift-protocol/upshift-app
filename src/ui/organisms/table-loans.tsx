@@ -243,6 +243,9 @@ export default function VaultAllocation(
               pageSize: 5,
             },
           },
+          sorting: {
+            sortModel: [{ field: 'supply', sort: 'desc' }],
+          },
         }}
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
