@@ -79,7 +79,7 @@ const columns: readonly IColumn[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/assets/tokens/${children.symbol}.png`}
+                img={`/assets/tokens/${children.symbol}.svg`}
                 imgSize={20}
                 symbol={children.symbol}
                 address={children.address}
