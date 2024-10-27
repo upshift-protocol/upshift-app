@@ -52,7 +52,10 @@ export default function useFetcher({
         return pool;
       }
       case 'lending-pools': {
-        const pools = await augustSdk.pools.getPools();
+        const pools = await augustSdk.pools.getPools({
+          loans: false,
+          allocations: false,
+        });
         return pools;
       }
       case 'my-positions': {

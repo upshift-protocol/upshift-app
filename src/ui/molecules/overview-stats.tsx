@@ -42,14 +42,15 @@ const OverviewStatsMolecule = ({
   const totalBorrow = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = 0;
-    pools?.forEach(({ totalBorrowed, underlying }) => {
+    pools?.forEach(({ globalLoansAmount, underlying }) => {
       const foundToken = tokens?.find((t) => t.address === underlying.address);
       total +=
-        Number(totalBorrowed?.normalized || 0) * (foundToken?.price || 0);
+        Number(globalLoansAmount?.normalized || 0) * (foundToken?.price || 0);
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
   }, [pools?.length, tokens?.length]);
+
   return (
     <ResponsiveStack>
       <CustomStat
