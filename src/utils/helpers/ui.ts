@@ -43,13 +43,13 @@ export function formatChainForImg(chainId?: number, chains?: any) {
   if (!value)
     return {
       chainId,
-      formatted: '/chains/unknown.svg',
+      formatted: '/img/chains/unknown.svg',
     };
   let formatted: string = value;
   if (value?.includes(' ')) formatted = value?.replaceAll(' ', '-');
   return {
     chainId,
-    formatted: `/chains/${formatted && formatted !== '-' ? formatted : FALLBACK_CHAINID}.svg`,
+    formatted: `/img/chains/${formatted && formatted !== '-' ? formatted : FALLBACK_CHAINID}.svg`,
   };
 }
 

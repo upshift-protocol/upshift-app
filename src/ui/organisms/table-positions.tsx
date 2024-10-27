@@ -68,7 +68,7 @@ const columns: readonly IColumn[] = [
                 placement="top"
               >
                 <Image
-                  src={`/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
+                  src={`/img/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
                   alt={children?.[0]}
                   height={20}
                   width={20}
@@ -99,7 +99,7 @@ const columns: readonly IColumn[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/assets/tokens/${children.symbol}.svg`}
+                img={`/img/tokens/${children.symbol}.svg`}
                 imgSize={20}
                 symbol={children.symbol}
                 address={children.address}

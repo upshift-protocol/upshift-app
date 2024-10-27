@@ -40,7 +40,7 @@ const renderTokenExposure = (
       <AssetDisplay
         tooltip
         symbol={exp.label}
-        img={`/assets/tokens/${exp.label}.svg`}
+        img={`/img/tokens/${exp.label}.svg`}
       />
     );
   }

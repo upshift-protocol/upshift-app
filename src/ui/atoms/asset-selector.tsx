@@ -35,7 +35,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
     >
       <AssetDisplay
         address={props.address}
-        img={props.img || `/assets/tokens/${props.symbol ?? symbol}.svg`}
+        img={props.img || `/img/tokens/${props.symbol ?? symbol}.svg`}
         symbol={props.symbol ?? symbol}
         truncate
         imgFallback
