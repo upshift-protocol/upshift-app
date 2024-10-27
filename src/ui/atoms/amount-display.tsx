@@ -2,8 +2,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { formatCompactNumber } from '@/utils/helpers/ui';
-import useFetcher from '@/hooks/use-fetcher';
-import type { UseQueryResult } from '@tanstack/react-query';
+import useTokens from '@/hooks/use-tokens';
 
 type IAmountDisplay = {
   symbol?: string;
@@ -18,11 +17,11 @@ export default function AmountDisplay({
   direction = 'column',
   ...props
 }: IAmountDisplay) {
-  const { data: usdValue } = useFetcher({
-    queryKey: ['price', props?.symbol || ''],
+  const { data: allPrices } = useTokens({
     enabled: !!props.symbol && props?.usd,
-    initialData: '',
-  }) as UseQueryResult<number>;
+  });
+  const usdValue =
+    allPrices?.find((p) => p.symbol === props.symbol)?.price || 1;
 
   if (props.round) {
     return (

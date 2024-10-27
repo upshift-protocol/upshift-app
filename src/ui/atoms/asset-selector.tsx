@@ -12,7 +12,7 @@ type IAssetSelector = IAssetDisplay & {
 export default function AssetSelectorAtom(props: IAssetSelector) {
   const { isDark } = useThemeMode();
 
-  const { data: symbol } = useReadContract({
+  const { data: symbol, isLoading } = useReadContract({
     address: props.address,
     abi: erc20Abi,
     functionName: 'symbol',
@@ -40,6 +40,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
         truncate
         imgFallback
         chainId={props?.chainId}
+        loading={isLoading}
       />
     </Stack>
   );
