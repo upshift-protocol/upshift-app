@@ -8,13 +8,14 @@ import TxFeesAtom from '../molecules/tx-fees';
 import UpcomingRedemptionsMolecule from '../molecules/upcoming-redemptions';
 
 export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
-  const { handleWithdraw, isSuccess, button, expected, pool } = useWithdraw({
-    asset: props?.asset,
-    pool: props?.address,
-    value: (props as any)?.redeemable?.normalized, // TODO: add type interface
-    redemptions: (props as any)?.availableRedemptions,
-    chainId: props?.chainId as IChainId,
-  });
+  const { handleWithdraw, isSuccess, button, expected, pool, isLoading } =
+    useWithdraw({
+      asset: props?.asset,
+      pool: props?.address,
+      value: (props as any)?.redeemable?.normalized, // TODO: add type interface
+      redemptions: (props as any)?.availableRedemptions,
+      chainId: props?.chainId as IChainId,
+    });
 
   return (
     <ModalAtom
@@ -56,6 +57,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           onClick={handleWithdraw}
           disabled={button.disabled || pool?.loading}
           chainId={props?.chainId}
+          loading={isLoading}
         >
           {button.text}
         </Web3Button>
