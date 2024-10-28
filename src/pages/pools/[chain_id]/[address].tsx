@@ -104,7 +104,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               symbol={pool?.underlying?.symbol}
               img={
                 pool?.underlying?.symbol
-                  ? `/assets/tokens/${pool?.underlying?.symbol}.png`
+                  ? `/img/tokens/${pool?.underlying?.symbol}.svg`
                   : FALLBACK_TOKEN_IMG
               }
               variant="glass"

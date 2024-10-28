@@ -6,6 +6,7 @@ export const BUTTON_TEXTS = {
   submitting: 'Submitting Transaction',
   approve: 'Approve Input Amount',
   approving: 'Approving Input Amount',
+  insufficient: 'Insufficient Balance',
 };
 
 export const STYLE_VARS = {

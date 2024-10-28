@@ -1,6 +1,6 @@
 import { FALLBACK_TOKEN_IMG, STYLE_VARS } from '@/utils/constants/ui';
 import type { IAssetDisplay } from '@/utils/types';
-import { Tooltip, type TypographyVariant } from '@mui/material';
+import { Skeleton, Tooltip, type TypographyVariant } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -11,6 +11,7 @@ import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useChainId } from 'wagmi';
+import SLACK from '@/utils/slack';
 
 export default function AssetDisplay(props: IAssetDisplay) {
   const [imgSrc, setImgSrc] = useState<string>(props?.img ?? '');
@@ -34,6 +35,12 @@ export default function AssetDisplay(props: IAssetDisplay) {
     }
   }
 
+  function handleError() {
+    setImgSrc(FALLBACK_TOKEN_IMG);
+    // if(!DEVELOPMENT_MODE)
+    SLACK.tokenError(props.symbol, props.address, props.chainId);
+  }
+
   useEffect(() => {
     if (props.img) setImgSrc(props.img);
   }, [props.img]);
@@ -49,16 +56,22 @@ export default function AssetDisplay(props: IAssetDisplay) {
         className={renderVariant().wrapperCss}
       >
         <Stack direction={'row'} alignItems={'center'} spacing={1}>
-          {props.img || props.imgFallback ? (
+          {(props.img || props.imgFallback) && !props?.loading ? (
             <Image
               src={imgSrc}
               alt={props?.symbol ?? props?.address ?? ''}
               height={props?.imgSize ?? 24}
               width={props?.imgSize ?? 24}
-              onError={() => setImgSrc(FALLBACK_TOKEN_IMG)}
+              onError={handleError}
+            />
+          ) : props?.loading ? (
+            <Skeleton
+              variant="circular"
+              height={props?.imgSize || 24}
+              width={props?.imgSize || 24}
             />
           ) : null}
-          {props?.symbol ? (
+          {props?.symbol && !props?.loading ? (
             <Box width={props.truncate ? STYLE_VARS.assetDivWidth : undefined}>
               <Typography
                 variant={renderVariant().textVariant}
@@ -67,6 +80,10 @@ export default function AssetDisplay(props: IAssetDisplay) {
               >
                 {props?.symbol}
               </Typography>
+            </Box>
+          ) : props?.loading ? (
+            <Box width={props.truncate ? STYLE_VARS.assetDivWidth : undefined}>
+              <Skeleton variant="text" height="32px" />
             </Box>
           ) : null}
         </Stack>
@@ -89,7 +106,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
           alt={props?.symbol ?? props?.address ?? ''}
           height={props?.imgSize ?? 24}
           width={props?.imgSize ?? 24}
-          onError={() => setImgSrc(FALLBACK_TOKEN_IMG)}
+          onError={handleError}
           style={{ backgroundColor: 'white', borderRadius: '50%' }}
         />
       </Tooltip>

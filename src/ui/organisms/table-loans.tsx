@@ -40,7 +40,7 @@ const renderTokenExposure = (
       <AssetDisplay
         tooltip
         symbol={exp.label}
-        img={`/assets/tokens/${exp.label}.svg`}
+        img={`/img/tokens/${exp.label}.svg`}
       />
     );
   }
@@ -242,6 +242,9 @@ export default function VaultAllocation(
             paginationModel: {
               pageSize: 5,
             },
+          },
+          sorting: {
+            sortModel: [{ field: 'supply', sort: 'desc' }],
           },
         }}
         pageSizeOptions={[5]}

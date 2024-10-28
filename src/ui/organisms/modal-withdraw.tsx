@@ -14,12 +14,13 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
   const { address } = useAccount();
   const { palette } = useTheme();
   const inInputProps = useInput(props?.address, props?.chainId as IChainId);
-  const { requestWithdraw, isSuccess, button, expected, pool } = useWithdraw({
-    ...inInputProps,
-    asset: props?.asset,
-    pool: props?.address,
-    chainId: props?.chainId as IChainId,
-  });
+  const { requestWithdraw, isSuccess, button, expected, pool, isLoading } =
+    useWithdraw({
+      ...inInputProps,
+      asset: props?.asset,
+      pool: props?.address,
+      chainId: props?.chainId as IChainId,
+    });
 
   const { data } = useReadContract({
     ...props,
@@ -100,6 +101,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           onClick={requestWithdraw}
           disabled={button.disabled || pool?.loading}
           chainId={props?.chainId}
+          loading={isLoading}
         >
           {button.text}
         </Web3Button>

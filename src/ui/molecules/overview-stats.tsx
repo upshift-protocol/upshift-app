@@ -25,9 +25,9 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
-  const { data: tokens, isError, isFetching, isLoading } = useTokens();
+  const { data: tokens, isError, isLoading } = useTokens();
 
-  const displayEth = isError || isFetching || isLoading;
+  const displayEth = isError;
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
@@ -42,14 +42,15 @@ const OverviewStatsMolecule = ({
   const totalBorrow = useMemo(() => {
     if (!pools?.length) return '0.0';
     let total = 0;
-    pools?.forEach(({ totalBorrowed, underlying }) => {
+    pools?.forEach(({ globalLoansAmount, underlying }) => {
       const foundToken = tokens?.find((t) => t.address === underlying.address);
       total +=
-        Number(totalBorrowed?.normalized || 0) * (foundToken?.price || 0);
+        Number(globalLoansAmount?.normalized || 0) * (foundToken?.price || 0);
     });
     // TODO: return USD amount
     return toNormalizedBn(total).normalized;
   }, [pools?.length, tokens?.length]);
+
   return (
     <ResponsiveStack>
       <CustomStat
@@ -65,10 +66,10 @@ const OverviewStatsMolecule = ({
         }
         unit="Total Deposited"
         variant="inverse"
-        loading={loading || +isLoading || +isFetching}
+        loading={loading || +isLoading}
       />
       <CustomStat
-        loading={loading || +isLoading || +isFetching}
+        loading={loading || +isLoading}
         value={
           <Tooltip
             title={totalBorrow}
