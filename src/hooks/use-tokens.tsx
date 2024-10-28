@@ -4,7 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { augustSdk } from '@/config/august-sdk';
 import useFetcher from './use-fetcher';
 
-export default function useTokens() {
+type IUseToken = {
+  enabled?: boolean;
+};
+
+export default function useTokens(options?: IUseToken) {
   const { data: allPools } = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[]>;
@@ -34,7 +38,7 @@ export default function useTokens() {
 
   const query = useQuery({
     queryKey: ['all-prices'],
-    enabled: !!allPools && allPools?.length > 0,
+    enabled: !!allPools && allPools?.length > 0 && (options?.enabled || true),
     queryFn: getAllPrices,
   });
 

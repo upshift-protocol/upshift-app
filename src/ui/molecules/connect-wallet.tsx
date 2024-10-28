@@ -106,9 +106,9 @@ const ConnectWalletMolecule = ({
 
   function renderIcon(connector: Partial<Connector>) {
     if (!connector.id || connector.id === '-')
-      return `/wallets/${FALLBACK_CHAINID}.svg`;
+      return `/img/wallets/${FALLBACK_CHAINID}.svg`;
     if (connector?.icon) return connector?.icon;
-    return `/wallets/${connector.id?.toLowerCase()}.svg`;
+    return `/img/wallets/${connector.id?.toLowerCase()}.svg`;
   }
 
   function renderChildren() {
