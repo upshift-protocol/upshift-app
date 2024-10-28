@@ -53,7 +53,7 @@ const ExposureCharts = ({
             sm: 'flex-start',
             md: 'center',
           },
-          padding: isChartsDataLoading ? '16px' : '4rem 8rem',
+          padding: isChartsDataLoading ? '16px' : '4rem 2rem',
         }}
       >
         <DonutChart data={protocolData} isLoading={isChartsDataLoading} />
@@ -84,7 +84,7 @@ const ExposureCharts = ({
             sm: 'flex-start',
             md: 'center',
           },
-          padding: isChartsDataLoading ? '16px' : '4rem 8rem',
+          padding: isChartsDataLoading ? '16px' : '4rem 2rem',
         }}
       >
         <DonutChart data={tokenData} isLoading={isChartsDataLoading} />

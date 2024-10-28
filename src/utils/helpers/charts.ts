@@ -4,34 +4,30 @@ import { getTokenSymbol } from './ui';
 export function getProtocolExposureData(pool: IPool) {
   const protocolAllocation: { [key: string]: number } = {};
   const logoDetails: { [key: string]: string } = {};
+  const positionLengths: number[] = [];
 
   const loans = pool.loans ? [...pool.loans] : [];
 
   loans.forEach((loan: IPoolLoan) => {
+    positionLengths.push(loan.positions ? loan.positions.length : 0);
+  });
+
+  loans.forEach((loan: IPoolLoan, index: number) => {
     if (!loan.positions || loan.positions.length === 0) return;
 
-    // @ts-ignore
+    const allocationPerPosition =
+      (loan.allocation * 100) / (positionLengths[index] || 1);
+
     loan.positions.forEach((position: { label: string; value: string }) => {
       protocolAllocation[position.label] =
-        (protocolAllocation[position.label] || 0) + loan.allocation * 100;
+        (protocolAllocation[position.label] || 0) + allocationPerPosition;
 
       logoDetails[position.label] = position.value;
     });
   });
 
-  const totalAllocation = Object.values(protocolAllocation).reduce(
-    (acc, value) => acc + value,
-    0,
-  );
-
-  const normalizedProtocolAllocation = { ...protocolAllocation };
-  Object.keys(normalizedProtocolAllocation).forEach((key) => {
-    const allocation = normalizedProtocolAllocation[key] ?? 0;
-    normalizedProtocolAllocation[key] = (allocation / totalAllocation) * 100;
-  });
-
-  const labels = Object.keys(normalizedProtocolAllocation);
-  const data = Object.values(normalizedProtocolAllocation);
+  const labels = Object.keys(protocolAllocation);
+  const data = Object.values(protocolAllocation);
 
   return {
     labels,
@@ -78,6 +74,7 @@ export function getProtocolExposureData(pool: IPool) {
       },
     ],
     logoDetails,
+    positionLengths,
   };
 }
 
@@ -90,10 +87,36 @@ export function getTokenExposureData(pool: IPool) {
   }
 
   const tokenAllocation: { [token: string]: number } = {};
+  const filteredExposureData: number[] = [];
 
   pool.loans.forEach((loan: IPoolLoan) => {
-    // @ts-expect-error
-    loan.exposure?.forEach((token: { value: string; label: string }) => {
+    const validExposure =
+      (
+        loan.exposure as Array<{ value: string; label: string }> | undefined
+      )?.filter(
+        (token) => getTokenSymbol(token.value, pool.chainId) !== 'eth',
+      ) || [];
+
+    const validCount = validExposure.filter((token) => {
+      let tokenSymbol = getTokenSymbol(token.value, pool.chainId);
+      if (tokenSymbol.length > 30) tokenSymbol = token.label;
+      return !tokenSymbol.includes('_');
+    }).length;
+
+    filteredExposureData.push(validCount);
+  });
+
+  pool.loans.forEach((loan: IPoolLoan, index) => {
+    const validExposure =
+      (
+        loan.exposure as Array<{ value: string; label: string }> | undefined
+      )?.filter(
+        (token) => getTokenSymbol(token.value, pool.chainId) !== 'eth',
+      ) || [];
+
+    const filteredCount = filteredExposureData[index] || 1;
+
+    validExposure.forEach((token) => {
       let tokenSymbol = getTokenSymbol(token.value, pool.chainId);
 
       if (tokenSymbol.length > 30) {
@@ -101,8 +124,10 @@ export function getTokenExposureData(pool: IPool) {
       }
 
       if (!tokenSymbol.includes('_')) {
+        const allocationShare = (loan.allocation * 100) / filteredCount;
+
         tokenAllocation[tokenSymbol] =
-          (tokenAllocation[tokenSymbol] || 0) + loan.allocation * 100;
+          (tokenAllocation[tokenSymbol] || 0) + allocationShare;
       }
     });
   });
