@@ -11,6 +11,7 @@ import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useChainId } from 'wagmi';
+import SLACK from '@/utils/slack';
 
 export default function AssetDisplay(props: IAssetDisplay) {
   const [imgSrc, setImgSrc] = useState<string>(props?.img ?? '');
@@ -34,6 +35,12 @@ export default function AssetDisplay(props: IAssetDisplay) {
     }
   }
 
+  function handleError() {
+    setImgSrc(FALLBACK_TOKEN_IMG);
+    // if(!DEVELOPMENT_MODE)
+    SLACK.tokenError(props.symbol, props.address, props.chainId);
+  }
+
   useEffect(() => {
     if (props.img) setImgSrc(props.img);
   }, [props.img]);
@@ -55,7 +62,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
               alt={props?.symbol ?? props?.address ?? ''}
               height={props?.imgSize ?? 24}
               width={props?.imgSize ?? 24}
-              onError={() => setImgSrc(FALLBACK_TOKEN_IMG)}
+              onError={handleError}
             />
           ) : props?.loading ? (
             <Skeleton
@@ -99,7 +106,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
           alt={props?.symbol ?? props?.address ?? ''}
           height={props?.imgSize ?? 24}
           width={props?.imgSize ?? 24}
-          onError={() => setImgSrc(FALLBACK_TOKEN_IMG)}
+          onError={handleError}
           style={{ backgroundColor: 'white', borderRadius: '50%' }}
         />
       </Tooltip>
