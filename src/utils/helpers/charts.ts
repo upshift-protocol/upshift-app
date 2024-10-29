@@ -39,7 +39,6 @@ export function getProtocolExposureData(pool: IPool) {
         logoDetails,
         borderWidth: 0,
         backgroundColor: [
-          '#333333',
           '#AAAAAA',
           '#FFC107',
           '#FF9800',
@@ -56,7 +55,6 @@ export function getProtocolExposureData(pool: IPool) {
           '#CDDC39',
         ],
         hoverBackgroundColor: [
-          '#444444',
           '#E0E0E0',
           '#FFC107',
           '#FF9800',
@@ -144,7 +142,6 @@ export function getTokenExposureData(pool: IPool) {
         data,
         borderWidth: 0,
         backgroundColor: [
-          '#333333',
           '#AAAAAA',
           '#FFC107',
           '#FF9800',
@@ -161,7 +158,6 @@ export function getTokenExposureData(pool: IPool) {
           '#CDDC39',
         ],
         hoverBackgroundColor: [
-          '#444444',
           '#E0E0E0',
           '#FFC107',
           '#FF9800',
