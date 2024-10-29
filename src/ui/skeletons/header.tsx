@@ -12,7 +12,7 @@ import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
-import Logo from './Logo';
+import Logo from './logo';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: (_props) =>
