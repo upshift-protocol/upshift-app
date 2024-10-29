@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { formatCompactNumber } from '@/utils/helpers/ui';
 import useTokens from '@/hooks/use-tokens';
+import FONTS from '@/config/fonts';
 
 type IAmountDisplay = {
   symbol?: string;
@@ -59,7 +60,7 @@ export default function AmountDisplay({
             whiteSpace={'nowrap'}
             fontSize={props?.size || '16px'}
           >
-            <Typography component={'span'} fontFamily={'monospace'}>
+            <Typography {...FONTS.monospace} component={'span'}>
               {formatCompactNumber(Number(props.children))}
             </Typography>
             {props.symbol ? (
@@ -81,7 +82,7 @@ export default function AmountDisplay({
     <Stack alignItems={'end'} direction={direction}>
       <Stack direction="row" gap={1} alignItems="center">
         <Typography
-          fontFamily="monospace"
+          {...FONTS.monospace}
           component={'span'}
           fontSize={props?.size}
           whiteSpace={'nowrap'}

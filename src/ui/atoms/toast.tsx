@@ -14,7 +14,7 @@ type IToast = {
 export default function Toast({ hash, msg, chain = 42161 }: IToast) {
   if (hash) {
     return (
-      <Typography fontFamily={FONTS.dinCondensed.style.fontFamily}>
+      <Typography fontFamily={FONTS.visiaPro.style.fontFamily}>
         {msg}{' '}
         <LinkAtom href={explorerLink(hash, chain, 'tx')}>
           {truncate(hash)}

@@ -6,7 +6,7 @@ import type {
 } from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type { GridColDef } from '@mui/x-data-grid';
+import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import useFetcher from '@/hooks/use-fetcher';
@@ -16,6 +16,7 @@ import { Tooltip } from '@mui/material';
 import { getTokenSymbol } from '@/utils/helpers/ui';
 import { Fragment } from 'react';
 import { isAddress } from 'viem';
+import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 import AssetDisplay from '../atoms/asset-display';
@@ -72,6 +73,11 @@ const columns: GridColDef<any[number]>[] = [
     field: 'address',
     headerName: 'Loan Address',
     description: 'The vault address.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
     editable: false,
     renderCell({ value, row }) {
@@ -94,6 +100,11 @@ const columns: GridColDef<any[number]>[] = [
   {
     field: 'positions',
     headerName: 'Protocol Exposure',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
     editable: true,
     renderCell({ value, row }) {
@@ -123,6 +134,11 @@ const columns: GridColDef<any[number]>[] = [
   {
     field: 'exposure',
     headerName: 'Token Exposure',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
     editable: true,
     renderCell({ value, row }) {
@@ -147,6 +163,11 @@ const columns: GridColDef<any[number]>[] = [
     field: 'allocation',
     headerName: 'Allocation',
     description: 'Proportion of the vault supply allocated to this market.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 1,
     sortable: true,
     type: 'number',
@@ -161,6 +182,11 @@ const columns: GridColDef<any[number]>[] = [
     field: 'supply',
     headerName: 'Vault Supply',
     description: 'The amount supplied to the market',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     type: 'number',
     flex: 2,
     editable: true,
@@ -178,6 +204,11 @@ const columns: GridColDef<any[number]>[] = [
   {
     field: 'currentApr',
     headerName: 'APR',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 1,
     type: 'number',
     description: 'The borrowing interest rate paid back to the pool.',
@@ -228,15 +259,13 @@ export default function VaultAllocation(
 
   return (
     <Stack gap={3} direction="column">
-      <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
-        Vault Allocation Breakdown
-      </Typography>
+      <Typography variant="h6">Vault Allocation Breakdown</Typography>
 
       <DataGrid
         loading={props.loading || isLoading}
         rows={rowsFormatter()}
+        rowHeight={60}
         columns={columns}
-        autoHeight
         initialState={{
           pagination: {
             paginationModel: {
@@ -257,7 +286,7 @@ export default function VaultAllocation(
           ),
           noResultsOverlay: () => (
             <Stack height="100%" alignItems="center" justifyContent="center">
-              Local filters returns no results
+              Current filters return no results
             </Stack>
           ),
         }}

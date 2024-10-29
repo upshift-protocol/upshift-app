@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { Chip } from '@mui/material';
+import FONTS from '@/config/fonts';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -101,11 +102,11 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : props?.hardcodedApy ? (
-              <Typography fontFamily={'monospace'} display="flex">
+              <Typography {...FONTS.monospace} display="flex">
                 {props?.hardcodedApy}
               </Typography>
             ) : (
-              <Typography fontFamily={'monospace'} display="flex">
+              <Typography {...FONTS.monospace} display="flex">
                 <AmountDisplay round>{`${props?.apy || '0.00'}`}</AmountDisplay>
                 %
               </Typography>
@@ -122,13 +123,14 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <span style={{ fontFamily: 'monospace', display: 'flex' }}>
+              <span style={{ ...FONTS.monospace, display: 'flex' }}>
                 {BigInt(props?.withdrawalFee?.raw || 0) === BigInt(0) ? (
                   <Chip
                     label={'None'}
                     color={'success'}
                     variant="outlined"
                     size="small"
+                    sx={{ lineHeight: 1.2 }}
                   />
                 ) : (
                   <>

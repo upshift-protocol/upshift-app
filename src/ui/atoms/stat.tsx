@@ -1,3 +1,4 @@
+import FONTS from '@/config/fonts';
 import { useThemeMode } from '@/stores/theme';
 import { Skeleton } from '@mui/material';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -99,7 +100,7 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
         ) : (
           <StatValue
             ownerState={ownerState}
-            style={{ fontFamily: 'monospace' }}
+            style={{ ...FONTS.monospace }}
             isdark={+isDark}
           >
             {value}

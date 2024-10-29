@@ -21,7 +21,7 @@ export default function LinkAtom(props: ILinkAtom) {
     <MUILink
       overflow={props.overflow}
       underline={props?.underline}
-      fontFamily={FONTS.dinCondensed.style.fontFamily}
+      fontFamily={FONTS.visiaPro.style.fontFamily}
       style={props.style}
       href={props.href}
       target={props.target || '_blank'}
@@ -33,7 +33,7 @@ export default function LinkAtom(props: ILinkAtom) {
       ) : (
         <Typography
           component={'span'}
-          fontFamily={FONTS.dinCondensed.style.fontFamily}
+          fontFamily={FONTS.visiaPro.style.fontFamily}
         >
           {props.children}
         </Typography>
