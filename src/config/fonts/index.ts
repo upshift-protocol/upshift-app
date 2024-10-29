@@ -1,6 +1,6 @@
 import localFont from 'next/font/local';
 
-export const dinCondensed = localFont({
+const dinCondensed = localFont({
   src: [
     {
       path: './DinCondensedDINCondensedLight/font.woff',
@@ -14,7 +14,7 @@ export const dinCondensed = localFont({
   variable: '--font-din-condensed',
 });
 
-export const titlingGothic = localFont({
+const titlingGothic = localFont({
   src: [
     {
       path: './TitlingGothicFBSkylineMedium/font.woff',
@@ -23,3 +23,21 @@ export const titlingGothic = localFont({
   ],
   variable: '--font-titling-gothic',
 });
+
+const visiaPro = localFont({
+  src: [
+    {
+      path: './VisiaPro/VisiaProHeavy/font.woff',
+      weight: '400',
+    },
+  ],
+  variable: '--font-visia-pro',
+});
+
+const FONTS = {
+  dinCondensed,
+  titlingGothic,
+  visiaPro,
+};
+
+export default FONTS;

@@ -1,37 +1,37 @@
 import { red, pink, yellow } from '@mui/material/colors';
 import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { dinCondensed, titlingGothic } from './fonts';
+import FONTS from './fonts';
 
 const borderRadius = '16rem';
 
 const baseTheme: ThemeOptions = {
   typography: {
-    fontFamily: dinCondensed.style.fontFamily,
+    fontFamily: FONTS.dinCondensed.style.fontFamily,
     h1: {
       fontSize: '48px',
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
       textTransform: 'uppercase',
     },
     h2: {
       fontSize: '36px',
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
       textTransform: 'uppercase',
     },
     h3: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
       textTransform: 'uppercase',
     },
     h4: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
       textTransform: 'uppercase',
     },
     h5: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
       textTransform: 'uppercase',
     },
     h6: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
       textTransform: 'uppercase',
     },
     body1: {
