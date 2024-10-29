@@ -17,7 +17,11 @@ import { useEffect, useRef, useState } from 'react';
 import type { Id } from 'react-toastify';
 import { toast } from 'react-toastify';
 import { erc20Abi } from 'viem';
-import { readContract, simulateContract } from 'viem/actions';
+import {
+  readContract,
+  simulateContract,
+  waitForTransactionReceipt,
+} from 'viem/actions';
 import {
   useAccount,
   usePublicClient,
@@ -133,13 +137,21 @@ export default function useDeposit(props: IUseDepositProps) {
           args: [props.pool, BigInt(normalized.raw)],
         });
         const approveHash = await signer.writeContract(prepareTx.request);
+        const approveTxHash = await waitForTransactionReceipt(signer, {
+          hash: approveHash,
+        });
         ToastPromise(
           'approve',
           normalized,
           approvalToastId,
           symbol,
-          approveHash,
+          approveTxHash.transactionHash,
         );
+        // set button to deposit if not already
+        setButton({ text: BUTTON_TEXTS.submit, disabled: false });
+        setIsLoading(false);
+        setError('');
+        return;
       }
 
       // Deposit input amount

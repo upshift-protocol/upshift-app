@@ -26,6 +26,7 @@ const BaseSkeleton = ({ children, style, title, description }: IBase) => {
             ? darkTheme.palette.primary.main
             : lightTheme.palette.primary.main
         }
+        options={{ showSpinner: false }}
       />
 
       <Meta
