@@ -4,18 +4,49 @@ import { useQuery } from '@tanstack/react-query';
 import { augustSdk } from '@/config/august-sdk';
 import useFetcher from './use-fetcher';
 
-type IUseToken = {
+// interfaces
+interface IUseToken {
   enabled?: boolean;
-};
+  address?: IAddress;
+}
 
+interface IUseTokenReturnValue {
+  address: IAddress;
+  chain: number;
+  decimals: number;
+  price: number;
+  symbol: string;
+}
+
+// main hook
 export default function useTokens(options?: IUseToken) {
   const { data: allPools } = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[]>;
 
-  const getAllPrices = async () => {
-    const promises = await Promise.all(
-      allPools
+  const getAllPrices = async (): Promise<IUseTokenReturnValue[]> => {
+    if (options?.address) {
+      const foundPool = allPools?.find(
+        (p) =>
+          p?.underlying?.address?.toLowerCase() ===
+          options?.address?.toLowerCase(),
+      );
+      if (!foundPool) {
+        console.error('#getAllPrices:', 'foundPool is undefined');
+        return [];
+      }
+      const price = await augustSdk.getPrice(
+        foundPool.underlying.symbol.toLowerCase(),
+      );
+      return [
+        {
+          ...foundPool.underlying,
+          price,
+        },
+      ];
+    }
+    return Promise.all(
+      allPools?.length
         ? allPools?.map(async (p) => {
             const price = await augustSdk.getPrice(
               p.underlying?.symbol?.toLowerCase(),
@@ -27,13 +58,6 @@ export default function useTokens(options?: IUseToken) {
           })
         : [],
     );
-    return promises as {
-      address: IAddress;
-      chain: number;
-      decimals: number;
-      price: number;
-      symbol: string;
-    }[];
   };
 
   const query = useQuery({

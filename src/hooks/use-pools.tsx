@@ -24,7 +24,7 @@ export default function usePools(props?: IUsePools) {
           loans: false,
         }),
       queryKey: buildQueryKey('lending-pool', undefined, address),
-      enabled: props?.enabled || true,
+      enabled: typeof props?.enabled === 'undefined' ? true : props?.enabled,
     })),
   });
 
