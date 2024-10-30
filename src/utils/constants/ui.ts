@@ -18,3 +18,7 @@ export const STYLE_VARS = {
 
 export const FALLBACK_TOKEN_IMG =
   'https://etherscan.io/images/main/empty-token.png';
+
+export const HEADER_FONT_WEIGHT = 900;
+
+export const TABLE_HEADER_FONT_WEIGHT = 900;

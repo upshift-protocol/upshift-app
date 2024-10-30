@@ -101,11 +101,9 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : props?.hardcodedApy ? (
-              <Typography fontFamily={'monospace'} display="flex">
-                {props?.hardcodedApy}
-              </Typography>
+              <Typography display="flex">{props?.hardcodedApy}</Typography>
             ) : (
-              <Typography fontFamily={'monospace'} display="flex">
+              <Typography display="flex">
                 <AmountDisplay round>{`${props?.apy || '0.00'}`}</AmountDisplay>
                 %
               </Typography>
@@ -122,13 +120,14 @@ export default function VaultInfo(
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
             ) : (
-              <span style={{ fontFamily: 'monospace', display: 'flex' }}>
+              <span style={{ display: 'flex' }}>
                 {BigInt(props?.withdrawalFee?.raw || 0) === BigInt(0) ? (
                   <Chip
                     label={'None'}
                     color={'success'}
                     variant="outlined"
                     size="small"
+                    sx={{ lineHeight: 1.2 }}
                   />
                 ) : (
                   <>

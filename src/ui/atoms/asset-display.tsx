@@ -83,7 +83,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
             </Box>
           ) : props?.loading ? (
             <Box width={props.truncate ? STYLE_VARS.assetDivWidth : undefined}>
-              <Skeleton variant="text" height="32px" />
+              <Skeleton variant="text" height="30px" width="42px" />
             </Box>
           ) : null}
         </Stack>

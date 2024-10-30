@@ -198,7 +198,7 @@ const ConnectWalletMolecule = ({
           />
         }
         label={
-          <Typography variant="body2">
+          <Typography variant="body2" fontSize={14}>
             I have read and accept{' '}
             <Link target="_blank" href={LINKS.terms_of_service}>
               Terms of Service

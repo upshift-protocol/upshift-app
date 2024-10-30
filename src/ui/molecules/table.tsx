@@ -16,6 +16,7 @@ import { explorerLink } from '@augustdigital/sdk';
 import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
+import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -157,7 +158,11 @@ export default function TableMolecule({
                   key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
-                  sx={{ bgcolor: 'transparent', fontSize: '18px' }}
+                  sx={{
+                    bgcolor: 'transparent',
+                    fontSize: '18px',
+                    fontWeight: TABLE_HEADER_FONT_WEIGHT,
+                  }}
                 >
                   {isLarge
                     ? column.value
@@ -201,11 +206,7 @@ export default function TableMolecule({
                           column.id.includes('apr')
                         ) {
                           if (typeof value === 'string') {
-                            return (
-                              <Typography fontFamily={'monospace'}>
-                                {value || '-'}%
-                              </Typography>
-                            );
+                            return <Typography>{value || '-'}%</Typography>;
                           }
                           return value;
                         }
@@ -213,7 +214,7 @@ export default function TableMolecule({
                           // else it is an asset amount
                           if (typeof value === 'string') {
                             return (
-                              <Typography fontFamily={'monospace'}>
+                              <Typography>
                                 {value || '-'} {underlying?.symbol}
                               </Typography>
                             );
