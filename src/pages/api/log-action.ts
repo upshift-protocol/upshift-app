@@ -62,6 +62,7 @@ const logDeposit = async (data: IDepositLog) => {
     return true;
   } catch (error) {
     console.error('#logDeposit:', error);
+    return false;
   }
 };
 

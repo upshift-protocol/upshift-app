@@ -11,7 +11,7 @@ export default function Logo({
   const { isDark } = useThemeMode();
   return (
     <Image
-      src={`/img/logos/upshift-wordmark-${isDark ? 'color' : 'black'}.svg`}
+      src={`/img/logos/upshift-wordmark-${isDark ? 'color' : 'black-color'}.svg`}
       alt="Upshift Finance Logo"
       width={width}
       height={height}

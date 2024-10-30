@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import { formatCompactNumber } from '@/utils/helpers/ui';
+import { formatCompactNumber, formatUsd } from '@/utils/helpers/ui';
 import useTokens from '@/hooks/use-tokens';
 import { Chip } from '@mui/material';
 
@@ -49,9 +49,7 @@ export default function AmountDisplay({
             >
               <Chip
                 size="small"
-                label={formatCompactNumber(Number(props?.children) * usdValue, {
-                  symbol: true,
-                })}
+                label={formatUsd(Number(props?.children) * usdValue)}
               />
             </Typography>
           ) : null}
@@ -70,9 +68,7 @@ export default function AmountDisplay({
           </Typography>
           {props?.usd && usdValue && direction === 'column' ? (
             <Typography component="span" variant="caption">
-              {formatCompactNumber(Number(props?.children) * usdValue, {
-                symbol: true,
-              })}
+              {formatUsd(Number(props?.children) * usdValue)}
             </Typography>
           ) : null}
         </Stack>

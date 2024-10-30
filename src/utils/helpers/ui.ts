@@ -82,5 +82,7 @@ export function formatUsd(value: string | number) {
     style: 'currency',
     currency: 'USD',
   });
-  return formatCurrency.format(Number(value));
+  const formatted = formatCurrency.format(Number(value));
+  if (formatted.includes(',')) return formatted.split('.')[0];
+  return formatted;
 }
