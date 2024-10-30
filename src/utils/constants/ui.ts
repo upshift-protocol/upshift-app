@@ -21,4 +21,4 @@ export const FALLBACK_TOKEN_IMG =
 
 export const HEADER_FONT_WEIGHT = 900;
 
-export const TABLE_HEADER_FONT_WEIGHT = 800;
+export const TABLE_HEADER_FONT_WEIGHT = 900;

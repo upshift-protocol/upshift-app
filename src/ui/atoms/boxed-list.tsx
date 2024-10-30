@@ -6,7 +6,6 @@ import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useChainId } from 'wagmi';
-import FONTS from '@/config/fonts';
 import LinkAtom from './anchor-link';
 
 type IBoxedListItem = {
@@ -45,9 +44,7 @@ export default function BoxedListAtom(props: {
           {typeof item.value === 'string' && isAddress(item.value) ? (
             <>
               {item.value === zeroAddress ? (
-                <Typography {...FONTS.monospace} variant="body2">
-                  {'ETH'}
-                </Typography>
+                <Typography variant="body2">{'ETH'}</Typography>
               ) : (
                 <LinkAtom
                   href={explorerLink(
@@ -61,9 +58,7 @@ export default function BoxedListAtom(props: {
               )}
             </>
           ) : (
-            <Typography {...FONTS.monospace} variant="body2">
-              {item.value}
-            </Typography>
+            <Typography variant="body2">{item.value}</Typography>
           )}
         </StackRow>
       ))}

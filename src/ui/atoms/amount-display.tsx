@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { formatCompactNumber } from '@/utils/helpers/ui';
 import useTokens from '@/hooks/use-tokens';
-import FONTS from '@/config/fonts';
+import { Chip } from '@mui/material';
 
 type IAmountDisplay = {
   symbol?: string;
@@ -47,11 +47,12 @@ export default function AmountDisplay({
               component="span"
               variant="caption"
             >
-              ({' '}
-              {formatCompactNumber(Number(props?.children) * usdValue, {
-                symbol: true,
-              })}{' '}
-              )
+              <Chip
+                size="small"
+                label={formatCompactNumber(Number(props?.children) * usdValue, {
+                  symbol: true,
+                })}
+              />
             </Typography>
           ) : null}
           <Typography
@@ -60,7 +61,7 @@ export default function AmountDisplay({
             whiteSpace={'nowrap'}
             fontSize={props?.size || '16px'}
           >
-            <Typography {...FONTS.monospace} component={'span'}>
+            <Typography component={'span'}>
               {formatCompactNumber(Number(props.children))}
             </Typography>
             {props.symbol ? (
@@ -82,7 +83,6 @@ export default function AmountDisplay({
     <Stack alignItems={'end'} direction={direction}>
       <Stack direction="row" gap={1} alignItems="center">
         <Typography
-          {...FONTS.monospace}
           component={'span'}
           fontSize={props?.size}
           whiteSpace={'nowrap'}

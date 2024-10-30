@@ -62,10 +62,6 @@ const FONTS = {
   dinCondensed,
   titlingGothic,
   visiaPro,
-  monospace: {
-    fontFamily: 'monospace',
-    fontWeight: '400',
-  },
 };
 
 export default FONTS;

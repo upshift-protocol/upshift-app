@@ -9,7 +9,7 @@ const borderRadius = '16rem';
 const baseTheme: ThemeOptions = {
   typography: {
     fontFamily: FONTS.visiaPro.style.fontFamily,
-    fontWeightRegular: 600,
+    fontWeightRegular: 800,
     fontSize: 16,
     h1: {
       fontSize: '48px',

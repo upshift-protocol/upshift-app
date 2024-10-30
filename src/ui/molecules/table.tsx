@@ -16,7 +16,6 @@ import { explorerLink } from '@augustdigital/sdk';
 import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
-import FONTS from '@/config/fonts';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import LinkAtom from '../atoms/anchor-link';
 
@@ -207,11 +206,7 @@ export default function TableMolecule({
                           column.id.includes('apr')
                         ) {
                           if (typeof value === 'string') {
-                            return (
-                              <Typography {...FONTS.monospace}>
-                                {value || '-'}%
-                              </Typography>
-                            );
+                            return <Typography>{value || '-'}%</Typography>;
                           }
                           return value;
                         }
@@ -219,7 +214,7 @@ export default function TableMolecule({
                           // else it is an asset amount
                           if (typeof value === 'string') {
                             return (
-                              <Typography {...FONTS.monospace}>
+                              <Typography>
                                 {value || '-'} {underlying?.symbol}
                               </Typography>
                             );
