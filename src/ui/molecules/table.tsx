@@ -145,7 +145,7 @@ export default function TableMolecule({
       page * rowsPerPage + rowsPerPage,
     );
     return sliced;
-  }, [data?.length, page, rowsPerPage, address]);
+  }, [data?.length, page, rowsPerPage, address, loading]);
 
   return (
     <Box>

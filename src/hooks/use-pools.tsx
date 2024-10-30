@@ -1,4 +1,5 @@
 import { augustSdk } from '@/config/august-sdk';
+import { arrayAllEqualTrue } from '@/utils/helpers/array';
 import { buildQueryKey } from '@/utils/helpers/query';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { POOL_ADDRESSES } from '@augustdigital/sdk';
@@ -28,5 +29,12 @@ export default function usePools(props?: IUsePools) {
     })),
   });
 
-  return queries;
+  const isAllFetched = !arrayAllEqualTrue(
+    queries?.map((q) => q.isFetched && !q.isPending),
+  );
+
+  return {
+    queries,
+    isAllFetched,
+  };
 }
