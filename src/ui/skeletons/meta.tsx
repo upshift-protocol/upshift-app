@@ -18,6 +18,7 @@ const MetaSkeleton = (props: IMetaProps) => {
         description={props.description}
         canonical={props.canonical}
         openGraph={{
+          ...appConfig.openGraph,
           title: props.title,
           description: props.description,
           url: props.canonical,
