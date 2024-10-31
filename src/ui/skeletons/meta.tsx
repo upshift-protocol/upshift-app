@@ -1,6 +1,5 @@
 import { NextSeo } from 'next-seo';
 import appConfig from '@/config/app';
-import { GoogleTagManager } from '@next/third-parties/google';
 
 type IMetaProps = {
   title: string;
@@ -11,7 +10,6 @@ type IMetaProps = {
 const MetaSkeleton = (props: IMetaProps) => {
   return (
     <>
-      <GoogleTagManager gtmId="G-H1WDGRZH57" />
       <NextSeo
         {...appConfig}
         title={props.title}
