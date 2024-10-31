@@ -11,6 +11,7 @@ import '@/styles/global.css';
 import '@/styles/toast.css';
 import { ThemeProvider } from '@/stores/theme';
 import DevtoolsSkeleton from '@/ui/skeletons/devtools';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -30,6 +31,8 @@ const MyApp = (props: AppProps) => {
           </QueryClientProvider>
         </WagmiProvider>
       </ThemeProvider>
+
+      <GoogleTagManager gtmId="G-H1WDGRZH57" />
     </>
   );
 };
