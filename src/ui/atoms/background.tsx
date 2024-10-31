@@ -17,7 +17,6 @@ export default function Background({ variant, children, color }: IBackground) {
           borderRadius={'50%'}
           width={'fit-content'}
           p={0.25}
-          boxShadow={'0px 0px 8px 0px rgba(255,255,255,1);'}
         >
           {children}
         </Stack>
