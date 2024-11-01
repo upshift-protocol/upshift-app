@@ -184,7 +184,7 @@ const StakePage = () => {
             }
           >
             <MyActiveStakingOrganism
-              title="Active Stake Position"
+              title="Acteive Stake Position"
               data={stakingPosition}
               loading={+(activeStakingLoading || tokenMetaLoading)}
               refetchActiveStaking={refetchActiveStaking}

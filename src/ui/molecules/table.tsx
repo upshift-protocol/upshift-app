@@ -36,6 +36,7 @@ type ITable = {
   hover?: boolean;
   emptyText?: string;
   disableRowClick?: boolean;
+  sideEffects?: any[];
 };
 
 export default function TableMolecule({
@@ -49,6 +50,7 @@ export default function TableMolecule({
   type = 'custom',
   emptyText,
   disableRowClick,
+  sideEffects = [],
 }: ITable) {
   const { address } = useAccount();
   const router = useRouter();
@@ -147,7 +149,7 @@ export default function TableMolecule({
       page * rowsPerPage + rowsPerPage,
     );
     return sliced;
-  }, [data?.length, page, rowsPerPage, address, loading]);
+  }, [data?.length, page, rowsPerPage, address, loading, ...sideEffects]);
 
   return (
     <Box>
