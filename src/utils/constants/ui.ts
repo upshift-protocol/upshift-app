@@ -14,7 +14,7 @@ export const STYLE_VARS = {
   widthWide: '120rem',
   width: '100rem',
   descriptionWidth: '800px',
-  assetDivWidth: '60px',
+  assetDivWidth: '72px',
 };
 
 export const FALLBACK_TOKEN_IMG =
