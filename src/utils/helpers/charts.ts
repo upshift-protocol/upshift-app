@@ -18,7 +18,6 @@ export function getProtocolExposureData(pool: IPool) {
     const allocationPerPosition =
       (loan.allocation * 100) / (positionLengths[index] || 1);
 
-    // @ts-expect-error
     loan.positions.forEach((position: { label: string; value: string }) => {
       protocolAllocation[position.label] =
         (protocolAllocation[position.label] || 0) + allocationPerPosition;
