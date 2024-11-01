@@ -75,15 +75,6 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
     else setWalletConnected(false);
   }, [address]);
 
-  // function buildCrumbs(): IBreadCumb[] {
-  //   return [
-  //     {
-  //       text: 'Earn',
-  //       href: '/',
-  //     },
-  //   ];
-  // }
-
   return (
     <Base>
       <Section

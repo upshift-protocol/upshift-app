@@ -7,6 +7,7 @@ export const BUTTON_TEXTS = {
   approve: 'Approve Input Amount',
   approving: 'Approving Input Amount',
   insufficient: 'Insufficient Balance',
+  full: 'Deposit Cap Reached',
 };
 
 export const STYLE_VARS = {
