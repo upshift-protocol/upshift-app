@@ -3,7 +3,14 @@ import { useState } from 'react';
 import { erc20Abi, formatUnits, zeroAddress } from 'viem';
 import { useAccount, useReadContract } from 'wagmi';
 
-export default function useInput(token?: IAddress, chainId?: IChainId) {
+export default function useInput(
+  token?: IAddress,
+  chainId?: IChainId,
+  customValue?: {
+    balance: bigint;
+    decimals: number;
+  },
+) {
   const { address } = useAccount();
 
   const { data: balance } = useReadContract({
@@ -28,6 +35,9 @@ export default function useInput(token?: IAddress, chainId?: IChainId) {
     if (!token) {
       console.warn('#handleMax: token address is undefined');
       setValue('0');
+    }
+    if (customValue) {
+      setValue(formatUnits(customValue.balance, customValue.decimals));
     } else if (balance && decimals) {
       setValue(formatUnits(balance, decimals));
     } else {

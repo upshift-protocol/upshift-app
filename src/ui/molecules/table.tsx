@@ -35,6 +35,7 @@ type ITable = {
   pagination?: boolean;
   hover?: boolean;
   emptyText?: string;
+  disableRowClick?: boolean;
 };
 
 export default function TableMolecule({
@@ -47,6 +48,7 @@ export default function TableMolecule({
   hover = true,
   type = 'custom',
   emptyText,
+  disableRowClick,
 }: ITable) {
   const { address } = useAccount();
   const router = useRouter();
@@ -67,6 +69,7 @@ export default function TableMolecule({
   };
 
   const handleRowClick = (e: React.SyntheticEvent, index: number) => {
+    if (disableRowClick) return;
     e.preventDefault();
     const uid = data?.[index]?.[uidKey];
     const rowChainId = data?.[index]?.chainId;
@@ -144,7 +147,7 @@ export default function TableMolecule({
       page * rowsPerPage + rowsPerPage,
     );
     return sliced;
-  }, [data?.length, page, rowsPerPage, address]);
+  }, [data?.length, page, rowsPerPage, address, loading]);
 
   return (
     <Box>
@@ -204,6 +207,17 @@ export default function TableMolecule({
                             return (
                               <Typography fontFamily={'monospace'}>
                                 {value || '-'}%
+                              </Typography>
+                            );
+                          }
+                          return value;
+                        }
+
+                        if (column.id.includes('totalStaked')) {
+                          if (typeof value === 'string') {
+                            return (
+                              <Typography fontFamily={'monospace'}>
+                                {value || '-'} {row?.stakedTokenSymbol}
                               </Typography>
                             );
                           }

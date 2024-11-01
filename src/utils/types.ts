@@ -74,3 +74,35 @@ export type IDepositLogData = {
   eoa: IAddress;
   tx_id: string;
 };
+
+export type IActiveStakePosition = {
+  stakingToken: {
+    decimals: number;
+    symbol: string;
+    address: IAddress;
+    chain: number;
+    totalStaked: INormalizedNumber;
+    usd: INormalizedNumber;
+    totalSupply?: INormalizedNumber;
+    name: string;
+  };
+  rewardToken: {
+    decimals: number;
+    symbol: string;
+    address: IAddress;
+    chain: number;
+    redeemable: INormalizedNumber;
+    usd: INormalizedNumber;
+    name: string;
+  };
+  rewardDistributor: IAddress;
+  rewardPerSecond: INormalizedNumber;
+  apy?: number;
+  stakedPositionDetail: {
+    name: string;
+    symbol: string;
+    address: IAddress;
+    chain: number;
+  };
+  chainId: number;
+};
