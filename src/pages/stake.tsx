@@ -163,7 +163,7 @@ const StakePage = () => {
 
       setStakingPosition([activePosition]);
     }
-  }, [tokenMetaLoading, activeStakingLoading]);
+  }, [tokenMetaLoading, activeStakingLoading, activeStaking?.[1].result]);
 
   return (
     <Base>
