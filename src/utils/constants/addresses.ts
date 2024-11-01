@@ -1,7 +1,7 @@
 export const REWARD_DISTRIBUTOR_ADDRESS = (chainId: number) => {
   switch (chainId) {
     case 43114:
-      return '0x08635BdE0d205f76e758Ea642B73Aee3A523557D';
+      return '0x46942b0Ab51be779C68daDe814969D03a6b8f8f8';
     default:
       return '0x0000000000000000000000000000000000000000';
   }

@@ -230,7 +230,10 @@ export default function MyActiveStakingOrganism({
         pagination={false}
         emptyText="No positions available"
         disableRowClick={true}
-        sideEffects={data[0]?.stakingToken?.totalStaked?.normalized}
+        sideEffects={[
+          data[0]?.stakingToken?.totalStaked?.normalized,
+          data[0]?.rewardToken?.redeemable?.normalized,
+        ]}
       />
     </Paper>
   );
