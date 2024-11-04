@@ -1,11 +1,12 @@
 import type { ButtonProps } from '@mui/material';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { useAccount, useChainId, useChains, useSwitchChain } from 'wagmi';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import ConnectWalletMolecule from '../molecules/connect-wallet';
 
 interface IWeb3Button extends ButtonProps {
   chainId?: number;
+  loading?: boolean;
 }
 
 export default function Web3Button(props: IWeb3Button) {
@@ -43,10 +44,7 @@ export default function Web3Button(props: IWeb3Button) {
     );
   }
 
-  if (
-    typeof props?.chainId !== 'undefined' &&
-    props.chainId !== underlyingChainId
-  ) {
+  if (props?.chainId !== underlyingChainId) {
     const foundChain = chains?.find((c) => c.id === props?.chainId);
     return (
       <Button
@@ -64,7 +62,11 @@ export default function Web3Button(props: IWeb3Button) {
   }
 
   return (
-    <Button {...props} variant="contained">
+    <Button
+      {...props}
+      variant="contained"
+      startIcon={props?.loading ? <CircularProgress size={20} /> : null}
+    >
       {props.children}
     </Button>
   );

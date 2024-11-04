@@ -12,10 +12,21 @@ import { abi as ChainLinkAggregatorV3InterfaceABI } from '@/utils/abis/chainlink
 import { zeroAddress } from 'viem';
 import useFetcher from './use-fetcher';
 
-type IUseToken = {
+// interfaces
+interface IUseToken {
   enabled?: boolean;
-};
+  address?: IAddress;
+}
 
+interface IUseTokenReturnValue {
+  address: IAddress;
+  chain: number;
+  decimals: number;
+  price: number;
+  symbol: string;
+}
+
+// main hook
 export default function useTokens(options?: IUseToken) {
   const avaxPriceFeedAddress = AVAX_PRICE_FEED_ADDRESS(1);
 
@@ -30,9 +41,29 @@ export default function useTokens(options?: IUseToken) {
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[]>;
 
-  const getAllPrices = async () => {
+  const getAllPrices = async (): Promise<IUseTokenReturnValue[]> => {
+    if (options?.address) {
+      const foundPool = allPools?.find(
+        (p) =>
+          p?.underlying?.address?.toLowerCase() ===
+          options?.address?.toLowerCase(),
+      );
+      if (!foundPool) {
+        console.error('#getAllPrices:', 'foundPool is undefined');
+        return [];
+      }
+      const price = await augustSdk.getPrice(
+        foundPool.underlying.symbol.toLowerCase(),
+      );
+      return [
+        {
+          ...foundPool.underlying,
+          price,
+        },
+      ];
+    }
     const promises = await Promise.all(
-      allPools
+      allPools?.length
         ? allPools?.map(async (p) => {
             const price = await augustSdk.getPrice(
               p.underlying?.symbol?.toLowerCase(),

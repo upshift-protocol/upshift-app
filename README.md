@@ -68,6 +68,10 @@ To run the project using a diiferent network, you can either:
 
 2) inject the following `.env` variable, `NEXT_PUBLIC_NETWORK=`
 
+#### Adding New Tokens Images
+
+Most of the logic to add new tokens is handled by the August SDK, however, in order to properly render a token, a token image must be added to `/public/img/tokens/` as an `.svg` with the same case-convention as the real token (`agETH.svg`). 
+
 ## Directory
 
 ```

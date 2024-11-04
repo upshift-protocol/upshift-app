@@ -1,41 +1,59 @@
 import { red, pink, yellow } from '@mui/material/colors';
 import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { dinCondensed, titlingGothic } from './fonts';
+import { HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
+import FONTS from './fonts';
 
 const borderRadius = '16rem';
 
 const baseTheme: ThemeOptions = {
   typography: {
-    fontFamily: dinCondensed.style.fontFamily,
+    fontFamily: FONTS.visiaPro.style.fontFamily,
+    fontWeightRegular: 800,
+    fontSize: 16,
     h1: {
       fontSize: '48px',
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
+      fontWeight: HEADER_FONT_WEIGHT,
       textTransform: 'uppercase',
     },
     h2: {
       fontSize: '36px',
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
+      fontWeight: HEADER_FONT_WEIGHT,
       textTransform: 'uppercase',
     },
     h3: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
+      fontWeight: HEADER_FONT_WEIGHT,
       textTransform: 'uppercase',
     },
     h4: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
+      fontWeight: HEADER_FONT_WEIGHT,
       textTransform: 'uppercase',
     },
     h5: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
+      fontWeight: HEADER_FONT_WEIGHT,
       textTransform: 'uppercase',
     },
     h6: {
-      fontFamily: titlingGothic.style.fontFamily,
+      fontFamily: FONTS.visiaPro.style.fontFamily,
+      fontWeight: HEADER_FONT_WEIGHT,
       textTransform: 'uppercase',
+    },
+    body2: {
+      fontSize: 18,
     },
     body1: {
       fontSize: 18,
+    },
+    button: {
+      fontFamily: FONTS.dinCondensed.style.fontFamily,
+      textTransform: 'uppercase',
+      fontSize: 17,
+      lineHeight: 1.475,
     },
   },
   components: {

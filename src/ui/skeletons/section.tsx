@@ -79,6 +79,7 @@ const SectionSkeleton = (props: ISectionProps) => {
                   )}
                   {props?.chainId ? (
                     <Chip
+                      sx={{ mt: 0.75 }}
                       label={
                         <span
                           style={{

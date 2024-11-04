@@ -44,9 +44,7 @@ export default function BoxedListAtom(props: {
           {typeof item.value === 'string' && isAddress(item.value) ? (
             <>
               {item.value === zeroAddress ? (
-                <Typography variant="body2" fontFamily="monospace">
-                  {'ETH'}
-                </Typography>
+                <Typography variant="body2">{'ETH'}</Typography>
               ) : (
                 <LinkAtom
                   href={explorerLink(
@@ -60,9 +58,7 @@ export default function BoxedListAtom(props: {
               )}
             </>
           ) : (
-            <Typography variant="body2" fontFamily="monospace">
-              {item.value}
-            </Typography>
+            <Typography variant="body2">{item.value}</Typography>
           )}
         </StackRow>
       ))}

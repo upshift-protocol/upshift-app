@@ -14,7 +14,7 @@ export default function DepositModalMolecule(
     props?.underlying?.address,
     props?.chainId as IChainId,
   );
-  const { handleDeposit, isSuccess, button, expected } = useDeposit({
+  const { handleDeposit, isSuccess, button, expected, isLoading } = useDeposit({
     ...inInputProps,
     asset: props?.asset,
     pool: props?.address,
@@ -68,6 +68,7 @@ export default function DepositModalMolecule(
           variant="contained"
           disabled={button.disabled}
           chainId={props?.chainId}
+          loading={isLoading}
         >
           {button.text}
         </Web3Button>
