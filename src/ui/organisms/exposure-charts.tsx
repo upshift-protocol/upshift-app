@@ -37,7 +37,15 @@ const ExposureCharts = ({
   }, [pool]);
 
   return (
-    <Grid container spacing={0} justifyContent="space-around">
+    <Grid
+      container
+      spacing={0}
+      justifyContent="space-around"
+      style={{
+        background: isDark ? '#202426' : '#f0f2f6',
+        borderRadius: '0.25rem',
+      }}
+    >
       <Grid
         item
         xs={12}
@@ -46,8 +54,6 @@ const ExposureCharts = ({
           height: !isChartsDataLoading ? '350px' : '100%',
           display: 'flex',
           flexDirection: 'column',
-          border: `0.5px solid ${isDark ? 'gray' : 'lightgray'}`,
-          borderRadius: '0.25rem',
           alignItems: 'center',
           justifyContent: {
             sm: 'flex-start',
@@ -77,8 +83,6 @@ const ExposureCharts = ({
           height: !isChartsDataLoading ? '350px' : '100%',
           display: 'flex',
           flexDirection: 'column',
-          border: `0.5px solid ${isDark ? 'gray' : 'lightgray'}`,
-          borderRadius: '0.25rem',
           alignItems: 'center',
           justifyContent: {
             sm: 'flex-start',

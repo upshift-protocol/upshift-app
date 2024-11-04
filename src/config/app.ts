@@ -1,7 +1,7 @@
 const title = 'Upshift | Democratizing Insitutional Lending';
 const description =
   'Earn yields from real institutional loans via the Upshift protocol. Democratizing high-yield investments traditionally limited to financial institutions.';
-const rootUrl = 'https://app.upshift.finance';
+const rootUrl = 'https://private.upshift.finance';
 
 const appConfig = {
   site_name: 'Upshift',
@@ -15,11 +15,11 @@ const appConfig = {
     description,
     images: [
       {
-        url: 'https://upshift.netlify.app/android-chrome-384x384.png',
-        width: 384,
-        height: 384,
+        url: `${rootUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
         alt: 'Upshift',
-        type: 'image/png',
+        type: 'image/jpg',
       },
     ],
   },

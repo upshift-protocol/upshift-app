@@ -122,21 +122,28 @@ export default function useDeposit(props: IUseDepositProps) {
       });
       if (BigInt(allowance) < BigInt(normalized.raw)) {
         approvalToastId = toast.loading(
-          `Submitted approval for ${normalized.normalized} ${symbol}`,
+          `Submitting approval for ${normalized.normalized} ${symbol}`,
           {
             closeButton: true,
           },
         );
         // Approve input amount
         setButton({ text: BUTTON_TEXTS.approving, disabled: true });
-        const prepareTx = await simulateContract(provider, {
+        const approveHash = await signer.writeContract({
           account: address,
           address: props.asset,
           abi: erc20Abi,
           functionName: 'approve',
           args: [props.pool, BigInt(normalized.raw)],
         });
-        const approveHash = await signer.writeContract(prepareTx.request);
+        ToastPromise(
+          'approve',
+          normalized,
+          approvalToastId,
+          symbol,
+          approveHash,
+          1,
+        );
         const approveTxHash = await waitForTransactionReceipt(signer, {
           hash: approveHash,
         });
@@ -147,11 +154,11 @@ export default function useDeposit(props: IUseDepositProps) {
           symbol,
           approveTxHash.transactionHash,
         );
+
         // set button to deposit if not already
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
         setIsLoading(false);
         setError('');
-        return;
       }
 
       // Deposit input amount

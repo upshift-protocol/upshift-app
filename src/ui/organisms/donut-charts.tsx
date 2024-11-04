@@ -51,7 +51,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
         data: [100],
         backgroundColor: ['#e0e0e0'],
         borderWidth: 4,
-        borderColor: !isDark ? 'white' : '#121212',
+        borderColor: !isDark ? '#f0f2f6' : '#202426',
       },
     ],
   };
@@ -64,7 +64,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
           datasets: data.datasets.map((dataset) => ({
             ...dataset,
             borderWidth: 4,
-            borderColor: !isDark ? 'white' : '#121212',
+            borderColor: !isDark ? '#f0f2f6' : '#202426',
           })),
         }
       : emptyData;

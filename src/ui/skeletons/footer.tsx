@@ -30,7 +30,7 @@ const FooterSkeleton = () => (
         <StyledLink href="https://augustdigital.io" target="_blank">
           Powered by August
           <Image
-            src="/img/august-logo-blue.svg"
+            src="/img/logos/august-logo-blue.svg"
             alt="August Digital"
             height={16}
             width={16}

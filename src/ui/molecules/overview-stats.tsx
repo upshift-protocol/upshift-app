@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Fragment, useMemo } from 'react';
-import { formatCompactNumber } from '@/utils/helpers/ui';
+import { formatUsd } from '@/utils/helpers/ui';
 import useTokens from '@/hooks/use-tokens';
 import CustomStat from '../atoms/stat';
 
@@ -25,9 +25,7 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
-  const { data: tokens, isError, isLoading } = useTokens();
-
-  const displayEth = isError;
+  const { data: tokens, isLoading } = useTokens();
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';
@@ -61,7 +59,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalSupplied), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
+            <Fragment>{`${formatUsd(Number(totalSupplied))}`}</Fragment>
           </Tooltip>
         }
         unit="Total Deposited"
@@ -77,7 +75,7 @@ const OverviewStatsMolecule = ({
             placement="top"
             arrow
           >
-            <Fragment>{`${formatCompactNumber(Number(totalBorrow), { symbol: !displayEth, decimals: 3 })} ${displayEth ? 'ETH' : ''}`}</Fragment>
+            <Fragment>{`${formatUsd(Number(totalBorrow))}`}</Fragment>
           </Tooltip>
         }
         unit="Total Borrowed"
