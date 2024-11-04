@@ -41,13 +41,17 @@ const ExposureCharts = ({
       container
       spacing={0}
       justifyContent="space-around"
-      style={{
-        background: isDark ? '#202426' : '#f0f2f6',
-        borderRadius: '0.25rem',
+      mt={{
+        xs: 4,
+        lg: 6,
       }}
     >
       <Grid
         item
+        style={{
+          position: 'relative',
+          background: isDark ? '#202426' : '#f0f2f6',
+        }}
         xs={12}
         sm={6}
         sx={{
@@ -59,20 +63,29 @@ const ExposureCharts = ({
             sm: 'flex-start',
             md: 'center',
           },
-          padding: isChartsDataLoading ? '16px' : '4rem 2rem',
+          padding: isChartsDataLoading ? '3.5rem' : '4rem 2rem',
+          borderRadius: {
+            xs: '0.25rem',
+            sm: '0',
+          },
+          borderTopLeftRadius: { xs: '0', sm: '0.25rem' },
+          borderBottomLeftRadius: { xs: '0', sm: '0.25rem' },
         }}
       >
-        <DonutChart data={protocolData} isLoading={isChartsDataLoading} />
         <Typography
-          variant="h6"
-          mt={{
-            xs: 2,
-            md: 6,
+          sx={{
+            position: 'absolute',
+            top: { xs: '-4rem', md: '-6rem' },
+            left: '0',
+            mt: { xs: 1, md: 5 },
+            mb: { xs: 20, md: 0 },
           }}
-          mb={{ xs: 16, md: 0 }}
+          variant="h6"
         >
           Protocol Exposure
         </Typography>
+
+        <DonutChart data={protocolData} isLoading={isChartsDataLoading} />
       </Grid>
 
       <Grid
@@ -88,18 +101,32 @@ const ExposureCharts = ({
             sm: 'flex-start',
             md: 'center',
           },
-          padding: isChartsDataLoading ? '16px' : '4rem 2rem',
+          padding: isChartsDataLoading ? '3.5rem' : '4rem 2rem',
+          position: 'relative',
+          background: isDark ? '#202426' : '#f0f2f6',
+          borderRadius: {
+            xs: '0.25rem',
+            sm: '0',
+          },
+          borderTopRightRadius: { xs: '0', sm: '0.25rem' },
+          borderBottomRightRadius: { xs: '0', sm: '0.25rem' },
+        }}
+        mt={{
+          xs: 12,
+          sm: 0,
         }}
       >
         <DonutChart data={tokenData} isLoading={isChartsDataLoading} />
 
         <Typography
           variant="h6"
-          mt={{
-            xs: 2,
-            md: 6,
+          sx={{
+            position: 'absolute',
+            top: { xs: '-4rem', md: '-6rem' },
+            left: '0',
+            mt: { xs: 1, md: 5 },
+            mb: { xs: 20, md: 0 },
           }}
-          mb={{ xs: 8, md: 0 }}
         >
           Token Exposure
         </Typography>
