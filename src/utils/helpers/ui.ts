@@ -55,6 +55,8 @@ export function getChainNameById(chainId?: number | string) {
   switch (Number(chainId)) {
     case 42161:
       return 'Arbitrum One';
+    case 43114:
+      return 'Avalanche';
     default:
       return 'Mainnet';
   }
