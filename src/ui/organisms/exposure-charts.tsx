@@ -55,7 +55,7 @@ const ExposureCharts = ({
         xs={12}
         sm={6}
         sx={{
-          height: !isChartsDataLoading ? '350px' : '100%',
+          height: !isChartsDataLoading ? '280px' : '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -63,7 +63,7 @@ const ExposureCharts = ({
             sm: 'flex-start',
             md: 'center',
           },
-          padding: isChartsDataLoading ? '3.5rem' : '4rem 2rem',
+          padding: isChartsDataLoading ? '2rem' : '2%',
           borderRadius: {
             xs: '0.25rem',
             sm: '0',
@@ -93,7 +93,7 @@ const ExposureCharts = ({
         xs={12}
         sm={6}
         sx={{
-          height: !isChartsDataLoading ? '350px' : '100%',
+          height: !isChartsDataLoading ? '280px' : '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -101,7 +101,7 @@ const ExposureCharts = ({
             sm: 'flex-start',
             md: 'center',
           },
-          padding: isChartsDataLoading ? '3.5rem' : '4rem 2rem',
+          padding: isChartsDataLoading ? '2rem' : '2%',
           position: 'relative',
           background: isDark ? '#202426' : '#f0f2f6',
           borderRadius: {
