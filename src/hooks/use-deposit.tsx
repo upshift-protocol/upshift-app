@@ -352,7 +352,7 @@ export default function useDeposit(props: IUseDepositProps) {
         });
         console.log('#supplyCheck::totalSupply:', totalSupply);
         console.log('#supplyCheck::maxSupply:', maxSupply);
-        if (totalSupply >= maxSupply) {
+        if (totalSupply + BigInt(1) >= maxSupply) {
           setIsFull(true);
           setButton({
             text: BUTTON_TEXTS.full,
