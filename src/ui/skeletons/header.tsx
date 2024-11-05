@@ -103,7 +103,6 @@ const HeaderSkeleton = () => {
               direction="row"
               alignItems="center"
               gap={{ xs: 1, md: 2 }}
-              marginRight={'auto'}
             >
               <LinkAtom
                 href="/"
@@ -118,9 +117,13 @@ const HeaderSkeleton = () => {
                 noSpan
               >
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   mb={{ xs: 0, md: 1 }}
-                  style={{ marginBottom: '0px' }}
+                  style={{
+                    marginBottom: '0px',
+                    lineHeight: '2em',
+                    fontSize: '1.3rem',
+                  }}
                 >
                   Deposit
                 </Typography>
@@ -139,9 +142,13 @@ const HeaderSkeleton = () => {
                 noSpan
               >
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   mb={{ xs: 0, md: 1 }}
-                  style={{ marginBottom: '0px' }}
+                  style={{
+                    marginBottom: '0px',
+                    lineHeight: '2em',
+                    fontSize: '1.3rem',
+                  }}
                 >
                   Stake
                 </Typography>
