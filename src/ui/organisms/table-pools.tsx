@@ -1,11 +1,8 @@
 import Image from 'next/image';
-
 import type { IColumn } from '@/utils/types';
 import type { IWSTokenEntry, IPoolWithUnderlying } from '@augustdigital/sdk';
 import type { UseQueryResult } from '@tanstack/react-query';
-
 import useFetcher from '@/hooks/use-fetcher';
-
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';

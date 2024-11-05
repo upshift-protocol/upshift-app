@@ -38,7 +38,10 @@ type IUseDepositProps = {
   poolName?: string;
   closeModal?: () => void;
   chainId?: IChainId;
-  supplyCheck?: boolean;
+  supplyCheck?: {
+    maxSupply?: string;
+    totalSupply: string;
+  };
 };
 
 export default function useDeposit(props: IUseDepositProps) {
@@ -337,22 +340,26 @@ export default function useDeposit(props: IUseDepositProps) {
   // if supplyCheck is passed, check if totalSupply > maxSupply
   useEffect(() => {
     (async () => {
-      if (provider && props.pool && props?.supplyCheck) {
-        const maxSupply = await readContract(provider, {
-          address: props.pool,
-          abi: ABI_LENDING_POOLS,
-          functionName: 'maxSupply',
-          args: [],
-        });
-        const totalSupply = await readContract(provider, {
-          address: props.pool,
-          abi: ABI_LENDING_POOLS,
-          functionName: 'totalSupply',
-          args: [],
-        });
+      if (props?.supplyCheck?.totalSupply) {
+        const { totalSupply } = props.supplyCheck;
+        let maxSupply: bigint;
+        if (!props?.supplyCheck?.maxSupply) {
+          if (provider && props?.pool) {
+            maxSupply = await readContract(provider, {
+              address: props.pool,
+              abi: ABI_LENDING_POOLS,
+              functionName: 'maxSupply',
+              args: [],
+            });
+          } else {
+            return;
+          }
+        } else {
+          maxSupply = BigInt(props?.supplyCheck?.maxSupply);
+        }
         console.log('#supplyCheck::totalSupply:', totalSupply);
         console.log('#supplyCheck::maxSupply:', maxSupply);
-        if (totalSupply + BigInt(1) >= maxSupply) {
+        if (BigInt(totalSupply) + BigInt(1) >= BigInt(maxSupply)) {
           setIsFull(true);
           setButton({
             text: BUTTON_TEXTS.full,
@@ -361,7 +368,7 @@ export default function useDeposit(props: IUseDepositProps) {
         }
       }
     })().catch(console.error);
-  }, [props?.supplyCheck]);
+  }, [props?.supplyCheck?.maxSupply, props?.supplyCheck?.totalSupply]);
 
   return {
     isFull,
