@@ -11,7 +11,7 @@ import type { IWSTokenEntry } from '@augustdigital/sdk';
 import { round } from '@augustdigital/sdk';
 import Image from 'next/image';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
-import { Paper, useTheme } from '@mui/material';
+import { Paper } from '@mui/material';
 import { useThemeMode } from '@/stores/theme';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
@@ -24,22 +24,14 @@ const columns: readonly IColumn[] = [
     id: 'name',
     value: 'Pool',
     minWidth: 180,
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
+    component: ({ children }: any) => {
       if (!children)
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
-      return (
-        <TableCell>
-          <AssetDisplay symbol={String(children)} />
-        </TableCell>
-      );
+      return <TableCell>{children}</TableCell>;
     },
   },
   {
@@ -231,7 +223,6 @@ export default function MyPositionsTableOrganism({
   data?: any;
   loading?: number;
 }) {
-  const { palette } = useTheme();
   const { isDark } = useThemeMode();
 
   return (
@@ -239,9 +230,8 @@ export default function MyPositionsTableOrganism({
       sx={{
         px: 4,
         py: 3,
-        bgcolor: isDark ? palette.grey[900] : palette.grey[100],
+        bgcolor: isDark ? '#202621' : '#f2f6f0',
       }}
-      variant="outlined"
     >
       {title ? (
         <Typography variant="h6" mb={{ xs: 0, md: 1 }}>

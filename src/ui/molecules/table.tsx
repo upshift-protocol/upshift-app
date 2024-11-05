@@ -11,7 +11,13 @@ import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress, zeroAddress } from 'viem';
 import { truncate } from '@/utils/helpers/string';
-import { Skeleton, Stack, Typography, useMediaQuery } from '@mui/material';
+import {
+  Chip,
+  Skeleton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { explorerLink } from '@augustdigital/sdk';
 import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
@@ -212,18 +218,35 @@ export default function TableMolecule({
                         }
                         if (typeof value === 'string') {
                           // else it is an asset amount
-                          if (typeof value === 'string') {
-                            return (
-                              <Typography>
-                                {value || '-'} {underlying?.symbol}
-                              </Typography>
-                            );
-                          }
-                          return value;
+                          return (
+                            <Typography>
+                              {value || '-'} {underlying?.symbol}
+                            </Typography>
+                          );
                         }
                         return value;
                       }
                       if (typeof value === 'string') {
+                        // if pool name
+                        if (column.id === 'name')
+                          return (
+                            <Stack direction="row" gap={1} alignItems="center">
+                              <Typography>{value || '-'}</Typography>
+                              {/* Check if full and render if full */}
+                              {row?.maxSupply?.raw &&
+                              row?.totalSupply?.raw &&
+                              BigInt(row?.totalSupply?.raw) + BigInt(1) >=
+                                BigInt(row?.maxSupply?.raw) ? (
+                                <Chip
+                                  label="Full"
+                                  color="warning"
+                                  variant="outlined"
+                                  size="small"
+                                />
+                              ) : null}
+                            </Stack>
+                          );
+                        // else
                         return <Typography>{value || '-'}</Typography>;
                       }
                       return value;
