@@ -7,7 +7,7 @@ import Section from '@/ui/skeletons/section';
 import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Collapse, Stack } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 const HomePage = () => {
@@ -24,17 +24,26 @@ const HomePage = () => {
     enabled: walletConnected,
   }) as UseQueryResult<any>;
 
-  function filteredPools() {
+  const filteredPools = useMemo(() => {
     const partnerPools = ['kelp gain', 'lombard lbtc'];
+    if (!allPools?.length) {
+      return { partners: [], upshift: [] };
+    }
     return {
-      partners: allPools?.filter((p) =>
-        partnerPools.includes(p?.name?.toLowerCase()),
-      ),
-      upshift: allPools?.filter(
-        (p) => !partnerPools.includes(p?.name?.toLowerCase()),
-      ),
+      partners: allPools
+        ?.filter((p) => partnerPools.includes(p?.name?.toLowerCase()))
+        .sort((a, b) => {
+          return BigInt(a.totalSupply.raw) < BigInt(b.totalSupply.raw) ? 1 : -1;
+        }),
+      upshift: allPools
+        ?.filter((p) => !partnerPools.includes(p?.name?.toLowerCase()))
+        .sort((a, b) => {
+          // sort manually
+          if (b.symbol === 'upUSD') return -1;
+          return BigInt(a.totalSupply.raw) > BigInt(b.totalSupply.raw) ? 1 : -1;
+        }),
     };
-  }
+  }, [allPools?.length]);
 
   useEffect(() => {
     if (address) setWalletConnected(true);
@@ -60,13 +69,13 @@ const HomePage = () => {
           </Collapse>
           <PoolsTableOrganism
             title="Upshift Pools"
-            data={filteredPools().upshift}
+            data={filteredPools.upshift}
             loading={+allPoolsLoading}
             pagination={false}
           />
           <PoolsTableOrganism
             title="Partner Pools"
-            data={filteredPools().partners}
+            data={filteredPools.partners}
             loading={+allPoolsLoading}
             pagination={false}
           />

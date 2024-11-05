@@ -7,13 +7,14 @@ export const BUTTON_TEXTS = {
   approve: 'Approve Input Amount',
   approving: 'Approving Input Amount',
   insufficient: 'Insufficient Balance',
+  full: 'Deposit Cap Reached',
 };
 
 export const STYLE_VARS = {
   widthWide: '120rem',
   width: '100rem',
   descriptionWidth: '800px',
-  assetDivWidth: '60px',
+  assetDivWidth: '72px',
 };
 
 export const FALLBACK_TOKEN_IMG =

@@ -38,6 +38,7 @@ type IUseDepositProps = {
   poolName?: string;
   closeModal?: () => void;
   chainId?: IChainId;
+  supplyCheck?: boolean;
 };
 
 export default function useDeposit(props: IUseDepositProps) {
@@ -51,6 +52,7 @@ export default function useDeposit(props: IUseDepositProps) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isFull, setIsFull] = useState(false);
   const [button, setButton] = useState({
     text: BUTTON_TEXTS.zero,
     disabled: true,
@@ -332,7 +334,37 @@ export default function useDeposit(props: IUseDepositProps) {
     return () => {};
   }, [isSuccess]);
 
+  // if supplyCheck is passed, check if totalSupply > maxSupply
+  useEffect(() => {
+    (async () => {
+      if (provider && props.pool && props?.supplyCheck) {
+        const maxSupply = await readContract(provider, {
+          address: props.pool,
+          abi: ABI_LENDING_POOLS,
+          functionName: 'maxSupply',
+          args: [],
+        });
+        const totalSupply = await readContract(provider, {
+          address: props.pool,
+          abi: ABI_LENDING_POOLS,
+          functionName: 'totalSupply',
+          args: [],
+        });
+        console.log('#supplyCheck::totalSupply:', totalSupply);
+        console.log('#supplyCheck::maxSupply:', maxSupply);
+        if (totalSupply + BigInt(1) >= maxSupply) {
+          setIsFull(true);
+          setButton({
+            text: BUTTON_TEXTS.full,
+            disabled: true,
+          });
+        }
+      }
+    })().catch(console.error);
+  }, [props?.supplyCheck]);
+
   return {
+    isFull,
     handleDeposit,
     button,
     isLoading,
