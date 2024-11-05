@@ -169,7 +169,8 @@ const StakePage = () => {
     <Base>
       <Section
         id="stake-table"
-        description="Stake your tokens to earn interest on your deposits."
+        title="Stake"
+        description="Stake your Upshift LP tokens to earn further partner incentives."
       >
         <Stack gap={{ xs: 3, sm: 3, md: 4, lg: 5, xl: 6 }}>
           <Collapse
@@ -191,7 +192,7 @@ const StakePage = () => {
             />
           </Collapse>
           <RewardDistributorTableOrganism
-            title="Stake Upshift Tokens"
+            title="Stake Upshift LP Tokens"
             data={stakingPosition}
             loading={+tokenMetaLoading}
             pagination={false}

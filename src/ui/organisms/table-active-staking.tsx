@@ -165,7 +165,7 @@ const columns: readonly IColumn[] = [
   },
   {
     id: 'rewardToken',
-    value: 'Redeemable',
+    value: 'Claimable',
     flex: 2,
     align: 'right',
     format: (value: number) => round(value),
