@@ -25,7 +25,11 @@ const HomePage = () => {
   }) as UseQueryResult<any>;
 
   const filteredPools = useMemo(() => {
-    const partnerPools = ['kelp gain', 'lombard lbtc'];
+    const partnerPools = [
+      'kelp gain',
+      'lombard lbtc',
+      'upshift avalanche ausd',
+    ];
     if (!allPools?.length) {
       return { partners: [], upshift: [] };
     }
@@ -67,12 +71,12 @@ const HomePage = () => {
               loading={+positionsLoading}
             />
           </Collapse>
-          <PoolsTableOrganism
+          {/* <PoolsTableOrganism
             title="Upshift Pools"
             data={filteredPools.upshift}
             loading={+allPoolsLoading}
             pagination={false}
-          />
+          /> */}
           <PoolsTableOrganism
             title="Partner Pools"
             data={filteredPools.partners}
