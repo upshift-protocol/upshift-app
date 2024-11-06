@@ -237,7 +237,7 @@ export default function MyPositionsTableOrganism({
       sx={{
         px: 4,
         py: 3,
-        bgcolor: isDark ? '#202621' : '#f2f6f0',
+        bgcolor: isDark ? '#202426' : '#f0f2f6',
       }}
     >
       {title ? (

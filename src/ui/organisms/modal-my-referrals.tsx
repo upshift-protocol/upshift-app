@@ -13,12 +13,22 @@ import {
   MdOutlineRemoveCircle,
 } from 'react-icons/md';
 import { Fragment, useEffect, useState } from 'react';
+import type { ButtonProps } from '@mui/material/Button';
 import ModalAtom from '../atoms/modal';
 import CopyToClipboard from '../atoms/copy-to-clipboard';
 
+// interfaces
+interface IMyReferralsModalMolecule {
+  buttonProps?: ButtonProps;
+}
+
+// helpers
 const TIMEOUT_DELAY = 1000; // 1 second
 
-export default function MyReferralsModalMolecule() {
+// main functional component
+export default function MyReferralsModalMolecule({
+  buttonProps,
+}: IMyReferralsModalMolecule) {
   const { palette } = useTheme();
   const { referrals } = useReferralsStore();
 
@@ -45,10 +55,11 @@ export default function MyReferralsModalMolecule() {
       title="My Referral Codes"
       description="Share any of these unused codes with anyone that wants to use the Upshift Protocol."
       buttonProps={{
+        ...buttonProps,
         children: 'My Referrals',
-        variant: 'text',
-        color: 'info',
-        disabled: !referrals?.length,
+        variant: buttonProps?.variant || 'text',
+        color: buttonProps?.color || 'info',
+        disabled: buttonProps?.disabled || !referrals?.length,
       }}
       headerStyle={{ marginBottom: '0.5rem' }}
     >

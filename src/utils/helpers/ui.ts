@@ -62,9 +62,19 @@ export function getChainNameById(chainId?: number | string) {
   }
 }
 
+export function getNativeTokenByChainId(chainId?: number | string) {
+  switch (Number(chainId)) {
+    case 43114:
+      return 'AVAX';
+    default:
+      return 'ETH';
+  }
+}
+
 export function getTokenSymbol(address: string, chainId?: number | string) {
   const lowercaseAddress = address?.toLowerCase();
-  if (lowercaseAddress === zeroAddress) return 'ETH';
+  if (lowercaseAddress === zeroAddress)
+    return getNativeTokenByChainId(chainId || FALLBACK_CHAINID);
   switch (Number(chainId)) {
     case 42161: {
       return address;

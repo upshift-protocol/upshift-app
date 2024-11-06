@@ -7,8 +7,9 @@ import {
   type IPoolAction,
 } from '@augustdigital/sdk';
 import { Skeleton, Stack, Typography } from '@mui/material';
-import { useGasPrice } from 'wagmi';
+import { useChainId, useGasPrice } from 'wagmi';
 import { Suspense } from 'react';
+import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import BoxedListAtom from '../atoms/boxed-list';
 
 type ITxFees = {
@@ -24,6 +25,7 @@ type ITxFees = {
 };
 
 export default function TxFeesAtom(props: ITxFees) {
+  const chainId = useChainId();
   const { data: gasPrice } = useGasPrice({ chainId: props?.chainId });
   const feeTotal = (gasPrice || BigInt(0)) * (props.fee || BigInt(0));
 
@@ -56,8 +58,9 @@ export default function TxFeesAtom(props: ITxFees) {
               height="14px"
             />
           );
-        if (typeof type === 'string') return `${value} ETH` || '-';
-        return `${value} ETH` || '-';
+        if (typeof type === 'string')
+          return `${value} ${getNativeTokenByChainId(chainId)}` || '-';
+        return `${value} ${getNativeTokenByChainId(chainId)}` || '-';
       }
     }
   }

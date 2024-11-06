@@ -28,6 +28,7 @@ import type {
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
+import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -109,7 +110,9 @@ export default function TableMolecule({
               const isNative = e === zeroAddress;
               if (isNative)
                 return (
-                  <Typography key={`table-value-arr-${i}`}>ETH</Typography>
+                  <Typography key={`table-value-arr-${i}`}>
+                    {getNativeTokenByChainId(chainId)}
+                  </Typography>
                 );
               return (
                 <LinkAtom
@@ -128,7 +131,8 @@ export default function TableMolecule({
         );
       // else string address
       const isNative = extracted === zeroAddress;
-      if (isNative) return <Typography>ETH</Typography>;
+      if (isNative)
+        return <Typography>{getNativeTokenByChainId(chainId)}</Typography>;
 
       return (
         <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
