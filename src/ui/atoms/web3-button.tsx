@@ -3,6 +3,7 @@ import { Button, CircularProgress } from '@mui/material';
 import { useAccount, useChainId, useChains, useSwitchChain } from 'wagmi';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { Fragment, useEffect, useState } from 'react';
+import { useReferralsStore } from '@/stores/referrals';
 import ConnectWalletMolecule from '../molecules/connect-wallet';
 
 interface IWeb3Button extends ButtonProps {
@@ -22,9 +23,11 @@ export default function Web3Button(props: IWeb3Button) {
   const underlyingChainId = useChainId();
   const chains = useChains();
   const { switchChain } = useSwitchChain();
-  const chainId = props?.chainid || underlyingChainId;
+  const { modalOpen } = useReferralsStore();
 
   const [buttonState, setButtonState] = useState<IButtonState>('loading');
+
+  const chainId = props?.chainid || underlyingChainId;
 
   useEffect(() => {
     if (!address) setButtonState('connect');
@@ -91,8 +94,9 @@ export default function Web3Button(props: IWeb3Button) {
           {...props}
           variant="contained"
           startIcon={props?.loading ? <CircularProgress size={20} /> : null}
+          disabled={(props as ButtonProps)?.disabled || modalOpen}
         >
-          {props.children}
+          {modalOpen ? 'No cheating!' : props.children}
         </Button>
       );
     }

@@ -21,10 +21,10 @@ export default function ReferralsModalMolecule() {
   return (
     <ModalAtom
       title="Referrals"
-      description="Upshift requires users to be referred by another user. If you do not have a referral code, feel free to reach out to the Upshift Finance team via Telegram."
+      description="Upshift requires users to be referred by another user. If you do not have a referral code, please reach out to the Upshift team via Telegram."
       closeWhen={!modalOpen}
       isOpen={modalOpen}
-      disableClose={isSuccess}
+      disableClose={!isSuccess}
     >
       <Stack gap={0}>
         <TextField
