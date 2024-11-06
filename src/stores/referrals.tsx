@@ -11,6 +11,7 @@ import fetchCustom from '@/utils/fetcher';
 import { useAccount } from 'wagmi';
 import { getAddress } from 'viem';
 import { generateCode } from '@/utils/helpers/string';
+import { REFERRALS_ENABLED } from '@/utils/constants/ui';
 
 // interfaces
 type ICodeObj = { code: string; used: boolean; eoa: string | undefined };
@@ -48,6 +49,7 @@ const ReferralsProvider = ({ children }: IChildren) => {
   const [codeInput, setCodeInput] = useState('');
 
   async function getReferrals() {
+    if (!REFERRALS_ENABLED) return;
     const referralsRes = await fetchCustom('get-referrals');
     if (referralsRes?.data && referralsRes.data.length && address) {
       // Retrieve user's referrals
@@ -91,12 +93,9 @@ const ReferralsProvider = ({ children }: IChildren) => {
   }
 
   useEffect(() => {
-    if (!address) return;
+    if (!(address && REFERRALS_ENABLED)) return;
     (async () => getReferrals())().catch(console.error);
   }, [address]);
-
-  console.log('ReferralsProvider::referrals:', referrals);
-  console.log('ReferralsProvider::allCodes:', allCodes);
 
   async function verifyCode() {
     setIsVerifying(true);

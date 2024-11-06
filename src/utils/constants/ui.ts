@@ -1,3 +1,5 @@
+export const REFERRALS_ENABLED = true;
+
 export const BUTTON_TEXTS = {
   zero: 'Input an Amount',
   submit: 'Submit Transaction',
