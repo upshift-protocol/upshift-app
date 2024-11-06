@@ -12,6 +12,8 @@ import '@/styles/toast.css';
 import { ThemeProvider } from '@/stores/theme';
 import DevtoolsSkeleton from '@/ui/skeletons/devtools';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { PoolsProvider } from '@/stores/pools';
+import { ReferralsProvider } from '@/stores/referrals';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -25,7 +27,11 @@ const MyApp = (props: AppProps) => {
       <ThemeProvider>
         <WagmiProvider config={walletConfig}>
           <QueryClientProvider client={queryClient}>
-            <Component {...pageProps} />
+            <ReferralsProvider>
+              <PoolsProvider>
+                <Component {...pageProps} />
+              </PoolsProvider>
+            </ReferralsProvider>
 
             <DevtoolsSkeleton />
           </QueryClientProvider>

@@ -1,10 +1,10 @@
 import useFetcher from '@/hooks/use-fetcher';
+import { usePoolsStore } from '@/stores/pools';
 import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
 import PoolsTableOrganism from '@/ui/organisms/table-pools';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Collapse, Stack } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
@@ -14,9 +14,9 @@ const HomePage = () => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
 
-  const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
-    queryKey: ['lending-pools'],
-  }) as UseQueryResult<IPoolWithUnderlying[]>;
+  const {
+    pools: { data: allPools, isLoading: allPoolsLoading },
+  } = usePoolsStore();
 
   const { data: positions, isLoading: positionsLoading } = useFetcher({
     queryKey: ['my-positions'],

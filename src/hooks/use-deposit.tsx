@@ -206,7 +206,6 @@ export default function useDeposit(props: IUseDepositProps) {
         eoa: `=HYPERLINK("${explorerLink(address, props.chainId || FALLBACK_CHAINID, 'address')}", "${truncate(address)}")`,
         tx_id: `=HYPERLINK("${explorerLink(depositHash as IAddress, props.chainId || FALLBACK_CHAINID, 'tx')}", "${truncate(depositHash || '')}")`,
       };
-      // log to google sheet
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_LAMBDA_URL}/logUpshiftDeposit`,
         {

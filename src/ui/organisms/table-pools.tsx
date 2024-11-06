@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import type { IColumn } from '@/utils/types';
 import type { IWSTokenEntry, IPoolWithUnderlying } from '@augustdigital/sdk';
-import type { UseQueryResult } from '@tanstack/react-query';
-import useFetcher from '@/hooks/use-fetcher';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
@@ -164,15 +162,10 @@ export default function PoolsTableOrganism({
   pagination,
 }: {
   title?: string;
-  data?: any;
+  data: IPoolWithUnderlying[];
   loading?: number;
   pagination?: boolean;
 }) {
-  const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
-    queryKey: ['lending-pools'],
-    enabled: typeof data === 'undefined' && !loading,
-  }) as UseQueryResult<IPoolWithUnderlying[]>;
-
   return (
     <Box>
       {title ? (
@@ -182,9 +175,9 @@ export default function PoolsTableOrganism({
       ) : null}
       <TableMolecule
         columns={columns}
-        data={data ?? allPools}
+        data={data}
         uidKey="address"
-        loading={loading ?? +allPoolsLoading}
+        loading={loading}
         action={(rowData) => PoolActionsMolecule({ pool: rowData })}
         pagination={pagination}
       />
