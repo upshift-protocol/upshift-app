@@ -62,6 +62,14 @@ const newReferral = async (data: INewReferralBody) => {
   await googleSheet.loadInfo();
   const googleSheetTab = googleSheet.sheetsByIndex[1];
 
+  await googleSheetTab?.addRow({
+    eoa: data.address,
+    referred_by_eoa: '',
+    referral_code: data.codeUsed,
+    referral_codes: data.newCode,
+    amount_deposited: '',
+  });
+
   console.log('#newReferral:', data);
   return data;
 };

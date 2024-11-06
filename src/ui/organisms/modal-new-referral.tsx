@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Collapse from '@mui/material/Collapse';
 import ModalAtom from '../atoms/modal';
 
-export default function ReferralsModalMolecule() {
+export default function NewReferralModalMolecule() {
   const {
     codeInput,
     onInputChange,
@@ -35,6 +35,7 @@ export default function ReferralsModalMolecule() {
           id={codeInputId}
           value={codeInput}
           onChange={onInputChange}
+          disabled={!!message}
         />
         <Collapse in={!!message}>
           <Typography
@@ -51,7 +52,7 @@ export default function ReferralsModalMolecule() {
           size="large"
           variant="contained"
           onClick={verifyCode}
-          disabled={isVerifying || !!message}
+          disabled={isVerifying || !!message || !codeInput}
           startIcon={isVerifying ? <CircularProgress size={20} /> : null}
         >
           {isSuccess ? 'Code Confirmed' : 'Verify Code'}

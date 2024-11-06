@@ -30,6 +30,7 @@ export default function ModalAtom({
   onClose,
   isOpen,
   disableClose,
+  headerStyle,
 }: {
   title: string;
   buttonProps?: ButtonProps;
@@ -39,6 +40,7 @@ export default function ModalAtom({
   onClose?: Function;
   isOpen?: boolean;
   disableClose?: boolean;
+  headerStyle?: React.CSSProperties;
 }) {
   const [open, setOpen] = React.useState(isOpen || false);
   const handleOpen = (e?: React.SyntheticEvent) => {
@@ -102,7 +104,7 @@ export default function ModalAtom({
                 justifyContent="space-between"
                 width="100%"
               >
-                <Stack mb={3}>
+                <Stack mb={3} style={headerStyle}>
                   <Typography variant="h5">{title}</Typography>
                   {description ? (
                     <Typography variant="caption">{description}</Typography>

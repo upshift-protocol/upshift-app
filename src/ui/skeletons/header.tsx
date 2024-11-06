@@ -13,9 +13,10 @@ import Grid from '@mui/material/Grid';
 import ThemeSwitch from '../atoms/theme-switch';
 import LinkAtom from '../atoms/anchor-link';
 import Logo from './Logo';
+import MyReferralsModalMolecule from '../organisms/modal-my-referrals';
 
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
-  loading: (_props) =>
+  loading: () =>
     (
       <Skeleton
         width={'160px'}
@@ -27,7 +28,7 @@ const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
 });
 
 const DynamicChainBtn = dynamic(() => import('../molecules/chain-dropdown'), {
-  loading: (_props) =>
+  loading: () =>
     (
       <Skeleton
         width={'66px'}
@@ -76,18 +77,27 @@ const HeaderSkeleton = () => {
           >
             <MenuIcon />
           </IconButton> */}
-            <LinkAtom
-              href="/"
-              target="_self"
-              style={{
-                textDecoration: 'none',
-                color: 'inherit',
-                display: 'flex',
-              }}
-              noSpan
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap={3}
+              display={{ xs: 'none', sm: 'flex' }}
             >
-              <Logo />
-            </LinkAtom>
+              <LinkAtom
+                href="/"
+                target="_self"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  display: 'flex',
+                }}
+                noSpan
+              >
+                <Logo />
+              </LinkAtom>
+
+              <MyReferralsModalMolecule />
+            </Stack>
 
             {/* Desktop */}
             <Stack

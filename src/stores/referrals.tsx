@@ -10,12 +10,13 @@ import React, {
 import fetchCustom from '@/utils/fetcher';
 import { useAccount } from 'wagmi';
 import { getAddress } from 'viem';
-import type { IReferralRecord } from '@/pages/api/referrals';
 import { generateCode } from '@/utils/helpers/string';
 
 // interfaces
+type ICodeObj = { code: string; used: boolean; eoa: string | undefined };
+
 interface ReferralsContextValue {
-  referrals: IReferralRecord[];
+  referrals: ICodeObj[];
   modalOpen: boolean;
   verifyCode: () => Promise<boolean>;
   codeInputId: string;
@@ -25,8 +26,6 @@ interface ReferralsContextValue {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
-
-type ICodeObj = { code: string; used: boolean };
 
 // helpers
 const TIMEOUT_DELAY = 5000; // 5 seconds
@@ -42,48 +41,62 @@ const ReferralsProvider = ({ children }: IChildren) => {
   const { address } = useAccount();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [referrals, setReferrals] = useState<any>(null);
+  const [referrals, setReferrals] = useState<ICodeObj[]>([]);
   const [allCodes, setAllCodes] = useState<ICodeObj[]>([]);
   const [isVerifying, setIsVerifying] = useState(false);
   const [message, setMessage] = useState('');
   const [codeInput, setCodeInput] = useState('');
 
+  async function getReferrals() {
+    const referralsRes = await fetchCustom('get-referrals');
+    if (referralsRes?.data && referralsRes.data.length && address) {
+      // Retrieve user's referrals
+      const connectedEoaReferrals = referralsRes.data.find(
+        (r) => getAddress(r.eoa) === getAddress(address),
+      );
+
+      // has been referred
+      if (connectedEoaReferrals) {
+        setAllCodes([]);
+        const codeUsage: ICodeObj[] = [];
+        connectedEoaReferrals.codes.forEach((code) => {
+          const codeUsed = referralsRes.data?.find(
+            (ref) => ref.codeUsed === code,
+          );
+          codeUsage.push({
+            code,
+            used: !!codeUsed,
+            eoa: codeUsed?.eoa,
+          });
+        });
+        setReferrals(codeUsage);
+        setModalOpen(false);
+      } else {
+        setReferrals([]);
+        if (address) setModalOpen(true);
+        // Save all referral codes
+        const codes: ICodeObj[] = [];
+        referralsRes.data.forEach((r) => {
+          r.codes.forEach((c) => {
+            const codeUsed = !!referralsRes.data?.find(
+              (ref) => ref.codeUsed === c,
+            );
+            codes.push({ code: c, used: codeUsed, eoa: r.eoa });
+          });
+        });
+        setAllCodes(codes);
+        document.getElementById(codeInputId)?.focus();
+      }
+    }
+  }
+
   useEffect(() => {
     if (!address) return;
-
-    (async () => {
-      const referralsRes = await fetchCustom('get-referrals');
-      if (referralsRes?.data && referralsRes.data.length && address) {
-        // Retrieve user's referrals
-        const connectedEoaReferrals = referralsRes.data.filter(
-          (r) => getAddress(r.eoa) === getAddress(address),
-        );
-        console.log('ReferralsProvider::referrals:', connectedEoaReferrals);
-
-        // has been referred
-        if (connectedEoaReferrals.length) {
-          setModalOpen(false);
-        } else {
-          if (address) setModalOpen(true);
-          // Save all referral codes
-          const codes: ICodeObj[] = [];
-          referralsRes.data.forEach((r) => {
-            r.codes.forEach((c) => {
-              const codeUsed = !!referralsRes.data?.find(
-                (ref) => ref.codeUsed === c,
-              );
-              codes.push({ code: c, used: codeUsed });
-            });
-          });
-          console.log('ReferralsProvider::allCodes:', codes);
-
-          setAllCodes(codes);
-          setReferrals(connectedEoaReferrals);
-          document.getElementById(codeInputId)?.focus();
-        }
-      }
-    })().catch(console.error);
+    (async () => getReferrals())().catch(console.error);
   }, [address]);
+
+  console.log('ReferralsProvider::referrals:', referrals);
+  console.log('ReferralsProvider::allCodes:', allCodes);
 
   async function verifyCode() {
     setIsVerifying(true);
@@ -93,7 +106,13 @@ const ReferralsProvider = ({ children }: IChildren) => {
         return false;
       }
       const foundCode = allCodes.find((c) => c.code === codeInput);
-      if (foundCode?.used) {
+      if (!foundCode) {
+        setMessage(
+          'Invalid referral code. Please check the format and try again.',
+        );
+        return false;
+      }
+      if (foundCode?.used === true) {
         setMessage('Code is already used. Please try again with another code.');
         return false;
       }
@@ -101,10 +120,18 @@ const ReferralsProvider = ({ children }: IChildren) => {
       const newReferralRes = await fetchCustom('new-referral', {
         address,
         codeUsed: codeInput,
-        newCode: generateCode(address),
+        newCode: [
+          // give new user 5 referral codes
+          generateCode(address),
+          generateCode(address),
+          generateCode(address),
+          generateCode(address),
+          generateCode(address),
+        ].join(','),
       });
       if (newReferralRes.status !== 500) {
         setMessage('Code successfully verified! Welcome to Upshift Finance.');
+        (async () => getReferrals())().catch(console.error);
         setTimeout(() => setModalOpen(false), TIMEOUT_DELAY);
         return true;
       }
@@ -113,7 +140,7 @@ const ReferralsProvider = ({ children }: IChildren) => {
       );
       return false;
     } catch (e) {
-      console.error('#verifyReferralCode:', e);
+      console.error('#verifyCode:', e);
       return false;
     } finally {
       setIsVerifying(false);

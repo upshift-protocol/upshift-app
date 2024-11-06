@@ -14,7 +14,7 @@ import DevtoolsSkeleton from '@/ui/skeletons/devtools';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { PoolsProvider } from '@/stores/pools';
 import { ReferralsProvider } from '@/stores/referrals';
-import ReferralsModalMolecule from '@/ui/organisms/modal-referral';
+import NewReferralModalMolecule from '@/ui/organisms/modal-new-referral';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -33,7 +33,7 @@ const MyApp = (props: AppProps) => {
               <PoolsProvider>
                 {/* START: main injection */}
                 <Component {...pageProps} />
-                <ReferralsModalMolecule />
+                <NewReferralModalMolecule />
                 {/* END: main injection */}
               </PoolsProvider>
             </ReferralsProvider>
