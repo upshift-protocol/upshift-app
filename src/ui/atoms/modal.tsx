@@ -28,15 +28,19 @@ export default function ModalAtom({
   closeWhen,
   description,
   onClose,
+  isOpen,
+  disableClose,
 }: {
   title: string;
-  buttonProps: ButtonProps;
+  buttonProps?: ButtonProps;
   children: React.ReactNode;
   closeWhen?: boolean;
   description?: string;
   onClose?: Function;
+  isOpen?: boolean;
+  disableClose?: boolean;
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(isOpen || false);
   const handleOpen = (e?: React.SyntheticEvent) => {
     e?.stopPropagation();
     setOpen(true);
@@ -46,6 +50,12 @@ export default function ModalAtom({
     onClose?.();
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    if (typeof isOpen !== 'undefined') {
+      setOpen(isOpen);
+    }
+  }, [isOpen]);
 
   React.useEffect(() => {
     if (typeof closeWhen !== 'undefined') {
@@ -58,21 +68,23 @@ export default function ModalAtom({
       onClick={(e) => e.stopPropagation()}
       sx={{ width: buttonProps?.fullWidth ? '100%' : 'auto' }}
     >
-      <Button
-        {...buttonProps}
-        sx={{
-          width: buttonProps?.fullWidth ? '100%' : 'auto',
-          whiteSpace: 'nowrap',
-        }}
-        onClick={buttonProps?.onClick ?? handleOpen}
-      >
-        {buttonProps.children}
-      </Button>
+      {buttonProps ? (
+        <Button
+          {...buttonProps}
+          sx={{
+            width: buttonProps?.fullWidth ? '100%' : 'auto',
+            whiteSpace: 'nowrap',
+          }}
+          onClick={buttonProps?.onClick ?? handleOpen}
+        >
+          {buttonProps.children}
+        </Button>
+      ) : null}
       <MuiModal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
-        onClose={handleClose as () => void}
+        onClose={disableClose ? undefined : (handleClose as () => void)}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
         slotProps={{
@@ -96,20 +108,22 @@ export default function ModalAtom({
                     <Typography variant="caption">{description}</Typography>
                   ) : null}
                 </Stack>
-                <Button
-                  variant="text"
-                  onClick={handleClose}
-                  style={{
-                    borderRadius: '50%',
-                    padding: '6px',
-                    width: '32px',
-                    height: '32px',
-                    minWidth: '0',
-                    minHeight: '0',
-                  }}
-                >
-                  <TfiClose />
-                </Button>
+                {disableClose ? null : (
+                  <Button
+                    variant="text"
+                    onClick={handleClose}
+                    style={{
+                      borderRadius: '50%',
+                      padding: '6px',
+                      width: '32px',
+                      height: '32px',
+                      minWidth: '32px',
+                      minHeight: '32px',
+                    }}
+                  >
+                    <TfiClose />
+                  </Button>
+                )}
               </Stack>
               {children}
             </Card>

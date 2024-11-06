@@ -1,6 +1,6 @@
 // @ts-nocheck
 import GSHEET from '@/utils/constants/google-credentials';
-import type { IDepositLogData } from '@/utils/types';
+import type { INewReferralBody } from '@/utils/types';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -21,7 +21,7 @@ const getReferrals = async () => {
     const googleSheetTab = googleSheet.sheetsByIndex[1];
     const rows = await googleSheetTab?.getRows();
     const formattedRows: IReferralRecord[] = [];
-    rows?.forEach((row, i) => {
+    rows?.forEach((row) => {
       const formattedObj: IReferralRecord = {};
       formattedObj.eoa = row.get('eoa');
       formattedObj.referral = row.get('referred_by_eoa');
@@ -37,8 +37,37 @@ const getReferrals = async () => {
   }
 };
 
+const newReferral = async (data: INewReferralBody) => {
+  // sanitize
+  let error: string;
+  if (!data.address) {
+    error = 'eoa is undefined';
+    console.error('#newReferral:', error);
+    return error;
+  }
+  if (!data.codeUsed) {
+    error = 'codeUsed is undefined';
+    console.error('#newReferral:', error);
+    return error;
+  }
+  if (!data.newCode) {
+    error = 'newCode is undefined';
+    console.error('#newReferral:', error);
+    return error;
+  }
+
+  // authenticate
+  const auth = await GSHEET.getClient();
+  const googleSheet = new GoogleSpreadsheet(GSHEET.id || '', auth);
+  await googleSheet.loadInfo();
+  const googleSheetTab = googleSheet.sheetsByIndex[1];
+
+  console.log('#newReferral:', data);
+  return data;
+};
+
 interface ExtendedNextApiRequest extends NextApiRequest {
-  body: IDepositLogData;
+  body: INewReferralBody;
 }
 
 export default async function handler(
@@ -48,11 +77,18 @@ export default async function handler(
   try {
     switch (req.method?.toLowerCase()) {
       case 'post': {
-        const rows = await getReferrals();
-        return res.status(200).json({
-          ok: true,
-          data: rows,
-          error: undefined,
+        const newReferralRes = await newReferral(JSON.parse(req?.body));
+        if (typeof newReferralRes !== 'string') {
+          return res.status(200).json({
+            ok: true,
+            data: newReferralRes,
+            error: undefined,
+          });
+        }
+        return res.status(500).json({
+          ok: false,
+          data: null,
+          error: newReferralRes,
         });
       }
       default: {

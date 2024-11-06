@@ -1,4 +1,4 @@
-import { ALCHEMY_API_KEY, NETWORK } from '@/utils/constants/web3';
+import { NETWORK, RPC_URLS } from '@/utils/constants/web3';
 import { http, createConfig } from 'wagmi';
 import { localhost, avalanche } from 'wagmi/chains';
 import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors';
@@ -13,9 +13,7 @@ export const walletConfig = createConfig({
     coinbaseWallet({ appName: 'Upshift' }),
   ],
   transports: {
-    [avalanche.id]: http(
-      `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
-    ),
+    [avalanche.id]: http(RPC_URLS[43114]),
     [localhost.id]: http(),
   },
 });
