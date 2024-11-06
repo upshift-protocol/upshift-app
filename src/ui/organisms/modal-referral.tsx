@@ -16,6 +16,7 @@ export default function ReferralsModalMolecule() {
     verifyCode,
     isVerifying,
     message,
+    setModalOpen,
   } = useReferralsStore();
   const isSuccess = message?.includes('success');
   return (
@@ -25,6 +26,7 @@ export default function ReferralsModalMolecule() {
       closeWhen={!modalOpen}
       isOpen={modalOpen}
       disableClose={!isSuccess}
+      onClose={() => setModalOpen(false)}
     >
       <Stack gap={0}>
         <TextField

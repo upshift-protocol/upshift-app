@@ -1,4 +1,5 @@
 import type { IChildren } from '@/utils/types';
+import type { Dispatch, SetStateAction } from 'react';
 import React, {
   createContext,
   useContext,
@@ -22,6 +23,7 @@ interface ReferralsContextValue {
   message: string;
   codeInput: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 type ICodeObj = { code: string; used: boolean };
@@ -144,6 +146,7 @@ const ReferralsProvider = ({ children }: IChildren) => {
         referrals,
         modalOpen,
         verifyCode,
+        setModalOpen,
       }}
     >
       {children}
