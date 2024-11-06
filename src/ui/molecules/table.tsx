@@ -91,6 +91,8 @@ export default function TableMolecule({
   const extractData = (value: any) => {
     const extractor = () => {
       if (value?.normalized) return value?.normalized;
+      if (value?.symbol)
+        return `${value?.symbol}_${value?.chain}_${value?.address}`;
       return value;
     };
     const extracted = extractor();

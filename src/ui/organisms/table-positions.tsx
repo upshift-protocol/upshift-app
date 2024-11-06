@@ -7,7 +7,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 
 import { getChainNameById } from '@/utils/helpers/ui';
-import type { IWSTokenEntry } from '@augustdigital/sdk';
+import type { IAddress } from '@augustdigital/sdk';
 import { round } from '@augustdigital/sdk';
 import Image from 'next/image';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
@@ -76,8 +76,15 @@ const columns: readonly IColumn[] = [
     id: 'underlying',
     value: 'Deposit Token',
     flex: 2,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children?.symbol)
+    component: ({
+      children,
+    }: {
+      children?: { props?: { children: string } };
+    }) => {
+      const token = children?.props?.children?.split('_');
+      if (!token?.length) return null;
+      const [symbol, chain, address] = token;
+      if (!symbol)
         return (
           <TableCell>
             <Stack alignItems="center" gap={1} direction="row">
@@ -91,11 +98,11 @@ const columns: readonly IColumn[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${children.symbol}.svg`}
+                img={`/img/tokens/${symbol}.svg`}
                 imgSize={20}
-                symbol={children.symbol}
-                address={children.address}
-                chainId={children?.chain}
+                symbol={symbol}
+                address={address as IAddress}
+                chainId={chain ? Number(chain) : undefined}
               />
             </div>
           </Stack>

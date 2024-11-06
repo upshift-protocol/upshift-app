@@ -100,8 +100,8 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
           variant="contained"
           onClick={requestWithdraw}
           disabled={button.disabled || pool?.loading}
-          chainId={props?.chainId}
-          loading={isLoading}
+          chainid={props?.chainId}
+          loading={+isLoading}
         >
           {button.text}
         </Web3Button>
