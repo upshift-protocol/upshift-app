@@ -29,6 +29,7 @@ import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import { getNativeTokenByChainId } from '@/utils/helpers/ui';
+import { useThemeMode } from '@/stores/theme';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -60,6 +61,7 @@ export default function TableMolecule({
   type = 'custom',
   emptyText,
 }: ITable) {
+  const { isDark } = useThemeMode();
   const { address } = useAccount();
   const router = useRouter();
   const chainId = useChainId();
@@ -167,7 +169,7 @@ export default function TableMolecule({
     <Box>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead sx={{ bgcolor: 'transparent' }}>
+          <TableHead>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
@@ -175,7 +177,7 @@ export default function TableMolecule({
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{
-                    bgcolor: 'transparent',
+                    bgcolor: isDark ? '#2c2f30' : '#f0f2f6',
                     fontSize: '18px',
                     fontWeight: TABLE_HEADER_FONT_WEIGHT,
                   }}
@@ -188,7 +190,7 @@ export default function TableMolecule({
                 </TableCell>
               ))}
               {action || type === 'pools' ? (
-                <TableCell sx={{ bgcolor: 'transparent' }} />
+                <TableCell sx={{ bgcolor: isDark ? '#2c2f30' : '#f0f2f6' }} />
               ) : null}
             </TableRow>
           </TableHead>
