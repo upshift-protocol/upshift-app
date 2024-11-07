@@ -22,3 +22,8 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+::selection {
+  background-color: #00FF7E;
+  color: black;
+}
