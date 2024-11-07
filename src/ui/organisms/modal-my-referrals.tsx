@@ -12,7 +12,7 @@ import {
   MdCheckCircle,
   MdOutlineRemoveCircle,
 } from 'react-icons/md';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import type { ButtonProps } from '@mui/material/Button';
 import ModalAtom from '../atoms/modal';
 import CopyToClipboard from '../atoms/copy-to-clipboard';
@@ -50,6 +50,10 @@ export default function MyReferralsModalMolecule({
     return () => {};
   }, [copiedCode]);
 
+  const sortedReferrals = useMemo(() => {
+    return referrals.sort((sRef) => (sRef.used ? 1 : -1));
+  }, [referrals.length]);
+
   return (
     <ModalAtom
       title="My Referral Codes"
@@ -77,38 +81,36 @@ export default function MyReferralsModalMolecule({
               Available
             </Typography>
           </Stack>
-          {referrals
-            .sort((sRef) => (sRef.used ? 1 : -1))
-            .map((ref, i) => (
-              <Fragment key={`my-referral-${i}`}>
-                {i === 0 ? null : <Divider />}
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Stack direction="row" alignItems="center" gap={1}>
-                    <Typography minWidth="125px">{ref.code}</Typography>
-                    <CopyToClipboard open={ref.code === copiedCode}>
-                      <IconButton
-                        color="primary"
-                        disabled={ref.used}
-                        onClick={(
-                          e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-                        ) => copyToClipboard(e, ref.code)}
-                      >
-                        <MdContentCopy size={16} />
-                      </IconButton>
-                    </CopyToClipboard>
-                  </Stack>
-                  {ref.used ? (
-                    <MdOutlineRemoveCircle color={palette.error.main} />
-                  ) : (
-                    <MdCheckCircle color={palette.primary.main} />
-                  )}
+          {sortedReferrals.map((ref, i) => (
+            <Fragment key={`my-referral-${i}`}>
+              {i === 0 ? null : <Divider />}
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Stack direction="row" alignItems="center" gap={1}>
+                  <Typography minWidth="125px">{ref.code}</Typography>
+                  <CopyToClipboard open={ref.code === copiedCode}>
+                    <IconButton
+                      color="primary"
+                      disabled={ref.used}
+                      onClick={(
+                        e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+                      ) => copyToClipboard(e, ref.code)}
+                    >
+                      <MdContentCopy size={16} />
+                    </IconButton>
+                  </CopyToClipboard>
                 </Stack>
-              </Fragment>
-            ))}
+                {ref.used ? (
+                  <MdOutlineRemoveCircle color={palette.error.main} />
+                ) : (
+                  <MdCheckCircle color={palette.primary.main} />
+                )}
+              </Stack>
+            </Fragment>
+          ))}
         </Stack>
       </Paper>
     </ModalAtom>

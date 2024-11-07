@@ -92,10 +92,22 @@ const ReferralsProvider = ({ children }: IChildren) => {
     }
   }
 
+  function reset() {
+    setModalOpen(false);
+    setReferrals([]);
+    setAllCodes([]);
+  }
+
+  // get referrals when user disconnects wallet
   useEffect(() => {
     if (!(address && REFERRALS_ENABLED)) return;
     (async () => getReferrals())().catch(console.error);
   }, [address]);
+
+  // close modal if modal is open when user disconnects wallet
+  useEffect(() => {
+    if (modalOpen && !address) reset();
+  }, [address, modalOpen]);
 
   async function verifyCode() {
     setIsVerifying(true);
