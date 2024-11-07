@@ -21,11 +21,27 @@ export default async function fetchCustom(
   try {
     switch (type) {
       case 'log-deposits': {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_LAMBDA_URL}/logUpshiftDeposit`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        returnObj.status = res.status;
+        returnObj.data = (
+          (await res.json()) as { ok: Boolean; data: IReferralRecord[] }
+        ).data;
+        returnObj.text = res.statusText;
         return returnObj;
       }
       case 'new-referral': {
         const referrals = await fetch(
-          `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/referrals`,
+          `${process.env.NEXT_PUBLIC_LAMBDA_URL}/referrals`,
           {
             method: 'POST',
             body: JSON.stringify(body),
@@ -40,7 +56,7 @@ export default async function fetchCustom(
       }
       default: {
         const referrals = await fetch(
-          `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/referrals`,
+          `${process.env.NEXT_PUBLIC_LAMBDA_URL}/referrals`,
         );
         returnObj.status = referrals.status;
         returnObj.data = (
