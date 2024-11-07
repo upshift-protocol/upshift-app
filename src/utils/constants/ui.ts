@@ -1,5 +1,5 @@
 export const REFERRALS_ENABLED =
-  process.env.NEXT_PUBLIC_REFERRALS_ENABLED || false;
+  process.env.NEXT_PUBLIC_REFERRALS_ENABLED || true;
 
 export const BUTTON_TEXTS = {
   zero: 'Input an Amount',
