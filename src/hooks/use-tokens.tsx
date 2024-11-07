@@ -1,8 +1,7 @@
-import type { IAddress, IPoolWithUnderlying } from '@augustdigital/sdk';
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { IAddress } from '@augustdigital/sdk';
 import { useQuery } from '@tanstack/react-query';
 import { augustSdk } from '@/config/august-sdk';
-import useFetcher from './use-fetcher';
+import { usePoolsStore } from '@/stores/pools';
 
 // interfaces
 interface IUseToken {
@@ -20,9 +19,9 @@ interface IUseTokenReturnValue {
 
 // main hook
 export default function useTokens(options?: IUseToken) {
-  const { data: allPools } = useFetcher({
-    queryKey: ['lending-pools'],
-  }) as UseQueryResult<IPoolWithUnderlying[]>;
+  const {
+    pools: { data: allPools },
+  } = usePoolsStore();
 
   const getAllPrices = async (): Promise<IUseTokenReturnValue[]> => {
     if (options?.address) {

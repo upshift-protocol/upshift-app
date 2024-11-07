@@ -56,8 +56,8 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           variant="contained"
           onClick={handleWithdraw}
           disabled={button.disabled || pool?.loading}
-          chainId={props?.chainId}
-          loading={isLoading}
+          chainid={props?.chainId}
+          loading={+isLoading}
         >
           {button.text}
         </Web3Button>

@@ -22,7 +22,13 @@ export default function DepositModalMolecule(
       pool: props?.address,
       poolName: props?.name,
       chainId: props?.chainId as IChainId,
-      supplyCheck: props?.symbol === 'upUSD', // @temporary: alex requested we check for max supply
+      supplyCheck:
+        props?.symbol === 'upUSD'
+          ? {
+              totalSupply: props?.totalSupply.raw,
+              maxSupply: props?.maxSupply?.raw || undefined,
+            }
+          : undefined, // @temporary: alex requested we check for max supply
     });
 
   return (
@@ -31,6 +37,7 @@ export default function DepositModalMolecule(
       buttonProps={{
         children: isFull ? BUTTON_TEXTS.full : 'Deposit',
         variant: 'outlined',
+        color: isFull ? 'warning' : undefined,
         disabled: !props?.address || isFull,
       }}
       // TODO: leave modal open for 4 seconds
@@ -70,8 +77,8 @@ export default function DepositModalMolecule(
           size="large"
           variant="contained"
           disabled={button.disabled}
-          chainId={props?.chainId}
-          loading={isLoading}
+          chainid={props?.chainId}
+          loading={+isLoading}
         >
           {button.text}
         </Web3Button>

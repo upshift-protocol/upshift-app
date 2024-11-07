@@ -11,20 +11,31 @@ import { useRouter } from 'next/navigation';
 import type { IColumn } from '@/utils/types';
 import { isAddress, zeroAddress } from 'viem';
 import { truncate } from '@/utils/helpers/string';
-import { Skeleton, Stack, Typography, useMediaQuery } from '@mui/material';
+import {
+  Chip,
+  Skeleton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { explorerLink } from '@augustdigital/sdk';
-import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import type {
+  IChainId,
+  IAddress,
+  INormalizedNumber,
+  IPoolWithUnderlying,
+} from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
+import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
 
-type ITableItem = Record<
-  string,
-  string | number | IAddress | INormalizedNumber
->;
+type ITableItem =
+  | Record<string, string | number | IAddress | INormalizedNumber>
+  | IPoolWithUnderlying;
 
 type ITable = {
   columns: readonly IColumn[];
@@ -69,7 +80,7 @@ export default function TableMolecule({
 
   const handleRowClick = (e: React.SyntheticEvent, index: number) => {
     e.preventDefault();
-    const uid = data?.[index]?.[uidKey];
+    const uid = data?.[index]?.[uidKey as keyof ITableItem];
     const rowChainId = data?.[index]?.chainId;
     if (!uid) {
       console.error('#handleRowClick: uid not found');
@@ -81,6 +92,8 @@ export default function TableMolecule({
   const extractData = (value: any) => {
     const extractor = () => {
       if (value?.normalized) return value?.normalized;
+      if (value?.symbol)
+        return `${value?.symbol}_${value?.chain}_${value?.address}`;
       return value;
     };
     const extracted = extractor();
@@ -97,7 +110,9 @@ export default function TableMolecule({
               const isNative = e === zeroAddress;
               if (isNative)
                 return (
-                  <Typography key={`table-value-arr-${i}`}>ETH</Typography>
+                  <Typography key={`table-value-arr-${i}`}>
+                    {getNativeTokenByChainId(chainId)}
+                  </Typography>
                 );
               return (
                 <LinkAtom
@@ -116,7 +131,8 @@ export default function TableMolecule({
         );
       // else string address
       const isNative = extracted === zeroAddress;
-      if (isNative) return <Typography>ETH</Typography>;
+      if (isNative)
+        return <Typography>{getNativeTokenByChainId(chainId)}</Typography>;
 
       return (
         <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>
@@ -212,18 +228,35 @@ export default function TableMolecule({
                         }
                         if (typeof value === 'string') {
                           // else it is an asset amount
-                          if (typeof value === 'string') {
-                            return (
-                              <Typography>
-                                {value || '-'} {underlying?.symbol}
-                              </Typography>
-                            );
-                          }
-                          return value;
+                          return (
+                            <Typography>
+                              {value || '-'} {underlying?.symbol}
+                            </Typography>
+                          );
                         }
                         return value;
                       }
                       if (typeof value === 'string') {
+                        // if pool name
+                        if (column.id === 'name')
+                          return (
+                            <Stack direction="row" gap={1} alignItems="center">
+                              <Typography>{value || '-'}</Typography>
+                              {/* Check if full and render if full */}
+                              {row?.maxSupply?.raw &&
+                              row?.totalSupply?.raw &&
+                              BigInt(row?.totalSupply?.raw) + BigInt(1) >=
+                                BigInt(row?.maxSupply?.raw) ? (
+                                <Chip
+                                  label="Full"
+                                  color="warning"
+                                  variant="outlined"
+                                  size="small"
+                                />
+                              ) : null}
+                            </Stack>
+                          );
+                        // else
                         return <Typography>{value || '-'}</Typography>;
                       }
                       return value;
