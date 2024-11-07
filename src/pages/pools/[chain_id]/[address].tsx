@@ -21,6 +21,8 @@ import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
 
+import ExposureCharts from '@/ui/organisms/exposure-charts';
+
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
   const paths = await Promise.all(
@@ -108,7 +110,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         }
       >
         <Stack gap={3}>
-          <Stack direction="column" gap={6} mt={2}>
+          <Stack direction="column" gap={4} mt={2}>
             <VaultInfo {...pool} loading={+poolLoading} />
             <Collapse in={walletConnected && Boolean(positions?.length)}>
               <MyPositionsTableOrganism
@@ -117,6 +119,8 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
                 loading={+positionsLoading}
               />
             </Collapse>
+
+            <ExposureCharts pool={pool} />
             <VaultAllocation {...pool} loading={poolLoading} />
           </Stack>
         </Stack>
