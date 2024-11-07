@@ -61,7 +61,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
       ? {
           ...data,
           empty: false,
-          datasets: data.datasets.map((dataset) => ({
+          datasets: data.datasets.map((dataset: any) => ({
             ...dataset,
             borderWidth: 4,
             borderColor: !isDark ? '#f0f2f6' : '#202426',

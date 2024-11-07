@@ -1,7 +1,7 @@
 import { queryClient } from '@/config/react-query';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { TIMES } from '@/utils/constants/time';
-import type { IAddress } from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
 import type { Id } from 'react-toastify';
@@ -10,6 +10,7 @@ import { erc20Abi } from 'viem';
 import { readContract, simulateContract } from 'viem/actions';
 import {
   useAccount,
+  useChainId,
   usePublicClient,
   useReadContract,
   useReadContracts,
@@ -31,6 +32,7 @@ type IUseDepositProps = {
 
 export default function useWithdraw(props: IUseDepositProps) {
   const { switchChainAsync } = useSwitchChain();
+  const chainId = useChainId();
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -131,7 +133,15 @@ export default function useWithdraw(props: IUseDepositProps) {
         args: [BigInt(normalized.raw), address, address],
       });
       const redeemHash = await signer?.writeContract(prepareRedeem.request);
-      ToastPromise('redeem', normalized, redeemToastId, symbol, redeemHash);
+      ToastPromise(
+        'redeem',
+        normalized,
+        redeemToastId,
+        symbol,
+        redeemHash,
+        undefined,
+        chainId as IChainId,
+      );
 
       // Refetch queries
       queryClient.refetchQueries();
@@ -246,6 +256,8 @@ export default function useWithdraw(props: IUseDepositProps) {
         withdrawToastId,
         symbol,
         withdrawHash,
+        undefined,
+        chainId as IChainId,
       );
 
       // Refetch queries
