@@ -24,6 +24,7 @@ import {
 } from 'viem/actions';
 import {
   useAccount,
+  useChainId,
   usePublicClient,
   useReadContract,
   useSwitchChain,
@@ -46,6 +47,7 @@ type IUseDepositProps = {
 
 export default function useDeposit(props: IUseDepositProps) {
   const { switchChainAsync } = useSwitchChain();
+  const chainId = useChainId();
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -148,6 +150,7 @@ export default function useDeposit(props: IUseDepositProps) {
           symbol,
           approveHash,
           1,
+          chainId as IChainId,
         );
         const approveTxHash = await waitForTransactionReceipt(signer, {
           hash: approveHash,
@@ -158,6 +161,8 @@ export default function useDeposit(props: IUseDepositProps) {
           approvalToastId,
           symbol,
           approveTxHash.transactionHash,
+          undefined,
+          chainId as IChainId,
         );
 
         // set button to deposit if not already
@@ -180,7 +185,15 @@ export default function useDeposit(props: IUseDepositProps) {
         args: [BigInt(normalized.raw), address],
       });
       const depositHash = await signer.writeContract(prepareDeposit.request);
-      ToastPromise('deposit', normalized, depositToastId, symbol, depositHash);
+      ToastPromise(
+        'deposit',
+        normalized,
+        depositToastId,
+        symbol,
+        depositHash,
+        undefined,
+        chainId as IChainId,
+      );
 
       // Refetch queries
       queryClient.refetchQueries();
