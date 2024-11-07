@@ -19,7 +19,7 @@ type IButtonState =
   | 'default';
 
 export default function Web3Button(props: IWeb3Button) {
-  const { address } = useAccount();
+  const { address, chainId: accountChainId } = useAccount();
   const underlyingChainId = useChainId();
   const chains = useChains();
   const { switchChain } = useSwitchChain();
@@ -33,7 +33,10 @@ export default function Web3Button(props: IWeb3Button) {
     if (!address) setButtonState('connect');
     else if (!chains.map((c) => c.id).includes(chainId))
       setButtonState('switch-network');
-    else if (props?.chainid !== underlyingChainId)
+    else if (
+      props?.chainid !== underlyingChainId ||
+      props?.chainid !== accountChainId
+    )
       setButtonState('incorrect-network');
     else setButtonState('default');
   }, [address, chains?.length, chainId, underlyingChainId, props?.chainid]);
