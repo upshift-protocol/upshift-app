@@ -58,10 +58,9 @@ export default async function fetchCustom(
         const referrals = await fetch(
           `${process.env.NEXT_PUBLIC_LAMBDA_URL}/referrals`,
         );
+        const responseBody = await referrals.json();
         returnObj.status = referrals.status;
-        returnObj.data = (
-          (await referrals.json()) as { ok: Boolean; data: IReferralRecord[] }
-        ).data;
+        returnObj.data = responseBody;
         returnObj.text = referrals.statusText;
         return returnObj;
       }
