@@ -71,12 +71,12 @@ const HomePage = () => {
               loading={+positionsLoading}
             />
           </Collapse>
-          {/* <PoolsTableOrganism
+          <PoolsTableOrganism
             title="Upshift Pools"
             data={filteredPools.upshift}
             loading={+allPoolsLoading}
             pagination={false}
-          /> */}
+          />
           <PoolsTableOrganism
             title="Partner Pools"
             data={filteredPools.partners}
