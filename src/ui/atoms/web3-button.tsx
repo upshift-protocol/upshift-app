@@ -39,7 +39,14 @@ export default function Web3Button(props: IWeb3Button) {
     )
       setButtonState('incorrect-network');
     else setButtonState('default');
-  }, [address, chains?.length, chainId, underlyingChainId, props?.chainid]);
+  }, [
+    address,
+    chains?.length,
+    chainId,
+    underlyingChainId,
+    props?.chainid,
+    accountChainId,
+  ]);
 
   switch (buttonState) {
     case 'loading': {

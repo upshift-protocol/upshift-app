@@ -1,4 +1,4 @@
-import type { IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
 import type { Id } from 'react-toastify';
 import { toast } from 'react-toastify';
 import type { ReactNode } from 'react';
@@ -37,6 +37,7 @@ export default function ToastPromise(
   symbol?: string,
   hash?: IAddress,
   step?: 0 | 1 | 2,
+  chainId?: IChainId,
 ) {
   const stepWithFallback = step || 0;
   const determineWord = (): string => {
@@ -71,6 +72,7 @@ export default function ToastPromise(
             <Toast
               msg={`Confirmed ${determineWord()} ${normalized.normalized} ${symbol}:`}
               hash={hash}
+              chain={chainId}
             />,
           ),
           autoClose: false,
@@ -83,6 +85,7 @@ export default function ToastPromise(
             <Toast
               msg={`Submitted ${determineWord()} ${normalized.normalized} ${symbol}:`}
               hash={hash}
+              chain={chainId}
             />,
           ),
           autoClose: false,
@@ -95,6 +98,7 @@ export default function ToastPromise(
             <Toast
               msg={`Successfully ${determineWord()} ${normalized.normalized} ${symbol}:`}
               hash={hash}
+              chain={chainId}
             />,
           ),
           type: 'success',
@@ -106,6 +110,7 @@ export default function ToastPromise(
         <Toast
           msg={`Error ${determineWord()} ${normalized.normalized} ${symbol}:`}
           hash={hash}
+          chain={chainId}
         />,
       ),
       type: 'error',
