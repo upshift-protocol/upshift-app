@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import type { IColumn } from '@/utils/types';
-import type { IWSTokenEntry, IPoolWithUnderlying } from '@augustdigital/sdk';
-import type { UseQueryResult } from '@tanstack/react-query';
-import useFetcher from '@/hooks/use-fetcher';
+import type { IPoolWithUnderlying, IAddress } from '@augustdigital/sdk';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
@@ -61,8 +59,15 @@ const columns: readonly IColumn[] = [
     id: 'underlying',
     value: 'Deposit Token',
     flex: 2,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children?.symbol)
+    component: ({
+      children,
+    }: {
+      children?: { props?: { children: string } };
+    }) => {
+      const token = children?.props?.children?.split('_');
+      if (!token?.length) return null;
+      const [symbol, chain, address] = token;
+      if (!symbol)
         return (
           <TableCell>
             <Stack alignItems="center" gap={1} direction="row">
@@ -76,11 +81,11 @@ const columns: readonly IColumn[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${children.symbol}.svg`}
+                img={`/img/tokens/${symbol}.svg`}
                 imgSize={20}
-                symbol={children.symbol}
-                address={children.address}
-                chainId={children?.chain}
+                symbol={symbol}
+                address={address as IAddress}
+                chainId={chain ? Number(chain) : undefined}
               />
             </div>
           </Stack>
@@ -164,15 +169,10 @@ export default function PoolsTableOrganism({
   pagination,
 }: {
   title?: string;
-  data?: any;
+  data: IPoolWithUnderlying[];
   loading?: number;
   pagination?: boolean;
 }) {
-  const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
-    queryKey: ['lending-pools'],
-    enabled: typeof data === 'undefined' && !loading,
-  }) as UseQueryResult<IPoolWithUnderlying[]>;
-
   return (
     <Box>
       {title ? (
@@ -182,9 +182,9 @@ export default function PoolsTableOrganism({
       ) : null}
       <TableMolecule
         columns={columns}
-        data={data ?? allPools}
+        data={data}
         uidKey="address"
-        loading={loading ?? +allPoolsLoading}
+        loading={loading}
         action={(rowData) => PoolActionsMolecule({ pool: rowData })}
         pagination={pagination}
       />

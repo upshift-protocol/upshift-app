@@ -74,3 +74,9 @@ export type IDepositLogData = {
   eoa: IAddress;
   tx_id: string;
 };
+
+export type INewReferralBody = {
+  address: string;
+  codeUsed: string;
+  newCode: string;
+};

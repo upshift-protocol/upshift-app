@@ -116,6 +116,18 @@ export const lightTheme = createTheme({
           backdropFilter: 'blur(4px)',
           background: 'rgba(255, 255, 255, 0.2)',
         },
+        textInfo: {
+          color: 'rgba(0,0,0,0.7)',
+          borderBottom: '2px solid',
+          borderColor: '#00c260',
+          borderRadius: '0',
+          padding: '0rem 0.2rem',
+          marginBottom: '0.25rem',
+          ':hover': {
+            backgroundColor: 'transparent',
+            color: '#00c260',
+          },
+        },
       },
     },
   },
@@ -151,6 +163,18 @@ export const darkTheme = createTheme({
         outlined: {
           backdropFilter: 'blur(4px)',
           background: 'rgba(0, 0, 0, 0.2)',
+        },
+        textInfo: {
+          color: 'white',
+          borderBottom: '2px solid',
+          borderColor: '#00FF7E',
+          borderRadius: '0',
+          padding: '0rem 0.2rem',
+          marginBottom: '0.25rem',
+          ':hover': {
+            backgroundColor: 'transparent',
+            color: '#00FF7E',
+          },
         },
       },
     },

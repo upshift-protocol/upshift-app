@@ -19,18 +19,23 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { explorerLink } from '@augustdigital/sdk';
-import type { IChainId, IAddress, INormalizedNumber } from '@augustdigital/sdk';
+import type {
+  IChainId,
+  IAddress,
+  INormalizedNumber,
+  IPoolWithUnderlying,
+} from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
+import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
 
-type ITableItem = Record<
-  string,
-  string | number | IAddress | INormalizedNumber
->;
+type ITableItem =
+  | Record<string, string | number | IAddress | INormalizedNumber>
+  | IPoolWithUnderlying;
 
 type ITable = {
   columns: readonly IColumn[];
@@ -75,7 +80,7 @@ export default function TableMolecule({
 
   const handleRowClick = (e: React.SyntheticEvent, index: number) => {
     e.preventDefault();
-    const uid = data?.[index]?.[uidKey];
+    const uid = data?.[index]?.[uidKey as keyof ITableItem];
     const rowChainId = data?.[index]?.chainId;
     if (!uid) {
       console.error('#handleRowClick: uid not found');
@@ -87,6 +92,8 @@ export default function TableMolecule({
   const extractData = (value: any) => {
     const extractor = () => {
       if (value?.normalized) return value?.normalized;
+      if (value?.symbol)
+        return `${value?.symbol}_${value?.chain}_${value?.address}`;
       return value;
     };
     const extracted = extractor();
@@ -103,7 +110,9 @@ export default function TableMolecule({
               const isNative = e === zeroAddress;
               if (isNative)
                 return (
-                  <Typography key={`table-value-arr-${i}`}>ETH</Typography>
+                  <Typography key={`table-value-arr-${i}`}>
+                    {getNativeTokenByChainId(chainId)}
+                  </Typography>
                 );
               return (
                 <LinkAtom
@@ -122,7 +131,8 @@ export default function TableMolecule({
         );
       // else string address
       const isNative = extracted === zeroAddress;
-      if (isNative) return <Typography>ETH</Typography>;
+      if (isNative)
+        return <Typography>{getNativeTokenByChainId(chainId)}</Typography>;
 
       return (
         <LinkAtom href={explorerLink(extracted, FALLBACK_CHAINID, 'address')}>

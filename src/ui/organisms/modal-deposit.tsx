@@ -77,8 +77,8 @@ export default function DepositModalMolecule(
           size="large"
           variant="contained"
           disabled={button.disabled}
-          chainId={props?.chainId}
-          loading={isLoading}
+          chainid={props?.chainId}
+          loading={+isLoading}
         >
           {button.text}
         </Web3Button>
