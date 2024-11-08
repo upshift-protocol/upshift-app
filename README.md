@@ -62,9 +62,9 @@ Open http://localhost:3000 in your browser to start working on the UpShift app.
 
 Or run
 ```bash
-pnpm dev:bypass
+pnpm dev:referrals
 ```
-to bypass the Upshift Referral Program.
+to enable the Upshift Referral Program in your development server.
 
 *Note: Next JS requires some additional time to compile the project for your first time.*
 
