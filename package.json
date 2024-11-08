@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "NEXT_PUBLIC_DEV=1 next dev",
     "dev:local": "NEXT_PUBLIC_NETWORK=localhost pnpm dev",
+    "dev:bypass": "NEXT_PUBLIC_REFERRALS_ENABLED=0 pnpm dev",
     "build": "next build",
     "start": "next start",
     "build-prod": "run-s clean build",
@@ -18,7 +19,7 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.4.2",
+    "@augustdigital/sdk": "1.4.3",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^6.1.6",
