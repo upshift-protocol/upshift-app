@@ -5,6 +5,7 @@ import PoolsTableOrganism from '@/ui/organisms/table-pools';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
+import { REFERRALS_ENABLED } from '@/utils/constants/ui';
 import { Collapse, Stack } from '@mui/material';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
@@ -58,7 +59,7 @@ const HomePage = () => {
     <Base>
       <Section
         id="earn-table"
-        description="Upshift opens access to transparent yields backed by secure risk controls. Supply, stake and access cross-chain yields. For access to other pools please reach out."
+        description="Upshift opens access to transparent yields backed by secure risk controls. Supply, stake and access cross-chain yields. For access to other pools, please reach out."
         action={
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
@@ -71,12 +72,14 @@ const HomePage = () => {
               loading={+positionsLoading}
             />
           </Collapse>
-          <PoolsTableOrganism
-            title="Upshift Pools"
-            data={filteredPools.upshift}
-            loading={+allPoolsLoading}
-            pagination={false}
-          />
+          {!REFERRALS_ENABLED ? (
+            <PoolsTableOrganism
+              title="Upshift Pools"
+              data={filteredPools.upshift}
+              loading={+allPoolsLoading}
+              pagination={false}
+            />
+          ) : null}
           <PoolsTableOrganism
             title="Partner Pools"
             data={filteredPools.partners}

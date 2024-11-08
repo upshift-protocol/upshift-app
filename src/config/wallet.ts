@@ -1,3 +1,4 @@
+import { REFERRALS_ENABLED } from '@/utils/constants/ui';
 import { NETWORK, RPC_URLS } from '@/utils/constants/web3';
 import { http, createConfig } from 'wagmi';
 import { localhost, avalanche, mainnet } from 'wagmi/chains';
@@ -9,7 +10,9 @@ export const walletConfig = createConfig({
   chains:
     NETWORK === 'localhost'
       ? [mainnet, avalanche, localhost]
-      : [mainnet, avalanche],
+      : REFERRALS_ENABLED
+        ? [avalanche]
+        : [mainnet, avalanche],
   connectors: [
     injected(),
     walletConnect({ projectId: wcProjectId }),

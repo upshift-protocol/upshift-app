@@ -80,3 +80,10 @@ export type INewReferralBody = {
   codeUsed: string;
   newCode: string;
 };
+
+export interface IReferralRecord {
+  eoa: string;
+  referral: string;
+  codeUsed: string;
+  codes: string[];
+}

@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import { TfiClose } from 'react-icons/tfi';
+import Close from '@mui/icons-material/Close';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -123,7 +123,7 @@ export default function ModalAtom({
                       minHeight: '32px',
                     }}
                   >
-                    <TfiClose />
+                    <Close />
                   </Button>
                 )}
               </Stack>

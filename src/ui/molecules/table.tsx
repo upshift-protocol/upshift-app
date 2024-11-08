@@ -167,7 +167,7 @@ export default function TableMolecule({
     <Box>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead sx={{ bgcolor: 'transparent' }}>
+          <TableHead>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
