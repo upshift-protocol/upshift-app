@@ -7,11 +7,9 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import {
-  MdContentCopy,
-  MdCheckCircle,
-  MdOutlineRemoveCircle,
-} from 'react-icons/md';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import type { ButtonProps } from '@mui/material/Button';
 import ModalAtom from '../atoms/modal';
@@ -88,25 +86,30 @@ export default function MyReferralsModalMolecule({
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
+                py={1}
               >
                 <Stack direction="row" alignItems="center" gap={1}>
                   <Typography minWidth="125px">{ref.code}</Typography>
                   <CopyToClipboard open={ref.code === copiedCode}>
                     <IconButton
                       color="primary"
+                      sx={{ fontSize: '18px' }}
                       disabled={ref.used}
                       onClick={(
                         e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
                       ) => copyToClipboard(e, ref.code)}
                     >
-                      <MdContentCopy size={16} />
+                      <ContentCopyIcon fontSize="inherit" />
                     </IconButton>
                   </CopyToClipboard>
                 </Stack>
                 {ref.used ? (
-                  <MdOutlineRemoveCircle color={palette.error.main} />
+                  <CancelIcon htmlColor={palette.error.main} fontSize="small" />
                 ) : (
-                  <MdCheckCircle color={palette.primary.main} />
+                  <CheckCircleIcon
+                    htmlColor={palette.primary.main}
+                    fontSize="small"
+                  />
                 )}
               </Stack>
             </Fragment>
