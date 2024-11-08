@@ -9,13 +9,13 @@
     "dev:local": "NEXT_PUBLIC_NETWORK=localhost pnpm dev",
     "build": "next build",
     "start": "next start",
-    "build-stats": "cross-env ANALYZE=true npm run build",
     "build-prod": "run-s clean build",
     "clean": "rimraf .next .swc out",
     "lint": "next lint",
     "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
     "check-types": "tsc --noEmit --pretty",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@augustdigital/sdk": "1.4.2",
