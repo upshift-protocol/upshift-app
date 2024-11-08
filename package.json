@@ -19,7 +19,7 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.4.3",
+    "@augustdigital/sdk": "1.4.4",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^6.1.6",

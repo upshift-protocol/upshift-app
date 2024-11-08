@@ -255,6 +255,7 @@ export default function MyPositionsTableOrganism({
         }
         pagination={false}
         emptyText="No positions available"
+        cardBg={isDark ? '#2b2f32' : '#f0f2f6'}
       />
     </Paper>
   );
