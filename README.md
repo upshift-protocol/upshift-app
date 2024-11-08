@@ -50,7 +50,7 @@ pnpm install
 
 ### Development
 
-Run the local developer server with:
+Run the local development server with:
 
 ```bash
 pnpm dev
@@ -59,6 +59,12 @@ pnpm dev
 *which injects the environment variable `NEXT_PUBLIC_DEV=1` in order to display logs and render the devtools.*
 
 Open http://localhost:3000 in your browser to start working on the UpShift app. 
+
+Or run
+```bash
+pnpm dev:bypass
+```
+to bypass the Upshift Referral Program.
 
 *Note: Next JS requires some additional time to compile the project for your first time.*
 

@@ -46,7 +46,9 @@ const MyApp = (props: AppProps) => {
         </WagmiProvider>
       </ThemeProvider>
 
-      <GoogleTagManager gtmId="G-H1WDGRZH57" />
+      <GoogleTagManager
+        gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER || 'G-H1WDGRZH57'}
+      />
     </>
   );
 };
