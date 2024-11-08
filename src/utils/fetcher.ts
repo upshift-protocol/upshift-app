@@ -1,4 +1,4 @@
-import type { IReferralRecord } from '@/pages/api/referrals';
+import type { IReferralRecord } from '@/utils/types';
 
 type IFetchType = 'get-referrals' | 'log-deposits' | 'new-referral';
 

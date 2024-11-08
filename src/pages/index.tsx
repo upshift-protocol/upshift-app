@@ -58,7 +58,7 @@ const HomePage = () => {
     <Base>
       <Section
         id="earn-table"
-        description="Upshift opens access to transparent yields backed by secure risk controls. Supply, stake and access cross-chain yields. For access to other pools please reach out."
+        description="Upshift opens access to transparent yields backed by secure risk controls. Supply, stake and access cross-chain yields. For access to other pools, please reach out."
         action={
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
