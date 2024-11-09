@@ -47,6 +47,7 @@ type ITable = {
   pagination?: boolean;
   hover?: boolean;
   emptyText?: string;
+  cardBg?: string;
 };
 
 export default function TableMolecule({
@@ -59,6 +60,7 @@ export default function TableMolecule({
   hover = true,
   type = 'custom',
   emptyText,
+  cardBg,
 }: ITable) {
   const { address } = useAccount();
   const router = useRouter();
@@ -175,7 +177,7 @@ export default function TableMolecule({
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                   sx={{
-                    bgcolor: 'transparent',
+                    bgcolor: cardBg || 'transparent',
                     fontSize: '18px',
                     fontWeight: TABLE_HEADER_FONT_WEIGHT,
                   }}
@@ -188,7 +190,7 @@ export default function TableMolecule({
                 </TableCell>
               ))}
               {action || type === 'pools' ? (
-                <TableCell sx={{ bgcolor: 'transparent' }} />
+                <TableCell sx={{ bgcolor: cardBg || 'transparent' }} />
               ) : null}
             </TableRow>
           </TableHead>
