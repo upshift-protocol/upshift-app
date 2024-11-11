@@ -16,7 +16,9 @@
     "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
     "check-types": "tsc --noEmit --pretty",
     "prepare": "husky install",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "link:sdk": "pnpm link ../js-sdk/packages/sdk",
+    "unlink:sdk": "pnpm unlink @augustdigital/sdk"
   },
   "dependencies": {
     "@augustdigital/sdk": "1.4.5",
