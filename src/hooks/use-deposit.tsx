@@ -196,7 +196,7 @@ export default function useDeposit(props: IUseDepositProps) {
       );
 
       // Refetch queries
-      queryClient.refetchQueries();
+      queryClient.invalidateQueries();
 
       // Success states
       setIsSuccess(true);

@@ -144,7 +144,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       );
 
       // Refetch queries
-      queryClient.refetchQueries();
+      queryClient.invalidateQueries();
 
       // Success states
       setIsSuccess(true);
@@ -262,7 +262,7 @@ export default function useWithdraw(props: IUseDepositProps) {
       );
 
       // Refetch queries
-      queryClient.refetchQueries();
+      queryClient.invalidateQueries();
 
       // Success states
       setIsSuccess(true);
