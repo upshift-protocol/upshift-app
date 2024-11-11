@@ -55,7 +55,7 @@ const renderTokenExposure = (
         <LinkAtom
           href={explorerLink(
             exp.value,
-            (row?.chainId, FALLBACK_CHAINID),
+            row?.chainId || FALLBACK_CHAINID,
             'address',
           )}
         >
@@ -213,7 +213,7 @@ const columns: GridColDef<any[number]>[] = [
     type: 'number',
     editable: false,
     description: 'The borrowing interest rate paid back to the pool.',
-    renderCell({ value }: any) {
+    renderCell({ value }) {
       if (!value) return '-';
       return `${value}%`;
     },
@@ -254,6 +254,7 @@ export default function VaultAllocation(
       underlying: props?.underlying?.symbol,
       positions: l?.positions,
       exposure: l?.exposure,
+      chainId: props?.chainId,
     }));
     return loansWithData;
   };
