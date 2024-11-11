@@ -5,7 +5,6 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { useAccount } from 'wagmi';
 import { augustSdk } from '@/config/august-sdk';
-import { isAddress } from 'ethers';
 
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
@@ -23,14 +22,7 @@ const PoolsProvider = ({ children }: IChildren) => {
 
   const positions = useQuery({
     queryKey: ['my-positions', address],
-    enabled:
-      !!address && isAddress(address) && pools?.data && pools?.data?.length > 0,
-    queryFn: () =>
-      augustSdk.pools.getAllPositions(
-        address as IAddress,
-        undefined,
-        pools?.data,
-      ),
+    queryFn: () => augustSdk.pools.getAllPositions(address as IAddress),
     initialData: [],
   });
 

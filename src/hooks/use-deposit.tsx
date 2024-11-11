@@ -367,8 +367,10 @@ export default function useDeposit(props: IUseDepositProps) {
         } else {
           maxSupply = BigInt(props?.supplyCheck?.maxSupply);
         }
-        console.log('#supplyCheck::totalSupply:', totalSupply);
-        console.log('#supplyCheck::maxSupply:', maxSupply);
+        console.log(
+          `#supplyCheck::${props?.poolName}:`,
+          `${totalSupply} >= ${maxSupply}`,
+        );
         if (BigInt(totalSupply) + BigInt(1) >= BigInt(maxSupply)) {
           setIsFull(true);
           setButton({
