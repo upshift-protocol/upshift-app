@@ -172,7 +172,6 @@ export default function useWithdraw(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(redeemToastId);
     }
   }
 
@@ -290,7 +289,6 @@ export default function useWithdraw(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(withdrawToastId);
     }
   }
 
