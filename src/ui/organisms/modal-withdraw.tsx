@@ -19,6 +19,7 @@ export default function WithdrawModalMolecule(props?: IPoolWithUnderlying) {
       ...inInputProps,
       asset: props?.asset,
       pool: props?.address,
+      poolName: props?.name,
       chainId: props?.chainId as IChainId,
     });
 

@@ -167,12 +167,21 @@ export default function useWithdraw(props: IUseWithdrawProps) {
       }
     } catch (e) {
       console.error('#requestWithdraw', e);
+      toast.dismiss(redeemToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Request Redeem',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -180,14 +189,6 @@ export default function useWithdraw(props: IUseWithdrawProps) {
       } else {
         setError('Error occured while executing transaction');
       }
-      SLACK.interactionError(
-        JSON.stringify(e),
-        props?.pool,
-        String(props?.poolName),
-        props?.chainId || chainId,
-        address,
-        'Request Redeem',
-      );
     } finally {
       setIsLoading(false);
     }
@@ -292,12 +293,21 @@ export default function useWithdraw(props: IUseWithdrawProps) {
       queryClient.invalidateQueries();
     } catch (e) {
       console.error('#handleWithdraw:', e);
+      toast.dismiss(withdrawToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Withdraw',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -305,14 +315,6 @@ export default function useWithdraw(props: IUseWithdrawProps) {
       } else {
         setError('Error occured while executing transaction');
       }
-      SLACK.interactionError(
-        JSON.stringify(e),
-        props?.pool,
-        String(props?.poolName),
-        props?.chainId || chainId,
-        address,
-        'Withdraw',
-      );
     } finally {
       setIsLoading(false);
     }

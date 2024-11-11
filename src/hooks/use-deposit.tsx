@@ -233,12 +233,21 @@ export default function useDeposit(props: IUseDepositProps) {
       console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
     } catch (e) {
       console.error('#handleDeposit:', e);
+      toast.dismiss(depositToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Deposit',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -246,14 +255,6 @@ export default function useDeposit(props: IUseDepositProps) {
       } else {
         setError('Error occured while executing transaction');
       }
-      SLACK.interactionError(
-        JSON.stringify(e),
-        props?.pool,
-        String(props?.poolName),
-        props?.chainId || chainId,
-        address,
-        'Deposit',
-      );
     } finally {
       setIsLoading(false);
     }

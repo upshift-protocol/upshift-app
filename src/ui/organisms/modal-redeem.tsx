@@ -18,6 +18,7 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
   } = useWithdraw({
     asset: props?.asset,
     pool: props?.address,
+    poolName: props?.name,
     value: (props as any)?.redeemable?.normalized, // TODO: add type interface
     redemptions: (props as any)?.availableRedemptions,
     chainId: props?.chainId as IChainId,

@@ -80,7 +80,7 @@ export function interactionError(
   (async () => {
     const webhookUrl = `https://hooks.slack.com/services/${envVar}`;
     const data = {
-      text: `*${type} Error*\n${new Date().toUTCString()}\n\nPool: [${poolName}](${explorerLink(poolAddress as IAddress, chainId as IChainId, 'address')})\nEOA: ${address}\nChain: ${getChainNameById(chainId)}\n\nError: ${error}`,
+      text: `*${type} Error*\n${new Date().toUTCString()}\n\nPool: [${poolName}](${explorerLink(poolAddress as IAddress, chainId as IChainId, 'address')})\nEOA: ${address}\nChain: ${getChainNameById(chainId)}\n\n\nError: ${error}`,
     };
 
     const res = await fetch(webhookUrl, {
