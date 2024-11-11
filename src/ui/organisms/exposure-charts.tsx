@@ -1,6 +1,6 @@
 import { useThemeMode } from '@/stores/theme';
 import { Grid, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   getProtocolExposureData,
   getTokenExposureData,
@@ -14,27 +14,23 @@ const ExposureCharts = ({
   pool: IPoolWithUnderlying | undefined;
 }) => {
   const { isDark } = useThemeMode();
-  const [protocolData, setProtocolData] = useState<any>(null);
-  const [tokenData, setTokenData] = useState<any>(null);
   const [isChartsDataLoading, setIsChartsDataLoading] = useState(true);
 
-  useEffect(() => {
-    if (pool) {
+  const chartData = useMemo(() => {
+    const returnObj: any = { protocolExposure: null, tokenExposure: null };
+    if (pool?.address) {
+      setIsChartsDataLoading(true);
       try {
-        setIsChartsDataLoading(true);
-
-        const protocolExposureData = getProtocolExposureData(pool);
-        const tokenExposureData = getTokenExposureData(pool);
-
-        setProtocolData(protocolExposureData);
-        setTokenData(tokenExposureData);
+        returnObj.protocolExposure = getProtocolExposureData(pool);
+        returnObj.tokenExposure = getTokenExposureData(pool);
       } catch (error) {
-        console.log(error);
+        console.error('chartData:', error);
       } finally {
         setIsChartsDataLoading(false);
       }
     }
-  }, [pool]);
+    return returnObj;
+  }, [pool?.address]);
 
   return (
     <Grid
@@ -85,7 +81,10 @@ const ExposureCharts = ({
           Protocol Exposure
         </Typography>
 
-        <DonutChart data={protocolData} isLoading={isChartsDataLoading} />
+        <DonutChart
+          data={chartData.protocolExposure}
+          isLoading={isChartsDataLoading}
+        />
       </Grid>
 
       <Grid
@@ -116,7 +115,10 @@ const ExposureCharts = ({
           sm: 0,
         }}
       >
-        <DonutChart data={tokenData} isLoading={isChartsDataLoading} />
+        <DonutChart
+          data={chartData.tokenExposure}
+          isLoading={isChartsDataLoading}
+        />
 
         <Typography
           variant="h6"

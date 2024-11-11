@@ -4,15 +4,21 @@ import type { ChartData } from 'chart.js';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useThemeMode } from '@/stores/theme';
 import { Skeleton } from '@mui/material';
+import { formatUsd } from '@/utils/helpers/ui';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DonutChartProps {
   data?: ChartData<'doughnut'>;
   isLoading?: boolean;
+  type?: 'percent' | 'usd';
 }
 
-const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
+const DonutChart: React.FC<DonutChartProps> = ({
+  data,
+  isLoading,
+  type = 'percent',
+}) => {
   const { isDark } = useThemeMode();
 
   const options = {
@@ -35,7 +41,12 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
           label(context: any) {
             const label = context.label || '';
             const value = context.raw || 0;
-            return `${label}: ${value.toFixed(2)}%`;
+            switch (type) {
+              case 'usd':
+                return `${label}: ${formatUsd(value)}`;
+              default:
+                return `${label}: ${value.toFixed(2)}%`;
+            }
           },
         },
       },
