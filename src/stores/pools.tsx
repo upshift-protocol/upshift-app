@@ -1,22 +1,43 @@
 import type { IChildren } from '@/utils/types';
 import React, { createContext, useContext } from 'react';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
-import type { UseQueryResult } from '@tanstack/react-query';
+import type { IAddress, IPoolWithUnderlying } from '@augustdigital/sdk';
+import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
+import { useAccount } from 'wagmi';
+import { augustSdk } from '@/config/august-sdk';
+import { isAddress } from 'ethers';
 
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
+  positions: UseQueryResult<(IPoolWithUnderlying & any)[], Error>;
 }
 
 const PoolsContext = createContext<PoolsContextValue | undefined>(undefined);
 
 const PoolsProvider = ({ children }: IChildren) => {
+  const { address } = useAccount();
+
   const pools = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[], Error>;
 
+  const positions = useQuery({
+    queryKey: ['my-positions', address],
+    enabled:
+      !!address && isAddress(address) && pools?.data && pools?.data?.length > 0,
+    queryFn: () =>
+      augustSdk.pools.getAllPositions(
+        address as IAddress,
+        undefined,
+        pools?.data,
+      ),
+    initialData: [],
+  });
+
   return (
-    <PoolsContext.Provider value={{ pools }}>{children}</PoolsContext.Provider>
+    <PoolsContext.Provider value={{ pools, positions }}>
+      {children}
+    </PoolsContext.Provider>
   );
 };
 
