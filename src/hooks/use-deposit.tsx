@@ -248,8 +248,6 @@ export default function useDeposit(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(approvalToastId);
-      toast.dismiss(depositToastId);
     }
   }
 
