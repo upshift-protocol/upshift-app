@@ -1,4 +1,3 @@
-import useFetcher from '@/hooks/use-fetcher';
 import { usePoolsStore } from '@/stores/pools';
 import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
 import PoolsTableOrganism from '@/ui/organisms/table-pools';
@@ -7,7 +6,6 @@ import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import { REFERRALS_ENABLED } from '@/utils/constants/ui';
 import { Collapse, Stack } from '@mui/material';
-import type { UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -17,13 +15,8 @@ const HomePage = () => {
 
   const {
     pools: { data: allPools, isLoading: allPoolsLoading },
+    positions: { data: positions, isLoading: positionsLoading },
   } = usePoolsStore();
-
-  const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions'],
-    wallet: address,
-    enabled: walletConnected,
-  }) as UseQueryResult<any>;
 
   const filteredPools = useMemo(() => {
     const partnerPools = [
@@ -32,7 +25,7 @@ const HomePage = () => {
       'upshift avalanche ausd',
     ];
     if (!allPools?.length) {
-      return { partners: [], upshift: [] };
+      return { partners: [], upshift: [], myPositions: [] };
     }
     return {
       partners: allPools
@@ -47,8 +40,11 @@ const HomePage = () => {
           if (b.symbol === 'upUSD') return -1;
           return BigInt(a.totalSupply.raw) > BigInt(b.totalSupply.raw) ? 1 : -1;
         }),
+      myPositions: positions?.sort((_a, b) =>
+        b?.status === 'REDEEM' ? 1 : -1,
+      ),
     };
-  }, [allPools?.length]);
+  }, [allPools?.length, positions?.length]);
 
   useEffect(() => {
     if (address) setWalletConnected(true);
@@ -68,7 +64,7 @@ const HomePage = () => {
           <Collapse in={walletConnected && Boolean(positions?.length)}>
             <MyPositionsTableOrganism
               title="My Positions"
-              data={positions}
+              data={filteredPools.myPositions}
               loading={+positionsLoading}
             />
           </Collapse>

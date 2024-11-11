@@ -1,18 +1,14 @@
 import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import type {
-  IAddress,
-  IChainId,
-  IPoolWithUnderlying,
-} from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/table-loans';
 import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
-import type { UseQueryResult } from '@tanstack/react-query';
+import { type UseQueryResult } from '@tanstack/react-query';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -22,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
 
 import ExposureCharts from '@/ui/organisms/exposure-charts';
+import { usePoolsStore } from '@/stores/pools';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -55,22 +52,21 @@ export const getStaticProps = (async (context) => {
 const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
+  const [position, setPosition] = useState<any>([]);
+
+  const {
+    positions: { data: positions, isLoading: positionsLoading },
+  } = usePoolsStore();
 
   const { data: pool, isLoading: poolLoading } = useFetcher({
     queryKey: ['lending-pool', params.pool, String(params.chain_id)],
   }) as UseQueryResult<any>; // TODO: interface
 
-  const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions', params.pool],
-    wallet: address,
-    enabled: walletConnected && !!pool?.address,
-    initialData: [],
-    formatter(data) {
-      return data?.filter(
-        (p: IPoolWithUnderlying) => p.address === pool?.address,
-      );
-    },
-  }) as UseQueryResult<any>; // TODO: interface
+  useEffect(() => {
+    if (positions?.length) {
+      setPosition(positions.filter((p) => p.address === params.pool));
+    }
+  }, [positions?.length, params?.pool]);
 
   useEffect(() => {
     if (address) setWalletConnected(true);
@@ -112,10 +108,10 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         <Stack gap={3}>
           <Stack direction="column" gap={4} mt={2}>
             <VaultInfo {...pool} loading={+poolLoading} />
-            <Collapse in={walletConnected && Boolean(positions?.length)}>
+            <Collapse in={walletConnected && Boolean(position?.length)}>
               <MyPositionsTableOrganism
                 title="My Positions"
-                data={positions}
+                data={position}
                 loading={+positionsLoading}
               />
             </Collapse>

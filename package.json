@@ -16,10 +16,12 @@
     "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
     "check-types": "tsc --noEmit --pretty",
     "prepare": "husky install",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "link:sdk": "pnpm link ../js-sdk/packages/sdk",
+    "unlink:sdk": "pnpm unlink @augustdigital/sdk"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.4.4",
+    "@augustdigital/sdk": "1.4.5",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^6.1.6",
