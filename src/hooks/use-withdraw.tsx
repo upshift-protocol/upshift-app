@@ -1,7 +1,7 @@
 import { queryClient } from '@/config/react-query';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { TIMES } from '@/utils/constants/time';
-import type { IAddress, IChainId } from '@augustdigital/sdk';
+import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
 import type { Id } from 'react-toastify';
@@ -19,18 +19,26 @@ import {
 } from 'wagmi';
 import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import ToastPromise from '@/ui/molecules/toast-promise';
+import SLACK from '@/utils/slack';
 
-type IUseDepositProps = {
+type IUseWithdrawProps = {
   value?: string;
   asset?: IAddress;
   clearInput?: () => void;
   pool?: IAddress;
+  poolName?: string;
   closeModal?: () => void;
   redemptions?: any; // TODO: add type interface
   chainId?: number;
 };
 
-export default function useWithdraw(props: IUseDepositProps) {
+type IRedemption = {
+  day: INormalizedNumber;
+  month: INormalizedNumber;
+  year: INormalizedNumber;
+};
+
+export default function useWithdraw(props: IUseWithdrawProps) {
   const { switchChainAsync } = useSwitchChain();
   const chainId = useChainId();
   // States
@@ -46,6 +54,8 @@ export default function useWithdraw(props: IUseDepositProps) {
     text: BUTTON_TEXTS.zero,
     disabled: true,
   });
+  const [selectedRedemption, setSelectedRedemption] =
+    useState<IRedemption | null>(null);
 
   // Meta hooks
   const provider = usePublicClient();
@@ -156,13 +166,22 @@ export default function useWithdraw(props: IUseDepositProps) {
         );
       }
     } catch (e) {
-      console.error('#handleWithdraw', e);
+      console.error('#requestWithdraw', e);
+      toast.dismiss(redeemToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Request Redeem',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -172,11 +191,10 @@ export default function useWithdraw(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(redeemToastId);
     }
   }
 
-  async function handleWithdraw() {
+  async function handleWithdraw(redemption: IRedemption | null) {
     // checks
     if (!(address && provider)) {
       console.warn('#handleWithdraw: no wallet is connected');
@@ -202,12 +220,16 @@ export default function useWithdraw(props: IUseDepositProps) {
       return;
     }
 
-    // find appropriate redemptions
-    const foundRedemption = props.redemptions?.find(
-      (redemption: any) => redemption.amount.raw === normalized.raw,
-    );
+    // // find appropriate redemptions
+    // const foundRedemption = props.redemptions?.find(
+    //   (redemption: any) => redemption.amount.raw === normalized.raw,
+    // );
+    const day = selectedRedemption?.day || redemption?.day;
+    const month = selectedRedemption?.month || redemption?.month;
+    const year = selectedRedemption?.year || redemption?.year;
+
     // if redemption not found
-    if (!foundRedemption) {
+    if (!(day && month && year)) {
       console.error(
         '#requestWithdraw: could not find redemption',
         props?.redemptions,
@@ -243,12 +265,7 @@ export default function useWithdraw(props: IUseDepositProps) {
         abi: ABI_LENDING_POOLS,
         functionName: 'claim',
         // Year, Month, Day, Amount, Address
-        args: [
-          foundRedemption.year.raw,
-          foundRedemption.month.raw,
-          foundRedemption.day.raw,
-          address,
-        ],
+        args: [BigInt(year.raw), BigInt(month.raw), BigInt(day.raw), address],
       });
       const withdrawHash = await signer?.writeContract(prepareWithdraw.request);
       ToastPromise(
@@ -261,9 +278,6 @@ export default function useWithdraw(props: IUseDepositProps) {
         chainId as IChainId,
       );
 
-      // Refetch queries
-      queryClient.invalidateQueries();
-
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
@@ -273,14 +287,27 @@ export default function useWithdraw(props: IUseDepositProps) {
           withdrawHash,
         );
       }
+
+      // Refetch queries
+      // await waitForTransactionReceipt(provider, { hash: withdrawHash as IAddress, confirmations: 1 })
+      queryClient.invalidateQueries();
     } catch (e) {
       console.error('#handleWithdraw:', e);
+      toast.dismiss(withdrawToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Withdraw',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -290,7 +317,6 @@ export default function useWithdraw(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(withdrawToastId);
     }
   }
 
@@ -368,7 +394,15 @@ export default function useWithdraw(props: IUseDepositProps) {
     return () => {};
   }, [isSuccess]);
 
+  useEffect(() => {
+    if (props?.redemptions?.length) {
+      setSelectedRedemption(props?.redemptions[0]);
+    }
+  }, [props?.redemptions?.length]);
+
   return {
+    selectedRedemption,
+    setSelectedRedemption,
     requestWithdraw,
     handleWithdraw,
     button,

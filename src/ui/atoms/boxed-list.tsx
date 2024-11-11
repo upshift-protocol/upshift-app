@@ -63,7 +63,9 @@ export default function BoxedListAtom(props: {
               )}
             </>
           ) : (
-            <Typography variant="body2">{item.value}</Typography>
+            <Typography variant="body2" component="div">
+              {item.value}
+            </Typography>
           )}
         </StackRow>
       ))}

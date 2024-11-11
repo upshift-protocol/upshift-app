@@ -1,21 +1,28 @@
 import Stack from '@mui/material/Stack';
 import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useWithdraw from '@/hooks/use-withdraw';
+import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
-import TxFeesAtom from '../molecules/tx-fees';
 import UpcomingRedemptionsMolecule from '../molecules/upcoming-redemptions';
 
 export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
-  const { handleWithdraw, isSuccess, button, expected, pool, isLoading } =
-    useWithdraw({
-      asset: props?.asset,
-      pool: props?.address,
-      value: (props as any)?.redeemable?.normalized, // TODO: add type interface
-      redemptions: (props as any)?.availableRedemptions,
-      chainId: props?.chainId as IChainId,
-    });
+  const {
+    handleWithdraw,
+    isSuccess,
+    button,
+    pool,
+    isLoading,
+    selectedRedemption,
+  } = useWithdraw({
+    asset: props?.asset,
+    pool: props?.address,
+    poolName: props?.name,
+    value: (props as any)?.redeemable?.normalized, // TODO: add type interface
+    redemptions: (props as any)?.availableRedemptions,
+    chainId: props?.chainId as IChainId,
+  });
 
   return (
     <ModalAtom
@@ -40,21 +47,39 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
           loading={pool?.loading}
           asset={props?.symbol}
         />
-        <TxFeesAtom
-          function="claim"
-          out={props?.underlying?.address}
-          in={props?.address}
-          fee={BigInt(expected.fee.raw)}
-          loading={+expected.loading}
-          pool={pool}
-        />
+        <Box pt={1}>
+          <FormControl fullWidth>
+            <InputLabel id="Selected-Redemption">
+              Selected Redemption
+            </InputLabel>
+            <Select
+              labelId="Selected-Redemption"
+              value={selectedRedemption}
+              label="Selected Redemption"
+              onChange={(e) => {
+                console.log('e', e);
+              }}
+            >
+              {(props as any)?.availableRedemptions?.map(
+                (red: any, i: number) => (
+                  <MenuItem key={`available-redemption-${i}`} value={red}>
+                    {new Date(red.date).toLocaleDateString()}
+                  </MenuItem>
+                ),
+              )}
+            </Select>
+          </FormControl>
+        </Box>
       </Stack>
       <Stack mt={1}>
         <Web3Button
           style={{ marginTop: '1rem' }}
           size="large"
           variant="contained"
-          onClick={handleWithdraw}
+          onClick={async (e) => {
+            e.preventDefault();
+            await handleWithdraw(selectedRedemption);
+          }}
           disabled={button.disabled || pool?.loading}
           chainid={props?.chainId}
           loading={+isLoading}

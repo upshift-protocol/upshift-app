@@ -4,6 +4,8 @@ export const REFERRALS_ENABLED =
 export const BUTTON_TEXTS = {
   zero: 'Input an Amount',
   submit: 'Submit Transaction',
+  submit_many: (num: number | string) =>
+    `Submit ${num} Transaction${Number(num) > 1 ? 's' : ''}`,
   error: 'Error Executing Transaction',
   success: 'Transaction Complete',
   submitting: 'Submitting Transaction',

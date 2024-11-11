@@ -5,7 +5,7 @@ import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { DEVELOPMENT_MODE, FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { getChainNameById } from '@/utils/helpers/ui';
-// import type { IDepositLogData } from '@/utils/types';
+import SLACK from '@/utils/slack';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import {
   ABI_LENDING_POOLS,
@@ -233,12 +233,21 @@ export default function useDeposit(props: IUseDepositProps) {
       console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
     } catch (e) {
       console.error('#handleDeposit:', e);
+      toast.dismiss(depositToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Deposit',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -248,8 +257,6 @@ export default function useDeposit(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(approvalToastId);
-      toast.dismiss(depositToastId);
     }
   }
 
@@ -369,8 +376,10 @@ export default function useDeposit(props: IUseDepositProps) {
         } else {
           maxSupply = BigInt(props?.supplyCheck?.maxSupply);
         }
-        console.log('#supplyCheck::totalSupply:', totalSupply);
-        console.log('#supplyCheck::maxSupply:', maxSupply);
+        console.log(
+          `#supplyCheck::${props?.poolName}:`,
+          `${totalSupply} >= ${maxSupply}`,
+        );
         if (BigInt(totalSupply) + BigInt(1) >= BigInt(maxSupply)) {
           setIsFull(true);
           setButton({
