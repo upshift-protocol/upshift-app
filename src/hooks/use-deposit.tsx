@@ -5,7 +5,7 @@ import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { DEVELOPMENT_MODE, FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { getChainNameById } from '@/utils/helpers/ui';
-// import type { IDepositLogData } from '@/utils/types';
+import SLACK from '@/utils/slack';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import {
   ABI_LENDING_POOLS,
@@ -246,6 +246,14 @@ export default function useDeposit(props: IUseDepositProps) {
       } else {
         setError('Error occured while executing transaction');
       }
+      SLACK.interactionError(
+        JSON.stringify(e),
+        props?.pool,
+        String(props?.poolName),
+        props?.chainId || chainId,
+        address,
+        'Deposit',
+      );
     } finally {
       setIsLoading(false);
     }

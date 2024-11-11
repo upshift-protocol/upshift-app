@@ -19,12 +19,14 @@ import {
 } from 'wagmi';
 import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import ToastPromise from '@/ui/molecules/toast-promise';
+import SLACK from '@/utils/slack';
 
-type IUseDepositProps = {
+type IUseWithdrawProps = {
   value?: string;
   asset?: IAddress;
   clearInput?: () => void;
   pool?: IAddress;
+  poolName?: string;
   closeModal?: () => void;
   redemptions?: any; // TODO: add type interface
   chainId?: number;
@@ -36,7 +38,7 @@ type IRedemption = {
   year: INormalizedNumber;
 };
 
-export default function useWithdraw(props: IUseDepositProps) {
+export default function useWithdraw(props: IUseWithdrawProps) {
   const { switchChainAsync } = useSwitchChain();
   const chainId = useChainId();
   // States
@@ -178,6 +180,14 @@ export default function useWithdraw(props: IUseDepositProps) {
       } else {
         setError('Error occured while executing transaction');
       }
+      SLACK.interactionError(
+        JSON.stringify(e),
+        props?.pool,
+        String(props?.poolName),
+        props?.chainId || chainId,
+        address,
+        'Request Redeem',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -295,6 +305,14 @@ export default function useWithdraw(props: IUseDepositProps) {
       } else {
         setError('Error occured while executing transaction');
       }
+      SLACK.interactionError(
+        JSON.stringify(e),
+        props?.pool,
+        String(props?.poolName),
+        props?.chainId || chainId,
+        address,
+        'Withdraw',
+      );
     } finally {
       setIsLoading(false);
     }
