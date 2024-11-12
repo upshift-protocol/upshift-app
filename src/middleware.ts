@@ -17,8 +17,8 @@ export default function middleware(
 
   // Specify the correct pathname
   if (BLOCKED_COUNTRIES.includes(country)) {
-    req.nextUrl.pathname = '/blocked';
     return NextResponse.redirect('https://terms.upshift.finance');
   }
   return NextResponse.next();
+  // return NextResponse.rewrite(req.nextUrl);
 }
