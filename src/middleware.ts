@@ -9,11 +9,9 @@ export const config = {
   matcher: '/',
 };
 
-export default function middleware(
-  req: NextRequest & { geo: { country: string } },
-) {
+export default function middleware(req: NextRequest) {
   // Extract country
-  const country = req.geo.country || 'US';
+  const country = req.headers.get('x-vercel-ip-country') || 'US';
 
   // Specify the correct pathname
   if (BLOCKED_COUNTRIES.includes(country)) {
