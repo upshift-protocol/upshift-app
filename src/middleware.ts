@@ -6,7 +6,7 @@ const BLOCKED_COUNTRIES = ['US'];
 
 // Limit middleware pathname config
 export const config = {
-  matcher: '/',
+  matcher: ['/', '/pools/:path'],
 };
 
 export default function middleware(req: NextRequest) {
@@ -18,5 +18,4 @@ export default function middleware(req: NextRequest) {
     return NextResponse.redirect('https://terms.upshift.finance');
   }
   return NextResponse.next();
-  // return NextResponse.rewrite(req.nextUrl);
 }
