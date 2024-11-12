@@ -88,7 +88,8 @@ export default function TableMolecule({
       console.error('#handleRowClick: uid not found');
       return;
     }
-    router.push(`/pools/${rowChainId}/${uid}`);
+    const route = `/pools/${rowChainId}/${uid}`;
+    router.push(route);
   };
 
   const extractData = (value: any) => {

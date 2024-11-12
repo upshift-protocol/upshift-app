@@ -10,8 +10,10 @@ import DonutChart from './donut-charts';
 
 const ExposureCharts = ({
   pool,
+  loading,
 }: {
   pool: IPoolWithUnderlying | undefined;
+  loading: boolean;
 }) => {
   const { isDark } = useThemeMode();
   const [isChartsDataLoading, setIsChartsDataLoading] = useState(true);
@@ -30,7 +32,7 @@ const ExposureCharts = ({
       }
     }
     return returnObj;
-  }, [pool?.address]);
+  }, [pool?.address, loading]);
 
   return (
     <Grid
@@ -83,7 +85,7 @@ const ExposureCharts = ({
 
         <DonutChart
           data={chartData.protocolExposure}
-          isLoading={isChartsDataLoading}
+          isLoading={isChartsDataLoading || loading}
         />
       </Grid>
 
@@ -117,7 +119,7 @@ const ExposureCharts = ({
       >
         <DonutChart
           data={chartData.tokenExposure}
-          isLoading={isChartsDataLoading}
+          isLoading={isChartsDataLoading || loading}
         />
 
         <Typography

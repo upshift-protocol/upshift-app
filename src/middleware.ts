@@ -10,6 +10,9 @@ export const config = {
 };
 
 export default function middleware(req: NextRequest) {
+  if (!process.env.NEXT_PUBLIC_URL?.includes('upshift.finance'))
+    return NextResponse.next();
+
   // Extract country
   const country = req.headers.get('x-vercel-ip-country') || 'US';
 
