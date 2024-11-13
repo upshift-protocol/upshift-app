@@ -22,7 +22,7 @@
     "reset": "rm -rf node_modules pnpm-lock.yaml out .next && pnpm i"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.4.11",
+    "@augustdigital/sdk": "1.4.12",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^6.1.6",

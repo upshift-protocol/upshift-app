@@ -23,8 +23,14 @@ const PoolsProvider = ({ children }: IChildren) => {
 
   const positions = useQuery({
     queryKey: ['my-positions', address],
-    queryFn: () => augustSdk.pools.getAllPositions(address as IAddress),
+    queryFn: () =>
+      augustSdk.pools.getAllPositions(
+        address as IAddress,
+        undefined,
+        pools?.data,
+      ),
     initialData: [],
+    enabled: pools.isFetched,
   });
 
   const prices = useQuery({
