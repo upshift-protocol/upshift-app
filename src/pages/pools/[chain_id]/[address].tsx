@@ -56,10 +56,14 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const {
     positions: { data: positions, isLoading: positionsLoading },
+    pools: { data: poolsData, isFetched: poolsFetched },
   } = usePoolsStore();
 
-  const { data: pool, isLoading: poolLoading } = useFetcher({
+  const poolData = poolsData?.find((p) => p.address === params.pool);
+
+  const { data: pool, isFetched: poolFetched } = useFetcher({
     queryKey: ['lending-pool', params.pool, String(params.chain_id)],
+    placeholderData: poolsFetched && !!poolData ? poolData : {},
   }) as UseQueryResult<any>; // TODO: interface
 
   useEffect(() => {
@@ -83,7 +87,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
           `${pool?.name} vault aims to optimize ${pool?.underlying?.symbol || 'its underlying deposit token'} yield by providing liquidity to blue chip DeFi protocols and maximizing future airdrop potential.`
         }
         // breadcrumbs={buildCrumbs()}
-        loading={+poolLoading}
+        loading={+!poolFetched && +!pool?.name}
         chainId={pool?.chainId}
         action={
           <Stack direction="column" alignItems={'end'} gap={2}>
@@ -96,7 +100,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               }
               variant="glass"
               address={pool?.underlying?.address}
-              loading={poolLoading}
+              loading={!poolFetched && !pool?.underlying?.symbol}
             />
             <Stack direction={'row'} gap={1}>
               <DepositModalMolecule {...pool} chainId={params?.chain_id} />
@@ -107,7 +111,10 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
       >
         <Stack gap={3}>
           <Stack direction="column" gap={4} mt={2}>
-            <VaultInfo {...pool} loading={+poolLoading} />
+            <VaultInfo
+              {...pool}
+              loading={+!poolFetched && +!pool?.totalSupply}
+            />
             <Collapse in={walletConnected && Boolean(position?.length)}>
               <MyPositionsTableOrganism
                 title="My Positions"
@@ -116,8 +123,9 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               />
             </Collapse>
 
-            <ExposureCharts pool={pool} />
-            <VaultAllocation {...pool} loading={poolLoading} />
+            <ExposureCharts pool={pool} loading={!poolFetched} />
+
+            <VaultAllocation {...pool} loading={!poolFetched} />
           </Stack>
         </Stack>
       </Section>

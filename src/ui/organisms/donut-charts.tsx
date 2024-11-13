@@ -3,16 +3,22 @@ import { Doughnut } from 'react-chartjs-2';
 import type { ChartData } from 'chart.js';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useThemeMode } from '@/stores/theme';
-import { Skeleton } from '@mui/material';
+import { Box, Skeleton } from '@mui/material';
+import { formatUsd } from '@/utils/helpers/ui';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DonutChartProps {
   data?: ChartData<'doughnut'>;
   isLoading?: boolean;
+  type?: 'percent' | 'usd';
 }
 
-const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
+const DonutChart: React.FC<DonutChartProps> = ({
+  data,
+  isLoading,
+  type = 'percent',
+}) => {
   const { isDark } = useThemeMode();
 
   const options = {
@@ -35,7 +41,12 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
           label(context: any) {
             const label = context.label || '';
             const value = context.raw || 0;
-            return `${label}: ${value.toFixed(2)}%`;
+            switch (type) {
+              case 'usd':
+                return `${label}: ${formatUsd(value)}`;
+              default:
+                return `${label}: ${value.toFixed(2)}%`;
+            }
           },
         },
       },
@@ -71,7 +82,26 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, isLoading }) => {
 
   if (isLoading)
     return (
-      <Skeleton variant="circular" width={250} height={250} animation="wave" />
+      <Box position="relative" sx={{ transform: 'translateX(-50px)' }}>
+        <Box
+          top={45}
+          sx={{
+            transform: 'translateX(45px)',
+            backgroundColor: !isDark ? '#f0f2f6' : '#202426',
+            width: 130,
+            height: 130,
+            zIndex: 10,
+            position: 'absolute',
+          }}
+          borderRadius={'50%'}
+        />
+        <Skeleton
+          variant="circular"
+          width={220}
+          height={220}
+          animation="wave"
+        />
+      </Box>
     );
 
   return (

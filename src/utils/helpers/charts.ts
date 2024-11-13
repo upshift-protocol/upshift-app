@@ -74,6 +74,7 @@ export function getProtocolExposureData(pool: IPool) {
   };
 }
 
+type IExposureValue = { value: string; label: string; usd: number };
 export function getTokenExposureData(pool: IPool) {
   if (!pool || !Array.isArray(pool.loans)) {
     return {
@@ -81,15 +82,12 @@ export function getTokenExposureData(pool: IPool) {
       datasets: [],
     };
   }
-
   const tokenAllocation: { [token: string]: number } = {};
   const filteredExposureData: number[] = [];
 
   pool.loans.forEach((loan: IPoolLoan) => {
     const validExposure =
-      (
-        loan.exposure as Array<{ value: string; label: string }> | undefined
-      )?.filter(
+      (loan.exposure as Array<IExposureValue> | undefined)?.filter(
         (token) => getTokenSymbol(token.value, pool.chainId) !== 'eth',
       ) || [];
 
@@ -102,34 +100,28 @@ export function getTokenExposureData(pool: IPool) {
     filteredExposureData.push(validCount);
   });
 
-  pool.loans.forEach((loan: IPoolLoan, index) => {
+  pool.loans.forEach((loan: IPoolLoan) => {
     const validExposure =
-      (
-        loan.exposure as Array<{ value: string; label: string }> | undefined
-      )?.filter(
+      (loan.exposure as Array<IExposureValue> | undefined)?.filter(
         (token) => getTokenSymbol(token.value, pool.chainId) !== 'eth',
       ) || [];
 
-    const filteredCount = filteredExposureData[index] || 1;
-
     validExposure.forEach((token) => {
       let tokenSymbol = getTokenSymbol(token.value, pool.chainId);
-
       if (tokenSymbol.length > 30) {
         tokenSymbol = token.label;
       }
-
       if (!tokenSymbol.includes('_')) {
-        const allocationShare = (loan.allocation * 100) / filteredCount;
-
+        const allocationShare = token.usd * Number(loan.allocation); // unnecessary but makes number smaller and less prone to errors
         tokenAllocation[tokenSymbol] =
           (tokenAllocation[tokenSymbol] || 0) + allocationShare;
       }
     });
   });
-
+  const values = Object.values(tokenAllocation);
+  const totalUsd = values.reduce((prev, acc) => prev + acc, 0);
   const labels = Object.keys(tokenAllocation);
-  const data = Object.values(tokenAllocation);
+  const data = values.map((val) => (val / totalUsd) * 100);
 
   return {
     labels,
