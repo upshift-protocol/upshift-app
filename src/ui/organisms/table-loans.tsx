@@ -260,7 +260,7 @@ export default function VaultAllocation(
   };
 
   return (
-    <Stack gap={3} direction="column">
+    <Stack gap={3} direction="column" minHeight="20rem">
       <Typography variant="h6">Vault Allocation Breakdown</Typography>
 
       <DataGrid
