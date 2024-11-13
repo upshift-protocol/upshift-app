@@ -1,5 +1,3 @@
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
-
 export function truncate(s: string, amount?: number) {
   if (!s) return s;
   return `${s.slice(0, amount ?? 4)}...${s.slice(amount ? amount * -1 : -4)}`;
@@ -24,9 +22,4 @@ export function generateCode(seed: string, length = 12) {
     counter += 1;
   }
   return result;
-}
-
-export function routeBuilder(poolData: IPoolWithUnderlying) {
-  console.log('POOL DATA:', poolData);
-  return `vault_address=${poolData.address}&total_supply=${poolData.totalSupply.normalized}&withdrawal_fee=${poolData.withdrawalFee.normalized}&strategist=${(poolData as any).hardcodedStrategist}&avg_apy=${poolData.hardcodedApy}&liquidity=${Number(poolData?.totalAssets?.normalized || '0') - Number(poolData?.globalLoansAmount?.normalized || '0')}`;
 }

@@ -1,18 +1,24 @@
 import { truncate } from '@/utils/helpers/string';
 import { explorerLink } from '@augustdigital/sdk';
-import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
+import type {
+  IAddress,
+  IChainId,
+  IPoolWithUnderlying,
+} from '@augustdigital/sdk';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { Chip } from '@mui/material';
+import { renderBiggerApy } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
+  const renderedApy = renderBiggerApy(props.hardcodedApy, props.apy);
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>
@@ -58,12 +64,13 @@ export default function VaultInfo(
               <LinkAtom
                 overflow="hidden"
                 href={explorerLink(
-                  props?.loansOperator,
+                  (props?.hardcodedStrategist ||
+                    props.loansOperator) as IAddress,
                   (props?.chainId as IChainId) || FALLBACK_CHAINID,
                   'address',
                 )}
               >
-                {truncate(props?.loansOperator, 6)}
+                {truncate(props?.hardcodedStrategist || props.loansOperator, 6)}
               </LinkAtom>
             )}
           </Stack>
@@ -100,13 +107,8 @@ export default function VaultInfo(
             <Typography>Avg. APY</Typography>
             {props?.loading ? (
               <Skeleton variant="text" width={75} />
-            ) : props?.hardcodedApy ? (
-              <Typography display="flex">{props?.hardcodedApy}</Typography>
             ) : (
-              <Typography display="flex">
-                <AmountDisplay round>{`${props?.apy || '0.00'}`}</AmountDisplay>
-                %
-              </Typography>
+              <Typography display="flex">{renderedApy}</Typography>
             )}
           </Stack>
         </Grid>

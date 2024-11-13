@@ -1,4 +1,5 @@
 import { zeroAddress } from 'viem';
+import { round } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '../constants/web3';
 
 export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
@@ -97,4 +98,15 @@ export function formatUsd(value: string | number) {
   const formatted = formatCurrency.format(Number(value));
   if (formatted.includes(',')) return formatted.split('.')[0];
   return formatted;
+}
+
+export function renderBiggerApy(hardcodedApy?: string, realApy?: number) {
+  if (!hardcodedApy) return realApy || '0';
+  if (hardcodedApy === '-') return hardcodedApy;
+  const hardApy = Number(
+    hardcodedApy?.split('-')?.[1]?.replace('%', '') || '0',
+  );
+  const apy = Number(realApy || '0');
+  if (apy > hardApy) return `${round(realApy || '0', { showing: 2 })}%`;
+  return `${hardcodedApy}`;
 }

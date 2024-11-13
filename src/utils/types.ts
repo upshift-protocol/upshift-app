@@ -87,3 +87,11 @@ export interface IReferralRecord {
   codeUsed: string;
   codes: string[];
 }
+
+export interface ITokenPrice {
+  price: number;
+  address: IAddress;
+  symbol: string;
+  decimals: number;
+  chain: number;
+}

@@ -156,7 +156,7 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'loansOperator',
+    id: 'hardcodedStrategist',
     value: 'Strategist',
     flex: 1,
   },

@@ -1,4 +1,4 @@
-import type { IChildren } from '@/utils/types';
+import type { IChildren, ITokenPrice } from '@/utils/types';
 import React, { createContext, useContext } from 'react';
 import type { IAddress, IPoolWithUnderlying } from '@augustdigital/sdk';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
@@ -9,6 +9,7 @@ import { augustSdk } from '@/config/august-sdk';
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
   positions: UseQueryResult<(IPoolWithUnderlying & any)[], Error>;
+  prices: UseQueryResult<ITokenPrice[], Error>;
 }
 
 const PoolsContext = createContext<PoolsContextValue | undefined>(undefined);
@@ -26,8 +27,27 @@ const PoolsProvider = ({ children }: IChildren) => {
     initialData: [],
   });
 
+  const prices = useQuery({
+    queryKey: ['token-prices'],
+    queryFn: () =>
+      Promise.all(
+        pools?.data?.length
+          ? pools?.data?.map(async (p) => {
+              const price = await augustSdk.getPrice(
+                p.underlying?.symbol?.toLowerCase(),
+              );
+              return {
+                ...p.underlying,
+                price,
+              };
+            })
+          : [],
+      ),
+    enabled: pools.isFetched,
+  });
+
   return (
-    <PoolsContext.Provider value={{ pools, positions }}>
+    <PoolsContext.Provider value={{ pools, positions, prices }}>
       {children}
     </PoolsContext.Provider>
   );
