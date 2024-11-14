@@ -30,6 +30,7 @@ import {
   useSwitchChain,
   useWalletClient,
 } from 'wagmi';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 type IUseDepositProps = {
   value?: string;
@@ -195,9 +196,6 @@ export default function useDeposit(props: IUseDepositProps) {
         chainId as IChainId,
       );
 
-      // Refetch queries
-      queryClient.invalidateQueries();
-
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
@@ -231,6 +229,17 @@ export default function useDeposit(props: IUseDepositProps) {
         },
       );
       console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
+
+      // Refetch queries and log to google analytics
+      queryClient.invalidateQueries();
+      sendGTMEvent({
+        event: 'deposit',
+        pool: props.pool,
+        chain: chainId,
+        amount: normalized.normalized,
+        symbol,
+        hash: depositHash,
+      });
     } catch (e) {
       console.error('#handleDeposit:', e);
       toast.dismiss(depositToastId);
