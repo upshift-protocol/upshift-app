@@ -166,14 +166,16 @@ export default function useWithdraw(props: IUseWithdrawProps) {
 
       // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
-      sendGTMEvent({
-        event: 'redeem-request',
-        pool: props.pool,
-        chain: chainId,
-        amount: normalized.normalized,
-        symbol,
-        hash: redeemHash,
-      });
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+        ? sendGTMEvent({
+            event: 'redeem-request',
+            pool: props.pool,
+            chain: chainId,
+            amount: normalized.normalized,
+            symbol,
+            hash: redeemHash,
+          })
+        : console.warn('GOOGLE_TAG_MANAGER env var is not available');
     } catch (e) {
       console.error('#requestWithdraw', e);
       toast.dismiss(redeemToastId);
@@ -299,14 +301,16 @@ export default function useWithdraw(props: IUseWithdrawProps) {
 
       // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
-      sendGTMEvent({
-        event: 'withdraw',
-        pool: props.pool,
-        chain: chainId,
-        amount: normalized.normalized,
-        symbol,
-        hash: withdrawHash,
-      });
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+        ? sendGTMEvent({
+            event: 'withdraw',
+            pool: props.pool,
+            chain: chainId,
+            amount: normalized.normalized,
+            symbol,
+            hash: withdrawHash,
+          })
+        : console.warn('GOOGLE_TAG_MANAGER env var is not available');
       // await waitForTransactionReceipt(provider, { hash: withdrawHash as IAddress, confirmations: 1 })
     } catch (e) {
       console.error('#handleWithdraw:', e);

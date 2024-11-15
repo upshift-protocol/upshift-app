@@ -166,6 +166,18 @@ export default function useDeposit(props: IUseDepositProps) {
           chainId as IChainId,
         );
 
+        // log to google analytics
+        process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+          ? sendGTMEvent({
+              event: 'approve',
+              pool: props.pool,
+              chain: chainId,
+              amount: normalized.normalized,
+              symbol,
+              hash: approveHash,
+            })
+          : console.warn('GOOGLE_TAG_MANAGER env var is not available');
+
         // set button to deposit if not already
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
         setIsLoading(false);
@@ -232,14 +244,16 @@ export default function useDeposit(props: IUseDepositProps) {
 
       // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
-      sendGTMEvent({
-        event: 'deposit',
-        pool: props.pool,
-        chain: chainId,
-        amount: normalized.normalized,
-        symbol,
-        hash: depositHash,
-      });
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+        ? sendGTMEvent({
+            event: 'deposit',
+            pool: props.pool,
+            chain: chainId,
+            amount: normalized.normalized,
+            symbol,
+            hash: depositHash,
+          })
+        : console.warn('GOOGLE_TAG_MANAGER env var is not available');
     } catch (e) {
       console.error('#handleDeposit:', e);
       toast.dismiss(depositToastId);
