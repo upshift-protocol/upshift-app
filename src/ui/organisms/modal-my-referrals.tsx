@@ -65,7 +65,10 @@ export default function MyReferralsModalMolecule({
       }}
       headerStyle={{ marginBottom: '0.5rem' }}
     >
-      <Paper variant="outlined">
+      <Paper
+        variant="outlined"
+        sx={{ maxHeight: '30rem', overflowY: 'scroll' }}
+      >
         <Stack gap={0} px={2} py={0.5}>
           <Stack
             direction="row"
