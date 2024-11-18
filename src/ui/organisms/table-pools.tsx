@@ -95,7 +95,7 @@ const columns: readonly IColumn[] = [
   },
   {
     id: 'totalSupply',
-    value: 'Total Supply',
+    value: 'TVL',
     align: 'right',
     minWidth: 200,
     format: (value: number) => value.toLocaleString('en-US'),
