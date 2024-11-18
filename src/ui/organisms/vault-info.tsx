@@ -81,7 +81,7 @@ export default function VaultInfo(
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography>Total Supply</Typography>
+            <Typography>TVL</Typography>
             {props?.loading ? (
               <Skeleton variant="text" width={100} />
             ) : (
@@ -143,7 +143,7 @@ export default function VaultInfo(
             )}
           </Stack>
         </Grid>
-        <Grid item xs={6}>
+        {/* <Grid item xs={6}>
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -164,7 +164,7 @@ export default function VaultInfo(
               </AmountDisplay>
             )}
           </Stack>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Stack>
   );

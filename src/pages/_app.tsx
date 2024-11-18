@@ -47,7 +47,7 @@ const MyApp = (props: AppProps) => {
       </ThemeProvider>
 
       <GoogleTagManager
-        gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER || 'G-H1WDGRZH57'}
+        gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER || ''}
       />
     </>
   );
