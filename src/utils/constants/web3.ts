@@ -1,3 +1,6 @@
+import { avalanche, localhost, mainnet } from 'viem/chains';
+import { REFERRALS_ENABLED } from './ui';
+
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY || '';
 export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || '';
 
@@ -14,3 +17,19 @@ export const RPC_URLS = {
   43114: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
   1: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
 };
+
+export const ACTIVE_RPC_URLS = REFERRALS_ENABLED
+  ? {
+      43114: RPC_URLS[43114],
+    }
+  : {
+      1: RPC_URLS[1],
+      43114: RPC_URLS[43114],
+    };
+
+export const ACTIVE_NETWORKS =
+  NETWORK === 'localhost'
+    ? [mainnet, avalanche, localhost]
+    : REFERRALS_ENABLED
+      ? [avalanche]
+      : [mainnet, avalanche];

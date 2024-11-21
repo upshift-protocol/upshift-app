@@ -14,6 +14,8 @@ import { useChainId } from 'wagmi';
 type IFetchTypes =
   | 'lending-pools'
   | 'lending-pool'
+  | 'lending-pools-&-loans'
+  | 'loans'
   | 'price'
   | 'my-positions'
   | 'all-prices';
@@ -31,6 +33,7 @@ export default function useFetcher({
   queryKey,
   formatter,
   wallet,
+  initialData,
   ...props
 }: IUseFetcher) {
   const connectedChainId = useChainId();
@@ -56,11 +59,38 @@ export default function useFetcher({
         );
         return pool;
       }
-      case 'lending-pools': {
-        const pools = await augustSdk.pools.getPools({
-          loans: true,
-          allocations: true,
-        });
+      case 'loans': {
+        if (!Array.isArray(initialData)) {
+          console.error(
+            '#useFetcher: initial data passed as args must be a valid array',
+          );
+          return [];
+        }
+        const loans = await Promise.all(
+          initialData.map((p: IPoolWithUnderlying) =>
+            augustSdk.pools.getPoolLoans(p.address, p.chainId as IChainId),
+          ),
+        );
+        return loans;
+      }
+      case 'lending-pools':
+      case 'lending-pools-&-loans': {
+        if (!Array.isArray(initialData)) {
+          const pools = await augustSdk.pools.getPools({
+            loans: false,
+            allocations: false,
+          });
+          console.log('\nw/o:', pools);
+          return pools;
+        }
+        const pools = await augustSdk.pools.getPools(
+          {
+            loans: true,
+            allocations: true,
+          },
+          initialData,
+        );
+        console.log('\nw:', pools, initialData);
         return pools;
       }
       case 'my-positions': {
