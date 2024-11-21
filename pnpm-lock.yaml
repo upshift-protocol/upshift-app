@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@augustdigital/sdk':
         specifier: 1.4.14
-        version: link:../js-sdk/packages/sdk
+        version: 1.4.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.13.5(@types/react@18.3.12)(react@18.3.1)
@@ -175,6 +175,21 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@augustdigital/abis@1.4.15':
+    resolution: {integrity: sha512-Un8IN4oCdkXCP2ECz6N29D4TrPLG1Ay8/jAEICSFzTBUkajA0WSsRVMcFAMs0OGVtKoe3lZ9CxtfKR/bgIXhWw==}
+
+  '@augustdigital/pools@1.4.15':
+    resolution: {integrity: sha512-fbFRdFEMR7BRctJAEwmHqJBPryopXar8voHbWjLEttcp6SIz4b6bzbXwednkrI8RTfcC4sLQ87p4H79j3v722g==}
+
+  '@augustdigital/sdk@1.4.14':
+    resolution: {integrity: sha512-TXMhOfs8c870Ox70CFnV0kuLbCU0QBqZvJtYK9gYcUg0Prr3hm+3gF6p3eIy/CGNUt05KuDcuPhquP0jRB21kg==}
+
+  '@augustdigital/types@1.4.15':
+    resolution: {integrity: sha512-yPZaR1WUz8INeipL3MJug5iwb7sLkdgZSq6Ny/jsh5QipYPxOgPhupCtZsEsAPn629Lst6xcPWL/ZfbAh9q19A==}
+
+  '@augustdigital/utils@1.4.15':
+    resolution: {integrity: sha512-Wwkyx4ieUnguZ9ExLKsrn2iWlBVAA0tcTPkPpcCzdfdb4URXiwRB2ir8La4YDHzqP6TkvQGqTb2SLtlT0ioEBw==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -3021,6 +3036,9 @@ packages:
   eth-rpc-errors@4.0.3:
     resolution: {integrity: sha512-Z3ymjopaoft7JDoxZcEb3pwdGh7yiYMhOwm2doUt6ASXlMavpNlK6Cre0+IMl2VSGyEU9rkiperQhp5iRxn5Pg==}
 
+  ethereum-block-by-date@1.5.0:
+    resolution: {integrity: sha512-amsE+ASchZFjGq+F+xMKuD9k7HVImBfnJSJ9S0byjikFofXz/Zo8Rdm/lB3P4Rt28mpsw1fSeXqSiCZVltEwuw==}
+
   ethereum-cryptography@2.2.1:
     resolution: {integrity: sha512-r/W8lkHSiTLxUxW8Rf3u4HGB0xQweG2RyETjywylKZSzLWoWAijRz8WCuOtJ6wah+avllXBqZuk29HCCvhEIRg==}
 
@@ -4062,6 +4080,9 @@ packages:
 
   mlly@1.7.3:
     resolution: {integrity: sha512-xUsx5n/mN0uQf4V548PKQ+YShA4/IW0KI1dZhrNrPCLG+xizETbHTkOa1f8/xut9JRPp8kQuMnz0oqwkTiLo/A==}
+
+  moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
   motion@10.16.2:
     resolution: {integrity: sha512-p+PurYqfUdcJZvtnmAqu5fJgV2kR0uLFQuBKtLeFVTrYEVllI99tiOTSefVNYuip9ELTEkepIIDftNdze76NAQ==}
@@ -5765,6 +5786,46 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@augustdigital/abis@1.4.15': {}
+
+  '@augustdigital/pools@1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@augustdigital/abis': 1.4.15
+      '@augustdigital/types': 1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ethereum-block-by-date: 1.5.0
+      ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@augustdigital/sdk@1.4.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@augustdigital/abis': 1.4.15
+      '@augustdigital/pools': 1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      upshift-earn-app: 'link:'
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@augustdigital/types@1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+    dependencies:
+      ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@augustdigital/utils@1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@augustdigital/types': 1.4.15(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -9527,6 +9588,10 @@ snapshots:
     dependencies:
       fast-safe-stringify: 2.1.1
 
+  ethereum-block-by-date@1.5.0:
+    dependencies:
+      moment: 2.30.1
+
   ethereum-cryptography@2.2.1:
     dependencies:
       '@noble/curves': 1.4.2
@@ -10778,6 +10843,8 @@ snapshots:
       pathe: 1.1.2
       pkg-types: 1.2.1
       ufo: 1.5.4
+
+  moment@2.30.1: {}
 
   motion@10.16.2:
     dependencies:
