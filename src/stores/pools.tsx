@@ -17,18 +17,9 @@ const PoolsContext = createContext<PoolsContextValue | undefined>(undefined);
 const PoolsProvider = ({ children }: IChildren) => {
   const { address } = useAccount();
 
+  // get all vaults
   const pools = useFetcher({
     queryKey: ['lending-pools'],
-    refetchInterval: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  }) as UseQueryResult<IPoolWithUnderlying[], Error>;
-
-  const poolsWithLoans = useFetcher({
-    queryKey: ['lending-pools-&-loans'],
-    initialData: pools.data,
-    enabled: pools.isFetched,
   }) as UseQueryResult<IPoolWithUnderlying[], Error>;
 
   const positions = useQuery({
@@ -65,7 +56,7 @@ const PoolsProvider = ({ children }: IChildren) => {
   return (
     <PoolsContext.Provider
       value={{
-        pools: poolsWithLoans.isFetched ? poolsWithLoans : pools,
+        pools,
         positions,
         prices,
       }}
