@@ -122,17 +122,19 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    // id: 'apy',
-    id: 'hardcodedApy',
+    id: 'apy',
+    // id: 'hardcodedApy',
     value: 'Avg. APY',
     minWidth: 100,
     align: 'right',
-    // format: (value: number) => value.toFixed(2),
+    format: (value: number) => value.toFixed(2),
     component: ({
       children: {
         props: { children },
       },
-    }: any) => {
+    }: {
+      children: { props: { children: string[] | string } };
+    }) => {
       if (!children)
         return (
           <TableCell>
@@ -142,13 +144,10 @@ const columns: readonly IColumn[] = [
       return (
         <TableCell>
           <Stack alignItems="end">
-            {/* <AmountDisplay>
-              {children?.[0] && children?.[0] !== '-'
-                ? `${children?.[0]}%`
-                : '-'}
-            </AmountDisplay> */}
             <AmountDisplay>
-              {children && children !== '-' ? `${children}` : '-'}
+              {children && children !== '-'
+                ? `${(children as string[]).join('')}`
+                : '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>

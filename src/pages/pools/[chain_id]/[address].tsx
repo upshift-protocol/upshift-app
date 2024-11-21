@@ -1,4 +1,3 @@
-import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
@@ -8,7 +7,6 @@ import VaultAllocation from '@/ui/organisms/table-loans';
 import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
-import { type UseQueryResult } from '@tanstack/react-query';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -56,15 +54,10 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const {
     positions: { data: positions, isLoading: positionsLoading },
-    pools: { data: poolsData, isFetched: poolsFetched },
+    pools: { data: poolsData, isFetched: poolFetched },
   } = usePoolsStore();
 
-  const poolData = poolsData?.find((p) => p.address === params.pool);
-
-  const { data: pool, isFetched: poolFetched } = useFetcher({
-    queryKey: ['lending-pool', params.pool, String(params.chain_id)],
-    placeholderData: poolsFetched && !!poolData ? poolData : {},
-  }) as UseQueryResult<any>; // TODO: interface
+  const pool = poolsData?.find((p) => p.address === params.pool) as any;
 
   useEffect(() => {
     if (positions?.length) {

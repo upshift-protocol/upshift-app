@@ -138,8 +138,8 @@ const columns: readonly IColumn[] = [
   // },
   // { id: 'position', value: 'Position', align: 'right', flex: 2 },
   {
-    // id: 'apy',
-    id: 'hardcodedApy',
+    id: 'apy',
+    // id: 'hardcodedApy',
     value: 'Avg. APY',
     flex: 1,
     align: 'right',
@@ -151,12 +151,14 @@ const columns: readonly IColumn[] = [
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
-      const { children: subchildren } = children.props;
+      const { children: subchildren } = children.props as {
+        children: string[];
+      };
       return (
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay>
-              {subchildren ? `${subchildren}` : '-'}
+              {subchildren?.length ? `${subchildren.join('')}` : '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>

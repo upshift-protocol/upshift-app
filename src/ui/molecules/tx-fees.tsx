@@ -95,7 +95,7 @@ export default function TxFeesAtom(props: ITxFees) {
         );
       case 'deposit': {
         const rounded =
-          props?.pool?.hardcodedApy ||
+          // props?.pool?.hardcodedApy ||
           round(props?.pool?.apy as number | string);
         return (
           <BoxedListAtom
