@@ -29,6 +29,7 @@ import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import { getNativeTokenByChainId } from '@/utils/helpers/ui';
+import { sendGTMEvent } from '@next/third-parties/google';
 import LinkAtom from '../atoms/anchor-link';
 
 export type ITableType = 'pools' | 'custom';
@@ -88,6 +89,14 @@ export default function TableMolecule({
       console.error('#handleRowClick: uid not found');
       return;
     }
+    // log to google analytics
+    sendGTMEvent({
+      event: 'table-row-clicked',
+      pool: uid,
+      chain: rowChainId,
+    });
+
+    // route
     const route = `/pools/${rowChainId}/${uid}`;
     router.push(route);
   };

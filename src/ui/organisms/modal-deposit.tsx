@@ -66,7 +66,8 @@ export default function DepositModalMolecule(
           loading={+expected.loading}
           chainId={props?.chainId}
           pool={{
-            apy: props?.hardcodedApy || props?.apy,
+            apy: props?.apy,
+            // || props?.hardcodedApy,
             collateral: props?.collateral,
           }}
         />

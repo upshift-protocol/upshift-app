@@ -20,6 +20,7 @@ import {
 import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import ToastPromise from '@/ui/molecules/toast-promise';
 import SLACK from '@/utils/slack';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 type IUseWithdrawProps = {
   value?: string;
@@ -153,9 +154,6 @@ export default function useWithdraw(props: IUseWithdrawProps) {
         chainId as IChainId,
       );
 
-      // Refetch queries
-      queryClient.invalidateQueries();
-
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
@@ -165,6 +163,19 @@ export default function useWithdraw(props: IUseWithdrawProps) {
           redeemHash,
         );
       }
+
+      // Refetch queries and log to google analytics
+      queryClient.invalidateQueries();
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+        ? sendGTMEvent({
+            event: 'redeem-request',
+            pool: props.pool,
+            chain: chainId,
+            amount: normalized.normalized,
+            symbol,
+            hash: redeemHash,
+          })
+        : console.warn('GOOGLE_TAG_MANAGER env var is not available');
     } catch (e) {
       console.error('#requestWithdraw', e);
       toast.dismiss(redeemToastId);
@@ -288,9 +299,19 @@ export default function useWithdraw(props: IUseWithdrawProps) {
         );
       }
 
-      // Refetch queries
-      // await waitForTransactionReceipt(provider, { hash: withdrawHash as IAddress, confirmations: 1 })
+      // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+        ? sendGTMEvent({
+            event: 'withdraw',
+            pool: props.pool,
+            chain: chainId,
+            amount: normalized.normalized,
+            symbol,
+            hash: withdrawHash,
+          })
+        : console.warn('GOOGLE_TAG_MANAGER env var is not available');
+      // await waitForTransactionReceipt(provider, { hash: withdrawHash as IAddress, confirmations: 1 })
     } catch (e) {
       console.error('#handleWithdraw:', e);
       toast.dismiss(withdrawToastId);

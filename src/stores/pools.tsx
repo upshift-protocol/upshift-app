@@ -17,6 +17,7 @@ const PoolsContext = createContext<PoolsContextValue | undefined>(undefined);
 const PoolsProvider = ({ children }: IChildren) => {
   const { address } = useAccount();
 
+  // get all vaults
   const pools = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[], Error>;
@@ -53,7 +54,13 @@ const PoolsProvider = ({ children }: IChildren) => {
   });
 
   return (
-    <PoolsContext.Provider value={{ pools, positions, prices }}>
+    <PoolsContext.Provider
+      value={{
+        pools,
+        positions,
+        prices,
+      }}
+    >
       {children}
     </PoolsContext.Provider>
   );
