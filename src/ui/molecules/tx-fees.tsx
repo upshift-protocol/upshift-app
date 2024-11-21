@@ -96,7 +96,9 @@ export default function TxFeesAtom(props: ITxFees) {
       case 'deposit': {
         const rounded =
           // props?.pool?.hardcodedApy ||
-          round(props?.pool?.apy as number | string);
+          props?.pool?.apy === '-'
+            ? '-'
+            : round(props?.pool?.apy as number | string);
         return (
           <BoxedListAtom
             items={[
@@ -112,7 +114,10 @@ export default function TxFeesAtom(props: ITxFees) {
               },
               {
                 label: 'Estimated APY',
-                value: `${(rounded !== 'NaN' ? rounded : '0.00') || '0.00'}%`,
+                value:
+                  rounded === '-'
+                    ? '-'
+                    : `${rounded !== 'NaN' ? rounded : '0.00'}%`,
               },
             ]}
           />

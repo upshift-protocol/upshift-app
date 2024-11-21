@@ -145,7 +145,7 @@ const columns: readonly IColumn[] = [
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay>
-              {children && children !== '-'
+              {children?.length && Number(children?.[0]) >= 1
                 ? `${(children as string[]).join('')}`
                 : '-'}
             </AmountDisplay>

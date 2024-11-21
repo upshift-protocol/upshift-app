@@ -1,16 +1,8 @@
-import { REFERRALS_ENABLED } from '@/utils/constants/ui';
-import { RPC_URLS } from '@/utils/constants/web3';
+import { ACTIVE_RPC_URLS } from '@/utils/constants/web3';
 import AugustDigitalSDK from '@augustdigital/sdk';
 
 export const augustSdk = new AugustDigitalSDK({
   augustKey: process.env.NEXT_PUBLIC_AUGUST_DIGITAL_API_KEY as string,
-  providers: REFERRALS_ENABLED
-    ? {
-        43114: RPC_URLS[43114],
-      }
-    : {
-        1: RPC_URLS[1],
-        43114: RPC_URLS[43114],
-      },
+  providers: ACTIVE_RPC_URLS,
   env: process.env.NEXT_PUBLIC_DEV ? 'DEV' : 'PROD',
 });
