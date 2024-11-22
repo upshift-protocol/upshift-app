@@ -14,7 +14,7 @@ const HomePage = () => {
   const [walletConnected, setWalletConnected] = useState(false);
 
   const {
-    pools: { data: allPools, isLoading: allPoolsLoading, isFetched },
+    pools: { data: allPools, isLoading: allPoolsLoading },
     positions: { data: positions, isLoading: positionsLoading },
   } = usePoolsStore();
 
@@ -44,7 +44,7 @@ const HomePage = () => {
         b?.status === 'REDEEM' ? 1 : -1,
       ),
     };
-  }, [allPools?.length, positions?.length, isFetched]);
+  }, [JSON.stringify(allPools), JSON.stringify(positions)]);
 
   useEffect(() => {
     if (address) setWalletConnected(true);
