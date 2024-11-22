@@ -18,8 +18,6 @@ const HomePage = () => {
     positions: { data: positions, isLoading: positionsLoading },
   } = usePoolsStore();
 
-  console.log('allPools:', isFetched, allPools);
-
   const filteredPools = useMemo(() => {
     const partnerPools = [
       'kelp gain',
