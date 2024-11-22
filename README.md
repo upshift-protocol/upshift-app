@@ -126,8 +126,9 @@ Now, the app is ready to be deployed. All generated files are located at `out` f
 
 The site is currently deployed using AWS Amplify on the following links:
 
-- https://app.upshift.finance (`main`)
+- https://private.upshift.finance (`main`)
 - https://app-staging.upshift.finance (`develop`)
+- https://avax.upshift.finance
 
 ## Contributions
 
