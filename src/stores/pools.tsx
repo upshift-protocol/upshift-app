@@ -31,7 +31,7 @@ const PoolsProvider = ({ children }: IChildren) => {
   }) as UseQueryResult<IPoolWithUnderlying[], Error>;
 
   const poolWithLoans = useQuery({
-    queryKey: ['pools-with-loans', address],
+    queryKey: ['pools-with-loans'],
     queryFn: async () => {
       if (!pools?.data) return [];
       return Promise.all(
