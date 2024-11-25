@@ -120,7 +120,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
 
             <ExposureCharts
               pool={pool}
-              loading={!(poolFetched && pool?.loanData)}
+              loading={!(poolFetched && pool?.withLoans)}
             />
 
             <VaultAllocation {...pool} loading={!poolFetched} />

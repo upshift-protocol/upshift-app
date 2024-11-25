@@ -40,8 +40,8 @@ const PoolsProvider = ({ children }: IChildren) => {
 
   const poolWithLoans = useQuery({
     queryKey: ['pools-with-loans'],
-    queryFn: async () => {
-      if (!pools?.data) return [];
+    queryFn: () => {
+      if (!pools?.data?.length) return [];
       return Promise.all(
         pools.data?.map(async (p) => {
           const loans = await augustSdk.pools.getPoolLoans(
@@ -51,7 +51,7 @@ const PoolsProvider = ({ children }: IChildren) => {
           return {
             ...p,
             ...loans,
-            loanData: true,
+            withLoans: true,
           };
         }),
       );

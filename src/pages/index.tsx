@@ -23,6 +23,7 @@ const HomePage = () => {
       'kelp gain',
       'lombard lbtc',
       'upshift avalanche ausd',
+      'high growth eth',
     ];
     if (!allPools?.length) {
       return { partners: [], upshift: [], myPositions: [] };
