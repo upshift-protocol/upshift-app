@@ -58,6 +58,8 @@ export function getChainNameById(chainId?: number | string) {
       return 'Arbitrum One';
     case 43114:
       return 'Avalanche';
+    case 8453:
+      return 'Base';
     default:
       return 'Mainnet';
   }
