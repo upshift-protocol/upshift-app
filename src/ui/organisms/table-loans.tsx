@@ -7,7 +7,7 @@ import type {
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridCell, GridRow } from '@mui/x-data-grid';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -281,6 +281,12 @@ export default function VaultAllocation(
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
         slots={{
+          cell(cellProps) {
+            return <GridCell {...cellProps} />;
+          },
+          row(rowProps) {
+            return <GridRow {...rowProps} />;
+          },
           noRowsOverlay: () => (
             <Stack height="100%" alignItems="center" justifyContent="center">
               No active loans available

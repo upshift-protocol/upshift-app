@@ -1,3 +1,28 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+::selection {
+  background-color: #00FF7E;
+  color: black;
+}
+
+// custom styles
+
+// glow text
+.glow {
+  text-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+}
+
+.stroke-text{
+  text-shadow:0px 0px 5px #00FF7E, 0px 0px 5px #00FF7E;
+}
+// glass background (used for cards)
 .glass {
   backdrop-filter: blur(10px) saturate(180%);
   -webkit-backdrop-filter: blur(10px) saturate(180%);
@@ -12,18 +37,4 @@
   background-color: rgba(33, 150, 243, 0.05);
   border-radius: 4px;
   border: 1px solid rgba(209, 213, 219, 0.3);
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-::selection {
-  background-color: #00FF7E;
-  color: black;
 }

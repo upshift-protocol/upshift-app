@@ -25,7 +25,6 @@ const StatRoot = styled('div', {
     alignItems: 'end',
     gap: theme.spacing(0.5),
     padding: theme.spacing(3, 4),
-    backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[2],
     letterSpacing: '-0.025em',
@@ -35,11 +34,8 @@ const StatRoot = styled('div', {
       boxShadow: 'none',
     }),
     ...(ownerState.variant === 'inverse' && {
-      backgroundColor: isdark
-        ? theme.palette.common.white
-        : theme.palette.common.black,
+      boxShadow: 'none',
       color: isdark ? theme.palette.common.black : theme.palette.common.white,
-      boxShadow: '0px 0px 8px 0px rgba(255,255,255,1)',
     }),
   }),
 );
@@ -50,10 +46,10 @@ const StatValue = styled('div', {
 })<{ ownerState: StatOwnerState; isdark?: number }>(
   ({ theme, ownerState, isdark }) => ({
     ...theme.typography.h4,
-    fontSize: '2.25rem',
+    fontSize: '2.5rem',
     ...(ownerState.variant === 'inverse' && {
       boxShadow: 'none',
-      color: isdark ? theme.palette.common.black : theme.palette.common.white,
+      color: !isdark ? theme.palette.common.black : theme.palette.common.white,
     }),
   }),
 );
@@ -66,9 +62,10 @@ const StatUnit = styled('div', {
     ...theme.typography.body2,
     textTransform: 'uppercase',
     color: theme.palette.text.secondary,
+    opacity: 0.6,
     ...(ownerState.variant === 'inverse' && {
       boxShadow: 'none',
-      color: isdark ? theme.palette.common.black : theme.palette.grey[300],
+      color: !isdark ? theme.palette.common.black : theme.palette.grey[300],
     }),
   }),
 );
@@ -80,7 +77,6 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
     const { value, unit, variant, ...other } = props;
 
     const ownerState = { ...props, variant };
-
     return (
       <StatRoot
         ref={ref}
@@ -97,7 +93,11 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
             style={{ marginBottom: '6px', backgroundColor: 'gray' }}
           />
         ) : (
-          <StatValue ownerState={ownerState} isdark={+isDark}>
+          <StatValue
+            className="stroke-text"
+            ownerState={ownerState}
+            isdark={+isDark}
+          >
             {value}
           </StatValue>
         )}

@@ -59,6 +59,8 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const pool = poolsData?.find((p) => p.address === params.pool) as any;
 
+  console.log('SELECTED:');
+
   useEffect(() => {
     if (positions?.length) {
       setPosition(positions.filter((p) => p.address === params.pool));
@@ -116,7 +118,10 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               />
             </Collapse>
 
-            <ExposureCharts pool={pool} loading={!poolFetched} />
+            <ExposureCharts
+              pool={pool}
+              loading={!(poolFetched && pool?.loanData)}
+            />
 
             <VaultAllocation {...pool} loading={!poolFetched} />
           </Stack>

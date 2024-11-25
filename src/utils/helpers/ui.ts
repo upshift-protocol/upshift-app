@@ -103,10 +103,12 @@ export function formatUsd(value: string | number) {
 }
 
 export function renderBiggerApy(hardcodedApy?: string, realApy?: number) {
-  if (!hardcodedApy)
-    return realApy && Number(realApy) >= 1
+  if (!hardcodedApy) {
+    console.log('realApy:', realApy);
+    return realApy && Number(realApy) > 0.01
       ? `${round(realApy || '0', { showing: 2 })}%`
       : '-';
+  }
   if (hardcodedApy === '-') return hardcodedApy;
   const hardApy = Number(
     hardcodedApy?.split('-')?.[1]?.replace('%', '') || '0',

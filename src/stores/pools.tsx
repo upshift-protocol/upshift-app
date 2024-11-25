@@ -10,24 +10,32 @@ import useFetcher from '@/hooks/use-fetcher';
 import { useAccount } from 'wagmi';
 import { augustSdk } from '@/config/august-sdk';
 
+// interfaces
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
   positions: UseQueryResult<(IPoolWithUnderlying & any)[], Error>;
   prices: UseQueryResult<ITokenPrice[], Error>;
 }
 
+// utils
+const GET_ONCE_PROPS: any = {
+  refetchInterval: false,
+  refetchOnMount: false,
+  refetchOnReconnect: false,
+  refetchOnWindowFocus: false,
+};
+
+// contexts
 const PoolsContext = createContext<PoolsContextValue | undefined>(undefined);
 
+// providers
 const PoolsProvider = ({ children }: IChildren) => {
   const { address } = useAccount();
 
   // get all vaults
   const pools = useFetcher({
+    ...GET_ONCE_PROPS,
     queryKey: ['lending-pools'],
-    refetchInterval: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
   }) as UseQueryResult<IPoolWithUnderlying[], Error>;
 
   const poolWithLoans = useQuery({
@@ -43,11 +51,12 @@ const PoolsProvider = ({ children }: IChildren) => {
           return {
             ...p,
             ...loans,
+            loanData: true,
           };
         }),
       );
     },
-    enabled: pools.isFetched && !!pools?.data?.length,
+    enabled: pools.isFetched,
   });
 
   const positions = useQuery({
