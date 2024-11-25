@@ -15,13 +15,18 @@ input[type=number] {
 // custom styles
 
 // glow text
-.glow {
-  text-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+.glow-text-green {
+  text-shadow: 0px 0px 3px #00FF7E, 0px 0px 3px #00FF7E;
+}
+
+.glow-text-white {
+  text-shadow: 0px 0px 3px #fff, 0px 0px 3px #fff;
 }
 
 .stroke-text{
-  text-shadow:0px 0px 5px #00FF7E, 0px 0px 5px #00FF7E;
+  -webkit-text-stroke: 1px #00FF7E;
 }
+
 // glass background (used for cards)
 .glass {
   backdrop-filter: blur(10px) saturate(180%);

@@ -24,7 +24,7 @@ const StatRoot = styled('div', {
     flexDirection: 'column',
     alignItems: 'end',
     gap: theme.spacing(0.5),
-    padding: theme.spacing(3, 4),
+    padding: theme.spacing(0, 1),
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[2],
     letterSpacing: '-0.025em',
@@ -58,14 +58,14 @@ const StatUnit = styled('div', {
   name: 'MuiStat',
   slot: 'unit',
 })<{ ownerState: StatOwnerState; isdark?: number }>(
-  ({ theme, ownerState, isdark }) => ({
+  ({ theme, ownerState }) => ({
     ...theme.typography.body2,
     textTransform: 'uppercase',
-    color: theme.palette.text.secondary,
+    color: theme.palette.primary.main,
+    fontWeight: '800',
     opacity: 0.6,
     ...(ownerState.variant === 'inverse' && {
       boxShadow: 'none',
-      color: !isdark ? theme.palette.common.black : theme.palette.grey[300],
     }),
   }),
 );
@@ -78,13 +78,7 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
 
     const ownerState = { ...props, variant };
     return (
-      <StatRoot
-        ref={ref}
-        ownerState={ownerState}
-        {...other}
-        style={{ minWidth: '300px' }}
-        isdark={+isDark}
-      >
+      <StatRoot ref={ref} ownerState={ownerState} {...other} isdark={+isDark}>
         {props.loading ? (
           <Skeleton
             variant="rounded"
@@ -93,11 +87,7 @@ const StatAtom = React.forwardRef<HTMLDivElement, StatProps>(
             style={{ marginBottom: '6px', backgroundColor: 'gray' }}
           />
         ) : (
-          <StatValue
-            className="stroke-text"
-            ownerState={ownerState}
-            isdark={+isDark}
-          >
+          <StatValue className="" ownerState={ownerState} isdark={+isDark}>
             {value}
           </StatValue>
         )}

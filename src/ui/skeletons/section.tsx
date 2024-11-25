@@ -33,7 +33,7 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
   },
   [theme.breakpoints.up('lg')]: {
     flexDirection: 'row',
-    gap: '12rem',
+    gap: '24px',
   },
 }));
 
@@ -61,7 +61,7 @@ const SectionSkeleton = (props: ISectionProps) => {
 
       {(props.title || props.description) && (
         <ResponsiveStack>
-          <Box>
+          <Box maxWidth={{ lg: '500px' }}>
             {props.title && (
               <Fragment>
                 <Stack direction={'row'} gap={{ xs: 2, sm: 3, md: 4 }}>
@@ -122,11 +122,7 @@ const SectionSkeleton = (props: ISectionProps) => {
                     />
                   </Stack>
                 ) : (
-                  <Typography
-                    variant="body1"
-                    maxWidth={STYLE_VARS.descriptionWidth}
-                    marginBottom={1}
-                  >
+                  <Typography variant="body1" marginBottom={1}>
                     {props.description}
                   </Typography>
                 )}

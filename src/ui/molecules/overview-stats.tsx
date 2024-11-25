@@ -14,7 +14,7 @@ const ResponsiveStack = styled(Stack)(({ theme }) => ({
   },
   [theme.breakpoints.up('sm')]: {
     flexDirection: 'row',
-    gap: '16px',
+    gap: '60px',
   },
 }));
 
