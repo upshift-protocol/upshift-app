@@ -40,6 +40,7 @@ const PoolsProvider = ({ children }: IChildren) => {
             p,
             p.chainId as IChainId,
           );
+          console.log('loans:', loans);
           return {
             ...p,
             ...loans,
