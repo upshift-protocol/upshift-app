@@ -74,14 +74,12 @@ const HomePage = () => {
               title="Upshift Pools"
               data={filteredPools.upshift}
               loading={+allPoolsLoading}
-              pagination={false}
             />
           ) : null}
           <PoolsTableOrganism
             title="Partner Pools"
             data={filteredPools.partners}
             loading={+allPoolsLoading}
-            pagination={false}
           />
         </Stack>
       </Section>

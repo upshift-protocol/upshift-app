@@ -142,6 +142,12 @@ const ConnectWalletMolecule = ({
                 fullWidth
                 size="large"
                 variant={'outlined'}
+                color={
+                  color ??
+                  (selectedConnector?.id === connector?.id
+                    ? 'primary'
+                    : 'inherit')
+                }
                 style={{
                   justifyContent: 'start',
                 }}

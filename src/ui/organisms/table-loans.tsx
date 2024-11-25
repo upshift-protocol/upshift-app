@@ -5,9 +5,7 @@ import type {
   IPoolWithUnderlying,
 } from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
-import { DataGrid, GridCell, GridRow } from '@mui/x-data-grid';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import useFetcher from '@/hooks/use-fetcher';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -20,6 +18,7 @@ import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 import AssetDisplay from '../atoms/asset-display';
+import DataTable from '../molecules/data-table';
 
 const renderTokenExposure = (
   exp: { value: IAddress; label: string },
@@ -145,16 +144,25 @@ const columns: GridColDef<any[number]>[] = [
       if (!value?.length) return '-';
       return (
         <Stack direction="row" alignItems={'center'} height="100%" gap={1}>
-          {value.map((exp: { value: IAddress; label: string }, i: number) =>
-            exp.label !== 'eth' && String(exp.value) !== 'eth' ? (
-              <span
-                key={`table-loans-${row.id}-${exp.value}-${i}`}
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                {renderTokenExposure(exp, row, value, i)}
-              </span>
-            ) : null,
-          )}
+          {value
+            .filter(
+              (exp: { value: IAddress; label: string }) =>
+                exp.label !== 'eth' &&
+                String(exp.value) !== 'eth' &&
+                exp.value !== undefined,
+            )
+            .map((exp: { value: IAddress; label: string }, i: number) => {
+              const renderable = renderTokenExposure(exp, row, value, i);
+              if (renderable === null) return null;
+              return (
+                <span
+                  key={`table-loans-${row.id}-${exp.value}-${i}`}
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  {renderable}
+                </span>
+              );
+            })}
         </Stack>
       );
     },
@@ -215,21 +223,9 @@ const columns: GridColDef<any[number]>[] = [
     description: 'The borrowing interest rate paid back to the pool.',
     renderCell({ value }) {
       if (!value) return '-';
-      return `${value}%`;
+      return typeof value === 'number' ? `${value.toFixed(3)}%` : `${value}%`;
     },
   },
-  // {
-  //   field: 'liquidationLTV',
-  //   headerName: 'Liquidation LTV',
-  //   flex: 1,
-  //   type: 'number',
-  //   description:
-  //     'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
-  //   renderCell({ value }) {
-  //     if (!value) return '-';
-  //     return `${value}%`;
-  //   },
-  // },
 ];
 
 export default function VaultAllocation(
@@ -260,45 +256,12 @@ export default function VaultAllocation(
   };
 
   return (
-    <Stack gap={3} direction="column" minHeight="20rem">
-      <Typography variant="h6">Vault Allocation Breakdown</Typography>
-
-      <DataGrid
-        loading={props.loading || isLoading}
-        rows={rowsFormatter()}
-        rowHeight={60}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-          sorting: {
-            sortModel: [{ field: 'supply', sort: 'desc' }],
-          },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-        slots={{
-          cell(cellProps) {
-            return <GridCell {...cellProps} />;
-          },
-          row(rowProps) {
-            return <GridRow {...rowProps} />;
-          },
-          noRowsOverlay: () => (
-            <Stack height="100%" alignItems="center" justifyContent="center">
-              No active loans available
-            </Stack>
-          ),
-          noResultsOverlay: () => (
-            <Stack height="100%" alignItems="center" justifyContent="center">
-              Current filters return no results
-            </Stack>
-          ),
-        }}
-      />
-    </Stack>
+    <DataTable
+      title="Vault Allocation Breakdown"
+      columns={columns}
+      data={rowsFormatter()}
+      defaultSortKey="supply"
+      loading={props.loading || isLoading}
+    />
   );
 }

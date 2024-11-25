@@ -61,7 +61,11 @@ export default function AmountDisplay({
               {formatCompactNumber(Number(props.children))}
             </Typography>
             {props.symbol ? (
-              <Typography component={'span'}> {props.symbol}</Typography>
+              <Typography component={'span'}>
+                {props.symbol?.length === 1
+                  ? `${props.symbol}`
+                  : ` ${props.symbol}`}
+              </Typography>
             ) : null}
           </Typography>
           {props?.usd && usdValue && direction === 'column' ? (

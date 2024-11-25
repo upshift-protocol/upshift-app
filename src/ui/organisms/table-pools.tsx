@@ -1,163 +1,199 @@
 import Image from 'next/image';
-import type { IColumn } from '@/utils/types';
-import type { IPoolWithUnderlying, IAddress } from '@augustdigital/sdk';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import TableCell from '@mui/material/TableCell';
+import {
+  type IPoolWithUnderlying,
+  type IAddress,
+  explorerLink,
+  truncate,
+} from '@augustdigital/sdk';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
+import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
 import { getChainNameById } from '@/utils/helpers/ui';
+import { useMemo } from 'react';
 import AmountDisplay from '../atoms/amount-display';
-import TableMolecule from '../molecules/table';
-import PoolActionsMolecule from './actions-pool';
 import AssetDisplay from '../atoms/asset-display';
 import Background from '../atoms/background';
+import DataTable from '../molecules/data-table';
+import LinkAtom from '../atoms/anchor-link';
+import PoolActionsMolecule from './actions-pool';
 
-const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 180 },
+const newColumns: GridColDef<any[number]>[] = [
   {
-    id: 'chainId',
-    value: 'Chain',
-    minWidth: 50,
-    format: (value: number) => value.toString(),
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
-      if (!children)
-        return (
-          <TableCell>
-            <Skeleton variant="circular" height={36} width={36} />
-          </TableCell>
-        );
+    field: 'name',
+    headerName: 'Name',
+    description: 'Name of the vault.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 3,
+    editable: false,
+  },
+  {
+    field: 'chainId',
+    headerName: 'Chain',
+    description: 'Network the vault is deployed on.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 1,
+    editable: false,
+    renderCell({ value }) {
+      if (!value) return <Skeleton variant="circular" height={36} width={36} />;
       return (
-        <TableCell>
+        <Stack justifyContent={'center'} height="100%">
           <Stack justifyContent={'center'}>
             <Background color="white" variant="circular">
-              <Tooltip
-                title={getChainNameById(children?.[0])}
-                arrow
-                placement="top"
-              >
+              <Tooltip title={getChainNameById(value)} arrow placement="top">
                 <Image
-                  src={`/img/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
-                  alt={children?.[0]}
+                  src={`/img/chains/${value || FALLBACK_CHAINID}.svg`}
+                  alt={getChainNameById(value || FALLBACK_CHAINID)}
                   height={22}
                   width={22}
                 />
               </Tooltip>
             </Background>
           </Stack>
-        </TableCell>
+        </Stack>
       );
     },
   },
   {
-    id: 'underlying',
-    value: 'Deposit Token',
+    field: 'underlying',
+    headerName: 'Deposit Token',
+    description: 'Name of the vault.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
-    component: ({
-      children,
-    }: {
-      children?: { props?: { children: string } };
-    }) => {
-      const token = children?.props?.children?.split('_');
-      if (!token?.length) return null;
-      const [symbol, chain, address] = token;
-      if (!symbol)
+    editable: false,
+    renderCell({ value }) {
+      if (!value)
         return (
-          <TableCell>
-            <Stack alignItems="center" gap={1} direction="row">
-              <Skeleton variant="circular" height={24} width={24} />
-              <Skeleton variant="text" height={36} width={48} />
-            </Stack>
-          </TableCell>
+          <Stack alignItems="center" gap={1} direction="row">
+            <Skeleton variant="circular" height={24} width={24} />
+            <Skeleton variant="text" height={36} width={48} />
+          </Stack>
         );
       return (
-        <TableCell>
-          <Stack alignItems="start">
-            <div onClick={(e) => e.stopPropagation()}>
-              <AssetDisplay
-                img={`/img/tokens/${symbol}.svg`}
-                imgSize={20}
-                symbol={symbol}
-                address={address as IAddress}
-                chainId={chain ? Number(chain) : undefined}
-              />
-            </div>
-          </Stack>
-        </TableCell>
+        <Stack alignItems="start" justifyContent="center" height="100%">
+          <div onClick={(e) => e.stopPropagation()}>
+            <AssetDisplay
+              img={`/img/tokens/${value?.symbol}.svg`}
+              imgSize={20}
+              symbol={value?.symbol}
+              address={value?.address as IAddress}
+              chainId={value?.chain ? Number(value?.chain) : undefined}
+            />
+          </div>
+        </Stack>
       );
     },
   },
   {
-    id: 'totalSupply',
-    value: 'TVL',
-    align: 'right',
-    minWidth: 200,
-    format: (value: number) => value.toLocaleString('en-US'),
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
-      if (!children)
-        return (
-          <TableCell>
-            <Skeleton variant="text" height={36} />
-          </TableCell>
-        );
+    field: 'totalSupply',
+    headerName: 'TVL',
+    description: 'Name of the vault.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ value, row }) {
+      if (!value) return <Skeleton variant="text" height={36} width={90} />;
       return (
-        <TableCell>
-          <Stack alignItems="end">
-            <AmountDisplay symbol={children?.[2]} round usd>
-              {children?.[0] || '-'}
-            </AmountDisplay>
-          </Stack>
-        </TableCell>
+        <Stack alignItems="end" height="100%" justifyContent="center">
+          <AmountDisplay symbol={row?.underlying?.symbol} round usd>
+            {value.normalized || '-'}
+          </AmountDisplay>
+        </Stack>
       );
     },
   },
   {
-    id: 'apy',
-    // id: 'hardcodedApy',
-    value: 'Avg. APY',
-    minWidth: 100,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: {
-      children: { props: { children: string[] | string } };
-    }) => {
-      if (!children)
+    field: 'apy',
+    headerName: 'Avg. APY',
+    description: 'Name of the vault.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ value, row }) {
+      function renderInner() {
+        if (!row?.withLoans)
+          return <Skeleton variant="text" height={36} width={90} />;
+        if (!value) return <span>-</span>;
         return (
-          <TableCell>
-            <Skeleton variant="text" height={36} />
-          </TableCell>
+          <AmountDisplay round symbol="%">
+            {value}
+          </AmountDisplay>
         );
+      }
       return (
-        <TableCell>
-          <Stack alignItems="end">
-            <AmountDisplay>
-              {children?.length && Number(children?.[0]) >= 1
-                ? `${(children as string[]).join('')}`
-                : '-'}
-            </AmountDisplay>
-          </Stack>
-        </TableCell>
+        <Stack alignItems="end" height="100%" justifyContent="center">
+          {renderInner()}
+        </Stack>
       );
     },
   },
   {
-    id: 'hardcodedStrategist',
-    value: 'Strategist',
-    flex: 1,
+    field: 'hardcodedStrategist',
+    headerName: 'Strategist',
+    description: 'Name of the vault.',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ value, row }) {
+      function renderInner() {
+        if (!value) return <Skeleton variant="text" height={36} width={120} />;
+        return (
+          <LinkAtom href={`${explorerLink(value, row?.chainId, 'address')}`}>
+            {truncate(value)}
+          </LinkAtom>
+        );
+      }
+      return (
+        <Stack alignItems="end" height="100%" justifyContent="center">
+          {renderInner()}
+        </Stack>
+      );
+    },
+  },
+  {
+    field: 'address',
+    headerName: '',
+    description: '',
+    disableColumnMenu: true,
+    disableExport: true,
+    disableReorder: true,
+    editable: false,
+    sortable: false,
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 4,
+    renderCell({ value: _value, row }) {
+      return PoolActionsMolecule({ pool: row });
+    },
   },
 ];
 
@@ -165,28 +201,22 @@ export default function PoolsTableOrganism({
   title,
   data,
   loading,
-  pagination,
 }: {
   title?: string;
   data: IPoolWithUnderlying[];
   loading?: number;
-  pagination?: boolean;
 }) {
+  const memoizedData = useMemo(() => {
+    return data;
+  }, [JSON.stringify(data), loading]);
   return (
-    <Box>
-      {title ? (
-        <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
-          {title}
-        </Typography>
-      ) : null}
-      <TableMolecule
-        columns={columns}
-        data={data}
-        uidKey="address"
-        loading={loading}
-        action={(rowData) => PoolActionsMolecule({ pool: rowData })}
-        pagination={pagination}
-      />
-    </Box>
+    <DataTable
+      title={title || 'Pools'}
+      data={memoizedData}
+      defaultSortKey="totalSupply"
+      columns={newColumns}
+      loading={Boolean(loading)}
+      type="pools"
+    />
   );
 }

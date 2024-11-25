@@ -110,33 +110,6 @@ const columns: readonly IColumn[] = [
       );
     },
   },
-  // {
-  //   id: 'status',
-  //   value: 'Status',
-  //   flex: 1,
-  //   component: ({
-  //     children: {
-  //       props: { children },
-  //     },
-  //   }: any) => {
-  //     if (!children)
-  //       return (
-  //         <TableCell>
-  //           <Skeleton variant="text" height={36} />
-  //         </TableCell>
-  //       );
-  //     return (
-  //       <TableCell>
-  //         <Chip
-  //           label={String(children)}
-  //           color={renderVariant(children)}
-  //           variant="outlined"
-  //         />
-  //       </TableCell>
-  //     );
-  //   },
-  // },
-  // { id: 'position', value: 'Position', align: 'right', flex: 2 },
   {
     id: 'apy',
     // id: 'hardcodedApy',

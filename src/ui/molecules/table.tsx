@@ -51,6 +51,9 @@ type ITable = {
   cardBg?: string;
 };
 
+/**
+ * @deprecated use data-table.tsx instead
+ */
 export default function TableMolecule({
   data,
   columns,
