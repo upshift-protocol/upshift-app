@@ -98,13 +98,8 @@ export type IActiveStakePosition = {
   rewardDistributor: IAddress;
   rewardPerSecond: INormalizedNumber;
   apy?: number;
-  stakedPositionDetail: {
-    name: string;
-    symbol: string;
-    address: IAddress;
-    chain: number;
-  };
   chainId: number;
+  id: string;
 };
 export type INewReferralBody = {
   address: string;

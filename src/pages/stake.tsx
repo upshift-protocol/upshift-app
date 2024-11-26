@@ -130,6 +130,7 @@ const StakePage = () => {
         (Number(totalStaked?.normalized) * Number(avaxPriceInUSD?.normalized));
 
       const activePosition: IActiveStakePosition = {
+        id: '1',
         rewardToken: {
           decimals: chain?.nativeCurrency?.decimals as number,
           symbol: chain?.nativeCurrency?.symbol as string,
@@ -152,12 +153,6 @@ const StakePage = () => {
         rewardDistributor: rewardDistributorAddress,
         rewardPerSecond: rewardsPerSecond,
         apy: APR,
-        stakedPositionDetail: {
-          name: name as string,
-          symbol: symbol as string,
-          address: stakingToken as IAddress,
-          chain: chainId,
-        },
         chainId,
       };
 
@@ -185,7 +180,7 @@ const StakePage = () => {
             }
           >
             <MyActiveStakingOrganism
-              title="Acteive Stake Position"
+              title="Active Stake Position"
               data={stakingPosition}
               loading={+(activeStakingLoading || tokenMetaLoading)}
               refetchActiveStaking={refetchActiveStaking}

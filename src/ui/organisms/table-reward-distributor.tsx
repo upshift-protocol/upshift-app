@@ -1,8 +1,5 @@
 import Image from 'next/image';
-
-import type { IColumn } from '@/utils/types';
-import type { IWSTokenEntry } from '@augustdigital/sdk';
-
+import type { IAddress } from '@augustdigital/sdk';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
@@ -11,65 +8,66 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { getChainNameById } from '@/utils/helpers/ui';
+import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants';
 import AmountDisplay from '../atoms/amount-display';
-import TableMolecule from '../molecules/table';
 import AssetDisplay from '../atoms/asset-display';
 import Background from '../atoms/background';
 import RewardDistributorActionsMolecule from './actions-reward-distributor';
 
-const columns: readonly IColumn[] = [
+const columns: readonly GridColDef<any[number]>[] = [
   {
-    id: 'stakedPositionDetail',
-    value: 'Staking Position',
-    minWidth: 180,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children)
-        return (
-          <TableCell>
-            <Skeleton variant="text" height={36} />
-          </TableCell>
-        );
+    field: 'name',
+    headerName: 'Position',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ row }) {
+      if (!row) return '-';
+      const { stakingToken } = row;
       return (
-        <TableCell>
-          <AssetDisplay
-            img={`/img/tokens/${children.symbol}.svg`}
-            imgSize={20}
-            symbol={children.symbol}
-            address={children.address}
-            chainId={children?.chain}
-          />
-        </TableCell>
+        <Stack justifyContent={'center'} height="100%">
+          {stakingToken?.name}
+        </Stack>
       );
     },
   },
   {
-    id: 'chainId',
-    value: 'Chain',
-    minWidth: 50,
-    format: (value: number) => value.toString(),
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
-      if (!children)
+    field: 'chain',
+    headerName: 'Chain',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ row }) {
+      if (!row) {
         return (
           <TableCell>
             <Skeleton variant="circular" height={36} width={36} />
           </TableCell>
         );
+      }
+
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
             <Background color="white" variant="circular">
               <Tooltip
-                title={getChainNameById(children?.[0])}
+                title={getChainNameById(row?.chainId)}
                 arrow
                 placement="top"
               >
                 <Image
-                  src={`/img/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
-                  alt={children?.[0]}
+                  src={`/img/chains/${row?.chainId && row?.chainId !== '-' ? row?.chainId : FALLBACK_CHAINID}.svg`}
+                  alt={row?.chainId}
                   height={22}
                   width={22}
                 />
@@ -81,11 +79,18 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'stakingToken',
-    value: 'Deposit Token',
+    field: 'depositToken',
+    headerName: 'Deposit Token',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children?.symbol)
+    editable: false,
+    renderCell({ row }) {
+      const { stakingToken, chainId } = row;
+      if (!row) {
         return (
           <TableCell>
             <Stack alignItems="center" gap={1} direction="row">
@@ -94,16 +99,18 @@ const columns: readonly IColumn[] = [
             </Stack>
           </TableCell>
         );
+      }
+
       return (
         <TableCell>
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${children.symbol}.svg`}
+                img={`/img/tokens/${stakingToken.symbol}.svg`}
                 imgSize={20}
-                symbol={children.symbol}
-                address={children.address}
-                chainId={children?.chain}
+                symbol={stakingToken.symbol}
+                address={stakingToken?.address as IAddress}
+                chainId={chainId ? Number(chainId) : undefined}
               />
             </div>
           </Stack>
@@ -112,27 +119,62 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'stakingToken',
-    value: 'Total Supply',
-    align: 'right',
-    minWidth: 200,
-    format: (value: number) => value.toLocaleString('en-US'),
-    component: ({ children }: { children?: any }) => {
-      if (!children.totalSupply)
+    field: 'totalSupply',
+    headerName: 'Total Supply',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ row }) {
+      const { stakingToken } = row;
+      if (!stakingToken?.usd) {
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
+      }
+
+      console.log(row, 'stakingToke');
+
       return (
-        <TableCell>
+        <TableCell
+          style={{
+            paddingTop: '2px',
+          }}
+        >
           <Stack alignItems="end">
-            <AmountDisplay symbol={children?.symbol} round usd>
-              {children?.totalSupply?.normalized || '-'}
+            <AmountDisplay symbol={stakingToken?.symbol} round usd>
+              {stakingToken?.totalSupply?.normalized || '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
       );
+    },
+  },
+  {
+    field: 'stake',
+    headerName: '',
+    description: '',
+    disableColumnMenu: true,
+    disableExport: true,
+    disableReorder: true,
+    editable: false,
+    sortable: false,
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    renderCell({ row }) {
+      return RewardDistributorActionsMolecule({
+        stakingToken: row,
+        type: 'staking',
+      });
     },
   },
 ];
@@ -141,7 +183,6 @@ export default function RewardDistributorTableOrganism({
   title,
   data,
   loading,
-  pagination,
 }: {
   title?: string;
   data?: any;
@@ -155,20 +196,36 @@ export default function RewardDistributorTableOrganism({
           {title}
         </Typography>
       ) : null}
-      <TableMolecule
+
+      <DataGrid
+        loading={loading === 1}
+        rows={data}
+        rowHeight={60}
         columns={columns}
-        data={data}
-        uidKey="address"
-        loading={loading}
-        action={(rowData) =>
-          RewardDistributorActionsMolecule({
-            stakingToken: rowData,
-            type: 'staking',
-          })
-        }
-        pagination={pagination}
-        emptyText="No Staking Positions"
-        disableRowClick={true}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+          sorting: {
+            sortModel: [{ field: 'supply', sort: 'desc' }],
+          },
+        }}
+        pageSizeOptions={[5]}
+        disableRowSelectionOnClick
+        slots={{
+          noRowsOverlay: () => (
+            <Stack height="100%" alignItems="center" justifyContent="center">
+              No Staking Position Available
+            </Stack>
+          ),
+          noResultsOverlay: () => (
+            <Stack height="100%" alignItems="center" justifyContent="center">
+              Current filters return no results
+            </Stack>
+          ),
+        }}
       />
     </Box>
   );

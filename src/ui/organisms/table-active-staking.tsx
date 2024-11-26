@@ -1,68 +1,92 @@
-import type { IColumn } from '@/utils/types';
-
 import Typography from '@mui/material/Typography';
 import TableCell from '@mui/material/TableCell';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
-
 import { getChainNameById } from '@/utils/helpers/ui';
-import type { IWSTokenEntry } from '@augustdigital/sdk';
-import { round } from '@augustdigital/sdk';
+import type { IAddress } from '@augustdigital/sdk';
 import Image from 'next/image';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { Paper, useTheme } from '@mui/material';
 import { useThemeMode } from '@/stores/theme';
-import TableMolecule from '../molecules/table';
+import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants';
 import AmountDisplay from '../atoms/amount-display';
 import AssetDisplay from '../atoms/asset-display';
 import Background from '../atoms/background';
 import RewardDistributorActionsMolecule from './actions-reward-distributor';
 
-const columns: readonly IColumn[] = [
+const columns: readonly GridColDef<any[number]>[] = [
   {
-    id: 'stakedPositionDetail',
-    value: 'Staked Token',
-    minWidth: 180,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children)
+    field: 'stakedToken',
+    headerName: 'Staked Token',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ row }) {
+      const { stakingToken, chainId } = row;
+      if (!row) {
         return (
           <TableCell>
-            <Skeleton variant="text" height={36} />
+            <Stack alignItems="center" gap={1} direction="row">
+              <Skeleton variant="circular" height={24} width={24} />
+              <Skeleton variant="text" height={36} width={48} />
+            </Stack>
           </TableCell>
         );
+      }
+
       return (
         <TableCell>
-          <AssetDisplay
-            img={`/img/tokens/${children.symbol}.svg`}
-            imgSize={20}
-            symbol={children.symbol}
-            address={children.address}
-            chainId={children?.chain}
-          />
+          <Stack alignItems="start">
+            <div onClick={(e) => e.stopPropagation()}>
+              <AssetDisplay
+                img={`/img/tokens/${stakingToken.symbol}.svg`}
+                imgSize={20}
+                symbol={stakingToken.symbol}
+                address={stakingToken?.address as IAddress}
+                chainId={chainId ? Number(chainId) : undefined}
+              />
+            </div>
+          </Stack>
         </TableCell>
       );
     },
   },
   {
-    id: 'stakingToken',
-    value: 'Total Staked',
+    field: 'totalStaked',
+    headerName: 'Total Staked',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
-    align: 'right',
-    format: (value: number) => round(value),
-    component: ({ children }: { children: any }) => {
-      console.log(children, 'stakingToken');
-      if (!children)
+    editable: false,
+    renderCell({ row }) {
+      const { stakingToken } = row;
+      if (!stakingToken?.usd) {
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
+      }
+
       return (
-        <TableCell>
+        <TableCell
+          style={{
+            paddingTop: '2px',
+          }}
+        >
           <Stack alignItems="end">
-            <AmountDisplay symbol={children.symbol} round usd>
-              {children?.totalStaked?.normalized || '-'}
+            <AmountDisplay symbol={stakingToken?.symbol} round usd>
+              {stakingToken?.totalStaked?.normalized || '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
@@ -70,35 +94,38 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'chainId',
-    value: 'Chain',
-    minWidth: 50,
-    format: (value: number) => value.toString(),
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
-      if (!children)
+    field: 'chain',
+    headerName: 'Chain',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 1,
+    editable: false,
+    renderCell({ row }) {
+      if (!row) {
         return (
           <TableCell>
-            <Skeleton variant="text" height={36} />
+            <Skeleton variant="circular" height={36} width={36} />
           </TableCell>
         );
+      }
+
       return (
         <TableCell>
           <Stack justifyContent={'center'}>
             <Background color="white" variant="circular">
               <Tooltip
-                title={getChainNameById(children?.[0])}
+                title={getChainNameById(row?.chainId)}
                 arrow
                 placement="top"
               >
                 <Image
-                  src={`/img/chains/${children?.[0] && children?.[0] !== '-' ? children[0] : FALLBACK_CHAINID}.svg`}
-                  alt={children?.[0]}
-                  height={20}
-                  width={20}
+                  src={`/img/chains/${row?.chainId && row?.chainId !== '-' ? row?.chainId : FALLBACK_CHAINID}.svg`}
+                  alt={row?.chainId}
+                  height={22}
+                  width={22}
                 />
               </Tooltip>
             </Background>
@@ -108,11 +135,18 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'rewardToken',
-    value: 'Reward Token',
+    field: 'rewardToken',
+    headerName: 'Reward Token',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children?.symbol)
+    editable: false,
+    renderCell({ row }) {
+      const { rewardToken, chainId } = row;
+      if (!rewardToken?.usd) {
         return (
           <TableCell>
             <Stack alignItems="center" gap={1} direction="row">
@@ -121,16 +155,18 @@ const columns: readonly IColumn[] = [
             </Stack>
           </TableCell>
         );
+      }
+
       return (
         <TableCell>
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${children.symbol}.svg`}
+                img={`/img/tokens/${rewardToken.symbol}.svg`}
                 imgSize={20}
-                symbol={children.symbol}
-                address={children.address}
-                chainId={children?.chain}
+                symbol={rewardToken.symbol}
+                address={rewardToken?.address as IAddress}
+                chainId={chainId ? Number(chainId) : undefined}
               />
             </div>
           </Stack>
@@ -139,24 +175,32 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'apy',
-    value: 'APY',
-    flex: 1,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-    component: ({ children }: any) => {
-      if (!children?.props?.children)
+    field: 'apy',
+    headerName: 'APY',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 2,
+    editable: false,
+    renderCell({ row }) {
+      const { apy } = row;
+      if (!apy) {
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
-      const { children: subchildren } = children.props;
+      }
+
       return (
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay>
-              {subchildren ? `${subchildren[0]} ${subchildren[1]}` : '-'}
+              {apy && Number(apy) >= 1
+                ? `${([apy] as string[]).join('')?.toString()?.slice(0, 5)}%`
+                : '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
@@ -164,27 +208,62 @@ const columns: readonly IColumn[] = [
     },
   },
   {
-    id: 'rewardToken',
-    value: 'Claimable',
+    field: 'claimable',
+    headerName: 'Claimable',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
     flex: 2,
-    align: 'right',
-    format: (value: number) => round(value),
-    component: ({ children }: any) => {
-      if (!children)
+    editable: false,
+    renderCell({ row }) {
+      const { rewardToken } = row;
+      if (!rewardToken?.usd) {
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
+      }
+
+      console.log(row, 'stakingToke');
+
       return (
-        <TableCell>
+        <TableCell
+          style={{
+            paddingTop: '2px',
+          }}
+        >
           <Stack alignItems="end">
-            <AmountDisplay symbol={children?.symbol} round usd>
-              {children?.redeemable?.normalized || '-'}
+            <AmountDisplay symbol={rewardToken?.symbol} round usd>
+              {rewardToken?.redeemable?.normalized || '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
       );
+    },
+  },
+  {
+    field: 'stake',
+    headerName: '',
+    description: '',
+    disableColumnMenu: true,
+    disableExport: true,
+    disableReorder: true,
+    editable: false,
+    sortable: false,
+    flex: 3,
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    renderCell({ row }) {
+      return RewardDistributorActionsMolecule({
+        stakingToken: row,
+        type: 'unstaking',
+      });
     },
   },
 ];
@@ -216,20 +295,35 @@ export default function MyActiveStakingOrganism({
           {title}
         </Typography>
       ) : null}
-      <TableMolecule
+      <DataGrid
+        loading={loading === 1}
+        rows={data}
+        rowHeight={60}
         columns={columns}
-        data={data}
-        uidKey="address"
-        loading={loading}
-        action={(rowData: any) =>
-          RewardDistributorActionsMolecule({
-            stakingToken: rowData,
-            type: 'unstaking',
-          })
-        }
-        pagination={false}
-        emptyText="No positions available"
-        disableRowClick={true}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+          sorting: {
+            sortModel: [{ field: 'supply', sort: 'desc' }],
+          },
+        }}
+        pageSizeOptions={[5]}
+        disableRowSelectionOnClick
+        slots={{
+          noRowsOverlay: () => (
+            <Stack height="100%" alignItems="center" justifyContent="center">
+              No Staking Position Available
+            </Stack>
+          ),
+          noResultsOverlay: () => (
+            <Stack height="100%" alignItems="center" justifyContent="center">
+              Current filters return no results
+            </Stack>
+          ),
+        }}
       />
     </Paper>
   );
