@@ -84,7 +84,8 @@ const StakePage = () => {
       {
         address: rewardDistributorAddress,
         abi: RewardDistributorABI,
-        functionName: 'totalStaked',
+        functionName: 'balanceOf',
+        args: [address],
         chainId,
       },
       {
