@@ -227,8 +227,6 @@ const columns: readonly GridColDef<any[number]>[] = [
         );
       }
 
-      console.log(row, 'stakingToke');
-
       return (
         <TableCell
           style={{
