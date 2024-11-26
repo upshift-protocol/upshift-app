@@ -1,18 +1,12 @@
-import useFetcher from '@/hooks/use-fetcher';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import type {
-  IAddress,
-  IChainId,
-  IPoolWithUnderlying,
-} from '@augustdigital/sdk';
+import type { IAddress, IChainId } from '@augustdigital/sdk';
 import AssetDisplay from '@/ui/atoms/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/table-loans';
 import Stack from '@mui/material/Stack';
 import DepositModalMolecule from '@/ui/organisms/modal-deposit';
 import WithdrawModalMolecule from '@/ui/organisms/modal-withdraw';
-import type { UseQueryResult } from '@tanstack/react-query';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import { useAccount } from 'wagmi';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -20,6 +14,9 @@ import { augustSdk } from '@/config/august-sdk';
 import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
+
+import ExposureCharts from '@/ui/organisms/exposure-charts';
+import { usePoolsStore } from '@/stores/pools';
 
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
@@ -53,36 +50,25 @@ export const getStaticProps = (async (context) => {
 const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
+  const [position, setPosition] = useState<any>([]);
 
-  const { data: pool, isLoading: poolLoading } = useFetcher({
-    queryKey: ['lending-pool', params.pool, String(params.chain_id)],
-  }) as UseQueryResult<any>; // TODO: interface
+  const {
+    positions: { data: positions, isLoading: positionsLoading },
+    pools: { data: poolsData, isFetched: poolFetched },
+  } = usePoolsStore();
 
-  const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions', params.pool],
-    wallet: address,
-    enabled: walletConnected && !!pool?.address,
-    initialData: [],
-    formatter(data) {
-      return data?.filter(
-        (p: IPoolWithUnderlying) => p.address === pool?.address,
-      );
-    },
-  }) as UseQueryResult<any>; // TODO: interface
+  const pool = poolsData?.find((p) => p.address === params.pool) as any;
+
+  useEffect(() => {
+    if (positions?.length) {
+      setPosition(positions.filter((p) => p.address === params.pool));
+    }
+  }, [positions?.length, params?.pool]);
 
   useEffect(() => {
     if (address) setWalletConnected(true);
     else setWalletConnected(false);
   }, [address]);
-
-  // function buildCrumbs(): IBreadCumb[] {
-  //   return [
-  //     {
-  //       text: 'Earn',
-  //       href: '/',
-  //     },
-  //   ];
-  // }
 
   return (
     <Base>
@@ -94,7 +80,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
           `${pool?.name} vault aims to optimize ${pool?.underlying?.symbol || 'its underlying deposit token'} yield by providing liquidity to blue chip DeFi protocols and maximizing future airdrop potential.`
         }
         // breadcrumbs={buildCrumbs()}
-        loading={+poolLoading}
+        loading={+!poolFetched && +!pool?.name}
         chainId={pool?.chainId}
         action={
           <Stack direction="column" alignItems={'end'} gap={2}>
@@ -107,7 +93,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
               }
               variant="glass"
               address={pool?.underlying?.address}
-              loading={poolLoading}
+              loading={!poolFetched && !pool?.underlying?.symbol}
             />
             <Stack direction={'row'} gap={1}>
               <DepositModalMolecule {...pool} chainId={params?.chain_id} />
@@ -117,16 +103,25 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
         }
       >
         <Stack gap={3}>
-          <Stack direction="column" gap={6} mt={2}>
-            <VaultInfo {...pool} loading={+poolLoading} />
-            <Collapse in={walletConnected && Boolean(positions?.length)}>
+          <Stack direction="column" gap={4} mt={2}>
+            <VaultInfo
+              {...pool}
+              loading={+!poolFetched && +!pool?.totalSupply}
+            />
+            <Collapse in={walletConnected && Boolean(position?.length)}>
               <MyPositionsTableOrganism
                 title="My Positions"
-                data={positions}
+                data={position}
                 loading={+positionsLoading}
               />
             </Collapse>
-            <VaultAllocation {...pool} loading={poolLoading} />
+
+            <ExposureCharts
+              pool={pool}
+              loading={!(poolFetched && pool?.withLoans)}
+            />
+
+            <VaultAllocation {...pool} loading={!poolFetched} />
           </Stack>
         </Stack>
       </Section>

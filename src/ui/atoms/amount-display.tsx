@@ -2,8 +2,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { formatCompactNumber, formatUsd } from '@/utils/helpers/ui';
-import useTokens from '@/hooks/use-tokens';
 import { Chip } from '@mui/material';
+import { usePoolsStore } from '@/stores/pools';
 
 type IAmountDisplay = {
   symbol?: string;
@@ -18,11 +18,9 @@ export default function AmountDisplay({
   direction = 'column',
   ...props
 }: IAmountDisplay) {
-  const { data: allPrices } = useTokens({
-    enabled: !!props.symbol && props?.usd,
-  });
+  const { prices } = usePoolsStore();
   const usdValue =
-    allPrices?.find((p) => p.symbol === props.symbol)?.price || 1;
+    prices?.data?.find((p) => p.symbol === props.symbol)?.price || 1;
 
   if (props.round) {
     return (

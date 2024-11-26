@@ -1,19 +1,25 @@
+export const REFERRALS_ENABLED =
+  process.env.NEXT_PUBLIC_REFERRALS_ENABLED === 'true';
+
 export const BUTTON_TEXTS = {
   zero: 'Input an Amount',
   submit: 'Submit Transaction',
+  submit_many: (num: number | string) =>
+    `Submit ${num} Transaction${Number(num) > 1 ? 's' : ''}`,
   error: 'Error Executing Transaction',
   success: 'Transaction Complete',
   submitting: 'Submitting Transaction',
   approve: 'Approve Input Amount',
   approving: 'Approving Input Amount',
   insufficient: 'Insufficient Balance',
+  full: 'Deposit Cap Reached',
 };
 
 export const STYLE_VARS = {
   widthWide: '120rem',
   width: '100rem',
   descriptionWidth: '800px',
-  assetDivWidth: '60px',
+  assetDivWidth: '72px',
 };
 
 export const FALLBACK_TOKEN_IMG =

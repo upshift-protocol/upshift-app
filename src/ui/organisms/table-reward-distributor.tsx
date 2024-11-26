@@ -169,7 +169,6 @@ export default function RewardDistributorTableOrganism({
         pagination={pagination}
         emptyText="No Staking Positions"
         disableRowClick={true}
-        sideEffects={data[0]?.stakingToken?.totalStaked?.normalized}
       />
     </Box>
   );

@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack';
 import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useDeposit from '@/hooks/use-deposit';
+import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';
@@ -14,21 +15,30 @@ export default function DepositModalMolecule(
     props?.underlying?.address,
     props?.chainId as IChainId,
   );
-  const { handleDeposit, isSuccess, button, expected, isLoading } = useDeposit({
-    ...inInputProps,
-    asset: props?.asset,
-    pool: props?.address,
-    poolName: props?.name,
-    chainId: props?.chainId as IChainId,
-  });
+  const { handleDeposit, isSuccess, button, expected, isLoading, isFull } =
+    useDeposit({
+      ...inInputProps,
+      asset: props?.asset,
+      pool: props?.address,
+      poolName: props?.name,
+      chainId: props?.chainId as IChainId,
+      supplyCheck:
+        props?.symbol === 'upUSD'
+          ? {
+              totalSupply: props?.totalSupply.raw,
+              maxSupply: props?.maxSupply?.raw || undefined,
+            }
+          : undefined, // @temporary: alex requested we check for max supply
+    });
 
   return (
     <ModalAtom
       title="Deposit"
       buttonProps={{
-        children: 'Deposit',
+        children: isFull ? BUTTON_TEXTS.full : 'Deposit',
         variant: 'outlined',
-        disabled: !props?.address,
+        color: isFull ? 'warning' : undefined,
+        disabled: !props?.address || isFull,
       }}
       // TODO: leave modal open for 4 seconds
       onClose={inInputProps.clearInput}
@@ -56,7 +66,8 @@ export default function DepositModalMolecule(
           loading={+expected.loading}
           chainId={props?.chainId}
           pool={{
-            apy: props?.hardcodedApy || props?.apy,
+            apy: Number(props?.apy) <= 1 ? '-' : props?.apy,
+            // || props?.hardcodedApy,
             collateral: props?.collateral,
           }}
         />
@@ -67,8 +78,8 @@ export default function DepositModalMolecule(
           size="large"
           variant="contained"
           disabled={button.disabled}
-          chainId={props?.chainId}
-          loading={isLoading}
+          chainid={props?.chainId}
+          loading={+isLoading}
         >
           {button.text}
         </Web3Button>

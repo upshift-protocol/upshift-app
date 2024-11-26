@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { toNormalizedBn, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Fragment, useMemo } from 'react';
 import { formatUsd } from '@/utils/helpers/ui';
-import useTokens from '@/hooks/use-tokens';
+import { usePoolsStore } from '@/stores/pools';
 import CustomStat from '../atoms/stat';
 
 const ResponsiveStack = styled(Stack)(({ theme }) => ({
@@ -25,7 +25,9 @@ const OverviewStatsMolecule = ({
   pools?: IPoolWithUnderlying[];
   loading?: number;
 }) => {
-  const { data: tokens, isLoading } = useTokens();
+  const {
+    prices: { data: tokens, isLoading },
+  } = usePoolsStore();
 
   const totalSupplied = useMemo(() => {
     if (!pools?.length) return '0.0';

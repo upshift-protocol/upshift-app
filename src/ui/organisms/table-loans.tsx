@@ -55,7 +55,7 @@ const renderTokenExposure = (
         <LinkAtom
           href={explorerLink(
             exp.value,
-            (row?.chainId, FALLBACK_CHAINID),
+            row?.chainId || FALLBACK_CHAINID,
             'address',
           )}
         >
@@ -106,7 +106,7 @@ const columns: GridColDef<any[number]>[] = [
       </span>
     ),
     flex: 2,
-    editable: true,
+    editable: false,
     renderCell({ value, row }) {
       if (!value?.length) return '-';
       return (
@@ -140,7 +140,7 @@ const columns: GridColDef<any[number]>[] = [
       </span>
     ),
     flex: 2,
-    editable: true,
+    editable: false,
     renderCell({ value, row }) {
       if (!value?.length) return '-';
       return (
@@ -171,7 +171,7 @@ const columns: GridColDef<any[number]>[] = [
     flex: 1,
     sortable: true,
     type: 'number',
-    editable: true,
+    editable: false,
     renderCell({ value }) {
       if (!value) return '- %';
       if (typeof value === 'number') return `${(value * 100).toFixed(3)}%`;
@@ -189,7 +189,7 @@ const columns: GridColDef<any[number]>[] = [
     ),
     type: 'number',
     flex: 2,
-    editable: true,
+    editable: false,
     renderCell({ value, row }) {
       if (!value) return '-';
       return (
@@ -211,6 +211,7 @@ const columns: GridColDef<any[number]>[] = [
     ),
     flex: 1,
     type: 'number',
+    editable: false,
     description: 'The borrowing interest rate paid back to the pool.',
     renderCell({ value }) {
       if (!value) return '-';
@@ -253,12 +254,13 @@ export default function VaultAllocation(
       underlying: props?.underlying?.symbol,
       positions: l?.positions,
       exposure: l?.exposure,
+      chainId: props?.chainId,
     }));
     return loansWithData;
   };
 
   return (
-    <Stack gap={3} direction="column">
+    <Stack gap={3} direction="column" minHeight="20rem">
       <Typography variant="h6">Vault Allocation Breakdown</Typography>
 
       <DataGrid

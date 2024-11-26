@@ -1,40 +1,51 @@
-import useFetcher from '@/hooks/use-fetcher';
+import { usePoolsStore } from '@/stores/pools';
 import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
 import PoolsTableOrganism from '@/ui/organisms/table-pools';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import type { IPoolWithUnderlying } from '@augustdigital/sdk';
+import { REFERRALS_ENABLED } from '@/utils/constants/ui';
 import { Collapse, Stack } from '@mui/material';
-import type { UseQueryResult } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 const HomePage = () => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
 
-  const { data: allPools, isLoading: allPoolsLoading } = useFetcher({
-    queryKey: ['lending-pools'],
-  }) as UseQueryResult<IPoolWithUnderlying[]>;
+  const {
+    pools: { data: allPools, isLoading: allPoolsLoading },
+    positions: { data: positions, isLoading: positionsLoading },
+  } = usePoolsStore();
 
-  const { data: positions, isLoading: positionsLoading } = useFetcher({
-    queryKey: ['my-positions'],
-    wallet: address,
-    enabled: walletConnected,
-  }) as UseQueryResult<any>;
-
-  function filteredPools() {
-    const partnerPools = ['kelp gain', 'lombard lbtc'];
+  const filteredPools = useMemo(() => {
+    const partnerPools = [
+      'kelp gain',
+      'lombard lbtc',
+      'upshift avalanche ausd',
+      'high growth eth',
+    ];
+    if (!allPools?.length) {
+      return { partners: [], upshift: [], myPositions: [] };
+    }
     return {
-      partners: allPools?.filter((p) =>
-        partnerPools.includes(p?.name?.toLowerCase()),
-      ),
-      upshift: allPools?.filter(
-        (p) => !partnerPools.includes(p?.name?.toLowerCase()),
+      partners: allPools
+        ?.filter((p) => partnerPools.includes(p?.name?.toLowerCase()))
+        .sort((a, b) => {
+          return BigInt(a.totalSupply.raw) < BigInt(b.totalSupply.raw) ? 1 : -1;
+        }),
+      upshift: allPools
+        ?.filter((p) => !partnerPools.includes(p?.name?.toLowerCase()))
+        .sort((a, b) => {
+          // sort manually
+          if (b.symbol === 'upUSD') return -1;
+          return BigInt(a.totalSupply.raw) > BigInt(b.totalSupply.raw) ? 1 : -1;
+        }),
+      myPositions: positions?.sort((_a, b) =>
+        b?.status === 'REDEEM' ? 1 : -1,
       ),
     };
-  }
+  }, [JSON.stringify(allPools), JSON.stringify(positions)]);
 
   useEffect(() => {
     if (address) setWalletConnected(true);
@@ -45,7 +56,7 @@ const HomePage = () => {
     <Base>
       <Section
         id="earn-table"
-        description="Upshift pools generate yields from institutional loans on the August protocol."
+        description="Upshift opens access to transparent yields backed by secure risk controls. Supply, stake and access cross-chain yields. For access to other pools, please reach out."
         action={
           <OverviewStatsMolecule loading={+allPoolsLoading} pools={allPools} />
         }
@@ -54,19 +65,21 @@ const HomePage = () => {
           <Collapse in={walletConnected && Boolean(positions?.length)}>
             <MyPositionsTableOrganism
               title="My Positions"
-              data={positions}
+              data={filteredPools.myPositions}
               loading={+positionsLoading}
             />
           </Collapse>
-          <PoolsTableOrganism
-            title="Upshift Pools"
-            data={filteredPools().upshift}
-            loading={+allPoolsLoading}
-            pagination={false}
-          />
+          {!REFERRALS_ENABLED ? (
+            <PoolsTableOrganism
+              title="Upshift Pools"
+              data={filteredPools.upshift}
+              loading={+allPoolsLoading}
+              pagination={false}
+            />
+          ) : null}
           <PoolsTableOrganism
             title="Partner Pools"
-            data={filteredPools().partners}
+            data={filteredPools.partners}
             loading={+allPoolsLoading}
             pagination={false}
           />

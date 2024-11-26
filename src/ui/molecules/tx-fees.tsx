@@ -7,8 +7,9 @@ import {
   type IPoolAction,
 } from '@augustdigital/sdk';
 import { Skeleton, Stack, Typography } from '@mui/material';
-import { useAccount, useGasPrice } from 'wagmi';
+import { useGasPrice, useChainId } from 'wagmi';
 import { Suspense } from 'react';
+import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import BoxedListAtom from '../atoms/boxed-list';
 
 type ITxFees = {
@@ -24,9 +25,9 @@ type ITxFees = {
 };
 
 export default function TxFeesAtom(props: ITxFees) {
+  const chainId = useChainId();
   const { data: gasPrice } = useGasPrice({ chainId: props?.chainId });
   const feeTotal = (gasPrice || BigInt(0)) * (props.fee || BigInt(0));
-  const { chain } = useAccount();
 
   function renderValue(value?: string, type?: 'lock' | 'gas') {
     switch (type) {
@@ -57,8 +58,9 @@ export default function TxFeesAtom(props: ITxFees) {
               height="14px"
             />
           );
-        if (typeof type === 'string') return `${value} ETH` || '-';
-        return `${value} ${chain?.nativeCurrency?.symbol || 'ETH'} ` || '-';
+        if (typeof type === 'string')
+          return `${value} ${getNativeTokenByChainId(chainId)}` || '-';
+        return `${value} ${getNativeTokenByChainId(chainId)}` || '-';
       }
     }
   }
@@ -93,8 +95,10 @@ export default function TxFeesAtom(props: ITxFees) {
         );
       case 'deposit': {
         const rounded =
-          props?.pool?.hardcodedApy ||
-          round(props?.pool?.apy as number | string);
+          // props?.pool?.hardcodedApy ||
+          props?.pool?.apy === '-'
+            ? '-'
+            : round(props?.pool?.apy as number | string);
         return (
           <BoxedListAtom
             items={[
@@ -110,7 +114,10 @@ export default function TxFeesAtom(props: ITxFees) {
               },
               {
                 label: 'Estimated APY',
-                value: `${(rounded !== 'NaN' ? rounded : '0.00') || '0.00'}%`,
+                value:
+                  rounded === '-'
+                    ? '-'
+                    : `${rounded !== 'NaN' ? rounded : '0.00'}%`,
               },
             ]}
           />

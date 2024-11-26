@@ -5,7 +5,7 @@ import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
 import { DEVELOPMENT_MODE, FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { getChainNameById } from '@/utils/helpers/ui';
-// import type { IDepositLogData } from '@/utils/types';
+import SLACK from '@/utils/slack';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import {
   ABI_LENDING_POOLS,
@@ -24,11 +24,13 @@ import {
 } from 'viem/actions';
 import {
   useAccount,
+  useChainId,
   usePublicClient,
   useReadContract,
   useSwitchChain,
   useWalletClient,
 } from 'wagmi';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 type IUseDepositProps = {
   value?: string;
@@ -38,10 +40,15 @@ type IUseDepositProps = {
   poolName?: string;
   closeModal?: () => void;
   chainId?: IChainId;
+  supplyCheck?: {
+    maxSupply?: string;
+    totalSupply: string;
+  };
 };
 
 export default function useDeposit(props: IUseDepositProps) {
   const { switchChainAsync } = useSwitchChain();
+  const chainId = useChainId();
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -51,6 +58,7 @@ export default function useDeposit(props: IUseDepositProps) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isFull, setIsFull] = useState(false);
   const [button, setButton] = useState({
     text: BUTTON_TEXTS.zero,
     disabled: true,
@@ -143,6 +151,7 @@ export default function useDeposit(props: IUseDepositProps) {
           symbol,
           approveHash,
           1,
+          chainId as IChainId,
         );
         const approveTxHash = await waitForTransactionReceipt(signer, {
           hash: approveHash,
@@ -153,7 +162,21 @@ export default function useDeposit(props: IUseDepositProps) {
           approvalToastId,
           symbol,
           approveTxHash.transactionHash,
+          undefined,
+          chainId as IChainId,
         );
+
+        // log to google analytics
+        process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+          ? sendGTMEvent({
+              event: 'approve',
+              pool: props.pool,
+              chain: chainId,
+              amount: normalized.normalized,
+              symbol,
+              hash: approveHash,
+            })
+          : console.warn('GOOGLE_TAG_MANAGER env var is not available');
 
         // set button to deposit if not already
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
@@ -175,10 +198,15 @@ export default function useDeposit(props: IUseDepositProps) {
         args: [BigInt(normalized.raw), address],
       });
       const depositHash = await signer.writeContract(prepareDeposit.request);
-      ToastPromise('deposit', normalized, depositToastId, symbol, depositHash);
-
-      // Refetch queries
-      queryClient.refetchQueries();
+      ToastPromise(
+        'deposit',
+        normalized,
+        depositToastId,
+        symbol,
+        depositHash,
+        undefined,
+        chainId as IChainId,
+      );
 
       // Success states
       setIsSuccess(true);
@@ -201,7 +229,6 @@ export default function useDeposit(props: IUseDepositProps) {
         eoa: `=HYPERLINK("${explorerLink(address, props.chainId || FALLBACK_CHAINID, 'address')}", "${truncate(address)}")`,
         tx_id: `=HYPERLINK("${explorerLink(depositHash as IAddress, props.chainId || FALLBACK_CHAINID, 'tx')}", "${truncate(depositHash || '')}")`,
       };
-      // log to google sheet
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_LAMBDA_URL}/logUpshiftDeposit`,
         {
@@ -214,14 +241,36 @@ export default function useDeposit(props: IUseDepositProps) {
         },
       );
       console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
+
+      // Refetch queries and log to google analytics
+      queryClient.invalidateQueries();
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
+        ? sendGTMEvent({
+            event: 'deposit',
+            pool: props.pool,
+            chain: chainId,
+            amount: normalized.normalized,
+            symbol,
+            hash: depositHash,
+          })
+        : console.warn('GOOGLE_TAG_MANAGER env var is not available');
     } catch (e) {
       console.error('#handleDeposit:', e);
+      toast.dismiss(depositToastId);
       if (String(e).toLowerCase().includes('user rejected')) {
         toast.warn('User rejected transaction');
         setButton({ text: BUTTON_TEXTS.submit, disabled: false });
       } else {
         toast.error('Error executing transaction');
         setButton({ text: BUTTON_TEXTS.error, disabled: true });
+        SLACK.interactionError(
+          String(e),
+          props?.pool,
+          String(props?.poolName),
+          props?.chainId || chainId,
+          address,
+          'Deposit',
+        );
       }
       if (String(e).includes(':')) {
         const err = String(e)?.split(':')[0];
@@ -231,8 +280,6 @@ export default function useDeposit(props: IUseDepositProps) {
       }
     } finally {
       setIsLoading(false);
-      toast.dismiss(approvalToastId);
-      toast.dismiss(depositToastId);
     }
   }
 
@@ -332,7 +379,43 @@ export default function useDeposit(props: IUseDepositProps) {
     return () => {};
   }, [isSuccess]);
 
+  // if supplyCheck is passed, check if totalSupply > maxSupply
+  useEffect(() => {
+    (async () => {
+      if (props?.supplyCheck?.totalSupply) {
+        const { totalSupply } = props.supplyCheck;
+        let maxSupply: bigint;
+        if (!props?.supplyCheck?.maxSupply) {
+          if (provider && props?.pool) {
+            maxSupply = await readContract(provider, {
+              address: props.pool,
+              abi: ABI_LENDING_POOLS,
+              functionName: 'maxSupply',
+              args: [],
+            });
+          } else {
+            return;
+          }
+        } else {
+          maxSupply = BigInt(props?.supplyCheck?.maxSupply);
+        }
+        console.log(
+          `#supplyCheck::${props?.poolName}:`,
+          `${totalSupply} >= ${maxSupply}`,
+        );
+        if (BigInt(totalSupply) + BigInt(1) >= BigInt(maxSupply)) {
+          setIsFull(true);
+          setButton({
+            text: BUTTON_TEXTS.full,
+            disabled: true,
+          });
+        }
+      }
+    })().catch(console.error);
+  }, [props?.supplyCheck?.maxSupply, props?.supplyCheck?.totalSupply]);
+
   return {
+    isFull,
     handleDeposit,
     button,
     isLoading,

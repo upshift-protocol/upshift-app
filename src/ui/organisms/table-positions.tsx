@@ -7,11 +7,11 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 
 import { getChainNameById } from '@/utils/helpers/ui';
-import type { IWSTokenEntry } from '@augustdigital/sdk';
+import type { IAddress } from '@augustdigital/sdk';
 import { round } from '@augustdigital/sdk';
 import Image from 'next/image';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
-import { Paper, useTheme } from '@mui/material';
+import { Paper } from '@mui/material';
 import { useThemeMode } from '@/stores/theme';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
@@ -24,22 +24,14 @@ const columns: readonly IColumn[] = [
     id: 'name',
     value: 'Pool',
     minWidth: 180,
-    component: ({
-      children: {
-        props: { children },
-      },
-    }: any) => {
+    component: ({ children }: any) => {
       if (!children)
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
-      return (
-        <TableCell>
-          <AssetDisplay symbol={String(children)} />
-        </TableCell>
-      );
+      return <TableCell>{children}</TableCell>;
     },
   },
   {
@@ -84,8 +76,15 @@ const columns: readonly IColumn[] = [
     id: 'underlying',
     value: 'Deposit Token',
     flex: 2,
-    component: ({ children }: { children?: IWSTokenEntry }) => {
-      if (!children?.symbol)
+    component: ({
+      children,
+    }: {
+      children?: { props?: { children: string } };
+    }) => {
+      const token = children?.props?.children?.split('_');
+      if (!token?.length) return null;
+      const [symbol, chain, address] = token;
+      if (!symbol)
         return (
           <TableCell>
             <Stack alignItems="center" gap={1} direction="row">
@@ -99,11 +98,11 @@ const columns: readonly IColumn[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${children.symbol}.svg`}
+                img={`/img/tokens/${symbol}.svg`}
                 imgSize={20}
-                symbol={children.symbol}
-                address={children.address}
-                chainId={children?.chain}
+                symbol={symbol}
+                address={address as IAddress}
+                chainId={chain ? Number(chain) : undefined}
               />
             </div>
           </Stack>
@@ -139,8 +138,8 @@ const columns: readonly IColumn[] = [
   // },
   // { id: 'position', value: 'Position', align: 'right', flex: 2 },
   {
-    // id: 'apy',
-    id: 'hardcodedApy',
+    id: 'apy',
+    // id: 'hardcodedApy',
     value: 'Avg. APY',
     flex: 1,
     align: 'right',
@@ -152,12 +151,16 @@ const columns: readonly IColumn[] = [
             <Skeleton variant="text" height={36} />
           </TableCell>
         );
-      const { children: subchildren } = children.props;
+      const { children: subchildren } = children.props as {
+        children: string[];
+      };
       return (
         <TableCell>
           <Stack alignItems="end">
             <AmountDisplay>
-              {subchildren ? `${subchildren}` : '-'}
+              {subchildren?.length && Number(subchildren?.[0]) >= 1
+                ? `${subchildren.join('')}`
+                : '-'}
             </AmountDisplay>
           </Stack>
         </TableCell>
@@ -231,7 +234,6 @@ export default function MyPositionsTableOrganism({
   data?: any;
   loading?: number;
 }) {
-  const { palette } = useTheme();
   const { isDark } = useThemeMode();
 
   return (
@@ -239,9 +241,8 @@ export default function MyPositionsTableOrganism({
       sx={{
         px: 4,
         py: 3,
-        bgcolor: isDark ? palette.grey[900] : palette.grey[100],
+        bgcolor: isDark ? '#202426' : '#f0f2f6',
       }}
-      variant="outlined"
     >
       {title ? (
         <Typography variant="h6" mb={{ xs: 0, md: 1 }}>
@@ -258,6 +259,7 @@ export default function MyPositionsTableOrganism({
         }
         pagination={false}
         emptyText="No positions available"
+        cardBg={isDark ? '#2b2f32' : '#f0f2f6'}
       />
     </Paper>
   );

@@ -6,6 +6,7 @@ import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useChainId } from 'wagmi';
+import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import LinkAtom from './anchor-link';
 
 type IBoxedListItem = {
@@ -44,7 +45,9 @@ export default function BoxedListAtom(props: {
           {typeof item.value === 'string' && isAddress(item.value) ? (
             <>
               {item.value === zeroAddress ? (
-                <Typography variant="body2">{'ETH'}</Typography>
+                <Typography variant="body2">
+                  {getNativeTokenByChainId(chainId)}
+                </Typography>
               ) : (
                 <LinkAtom
                   href={explorerLink(
@@ -53,12 +56,16 @@ export default function BoxedListAtom(props: {
                     'token',
                   )}
                 >
-                  {item.value === zeroAddress ? 'ETH' : truncate(item.value)}
+                  {item.value === zeroAddress
+                    ? getNativeTokenByChainId(chainId)
+                    : truncate(item.value)}
                 </LinkAtom>
               )}
             </>
           ) : (
-            <Typography variant="body2">{item.value}</Typography>
+            <Typography variant="body2" component="div">
+              {item.value}
+            </Typography>
           )}
         </StackRow>
       ))}

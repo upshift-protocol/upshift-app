@@ -106,3 +106,23 @@ export type IActiveStakePosition = {
   };
   chainId: number;
 };
+export type INewReferralBody = {
+  address: string;
+  codeUsed: string;
+  newCode: string;
+};
+
+export interface IReferralRecord {
+  eoa: string;
+  referral: string;
+  codeUsed: string;
+  codes: string[];
+}
+
+export interface ITokenPrice {
+  price: number;
+  address: IAddress;
+  symbol: string;
+  decimals: number;
+  chain: number;
+}

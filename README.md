@@ -50,7 +50,7 @@ pnpm install
 
 ### Development
 
-Run the local developer server with:
+Run the local development server with:
 
 ```bash
 pnpm dev
@@ -59,6 +59,12 @@ pnpm dev
 *which injects the environment variable `NEXT_PUBLIC_DEV=1` in order to display logs and render the devtools.*
 
 Open http://localhost:3000 in your browser to start working on the UpShift app. 
+
+Or run
+```bash
+pnpm dev:referrals
+```
+to enable the Upshift Referral Program in your development server.
 
 *Note: Next JS requires some additional time to compile the project for your first time.*
 
@@ -120,8 +126,9 @@ Now, the app is ready to be deployed. All generated files are located at `out` f
 
 The site is currently deployed using AWS Amplify on the following links:
 
-- https://app.upshift.finance (`main`)
+- https://private.upshift.finance (`main`)
 - https://app-staging.upshift.finance (`develop`)
+- https://avax.upshift.finance
 
 ## Contributions
 

@@ -2,6 +2,7 @@ import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
 import { Typography } from '@mui/material';
 import FONTS from '@/config/fonts';
+import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import LinkAtom from './anchor-link';
 
 type IToast = {
@@ -11,7 +12,7 @@ type IToast = {
   chain?: IChainId;
 };
 
-export default function Toast({ hash, msg, chain = 42161 }: IToast) {
+export default function Toast({ hash, msg, chain = FALLBACK_CHAINID }: IToast) {
   if (hash) {
     return (
       <Typography fontFamily={FONTS.visiaPro.style.fontFamily}>

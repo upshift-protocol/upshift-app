@@ -1,4 +1,5 @@
 import { zeroAddress } from 'viem';
+import { round } from '@augustdigital/sdk';
 import { FALLBACK_CHAINID } from '../constants/web3';
 
 export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
@@ -57,14 +58,26 @@ export function getChainNameById(chainId?: number | string) {
       return 'Arbitrum One';
     case 43114:
       return 'Avalanche';
+    case 8453:
+      return 'Base';
     default:
       return 'Mainnet';
   }
 }
 
+export function getNativeTokenByChainId(chainId?: number | string) {
+  switch (Number(chainId)) {
+    case 43114:
+      return 'AVAX';
+    default:
+      return 'ETH';
+  }
+}
+
 export function getTokenSymbol(address: string, chainId?: number | string) {
   const lowercaseAddress = address?.toLowerCase();
-  if (lowercaseAddress === zeroAddress) return 'ETH';
+  if (lowercaseAddress === zeroAddress)
+    return getNativeTokenByChainId(chainId || FALLBACK_CHAINID);
   switch (Number(chainId)) {
     case 42161: {
       return address;
@@ -87,4 +100,18 @@ export function formatUsd(value: string | number) {
   const formatted = formatCurrency.format(Number(value));
   if (formatted.includes(',')) return formatted.split('.')[0];
   return formatted;
+}
+
+export function renderBiggerApy(hardcodedApy?: string, realApy?: number) {
+  if (!hardcodedApy)
+    return realApy && Number(realApy) >= 1
+      ? `${round(realApy || '0', { showing: 2 })}%`
+      : '-';
+  if (hardcodedApy === '-') return hardcodedApy;
+  const hardApy = Number(
+    hardcodedApy?.split('-')?.[1]?.replace('%', '') || '0',
+  );
+  const apy = Number(realApy || '0');
+  if (apy > hardApy) return `${round(realApy || '0', { showing: 2 })}%`;
+  return `${hardcodedApy}`;
 }

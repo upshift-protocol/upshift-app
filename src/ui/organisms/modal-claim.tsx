@@ -63,7 +63,7 @@ export default function ClainRewardModalMolecule(
           size="large"
           variant="contained"
           disabled={button.disabled}
-          chainId={props?.chainId}
+          chainid={props?.chainId}
         >
           {button.text}
         </Web3Button>
