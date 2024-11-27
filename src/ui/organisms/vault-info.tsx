@@ -71,7 +71,7 @@ export default function VaultInfo(
                 )}
               >
                 {truncate(
-                  props?.hardcodedStrategist || props.loansOperator || '',
+                  props?.hardcodedStrategist || props?.loansOperator || '',
                   6,
                 )}
               </LinkAtom>
