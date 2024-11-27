@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Chip } from '@mui/material';
 import { renderBiggerApy } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';

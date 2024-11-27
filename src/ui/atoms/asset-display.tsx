@@ -1,4 +1,8 @@
-import { FALLBACK_TOKEN_IMG, STYLE_VARS } from '@/utils/constants/ui';
+import {
+  FALLBACK_TOKEN_IMG,
+  STYLE_VARS,
+  FALLBACK_CHAINID,
+} from '@/utils/constants';
 import type { IAssetDisplay } from '@/utils/types';
 import { Skeleton, Tooltip, type TypographyVariant } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,7 +13,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink } from '@augustdigital/sdk';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useChainId } from 'wagmi';
 import SLACK from '@/utils/slack';
 

@@ -2,8 +2,11 @@ import { augustSdk } from '@/config/august-sdk';
 import { queryClient } from '@/config/react-query';
 import ToastPromise from '@/ui/molecules/toast-promise';
 import { TIMES } from '@/utils/constants/time';
-import { BUTTON_TEXTS } from '@/utils/constants/ui';
-import { DEVELOPMENT_MODE, FALLBACK_CHAINID } from '@/utils/constants/web3';
+import {
+  BUTTON_TEXTS,
+  DEVELOPMENT_MODE,
+  FALLBACK_CHAINID,
+} from '@/utils/constants';
 import { getChainNameById } from '@/utils/helpers/ui';
 import SLACK from '@/utils/slack';
 import type { IAddress, IChainId } from '@augustdigital/sdk';

@@ -1,7 +1,7 @@
 'use client';
 
 import { augustSdk } from '@/config/august-sdk';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import { formatChainForImg } from '@/utils/helpers/ui';
 import { type IChainId } from '@augustdigital/sdk';
 import type { SelectChangeEvent } from '@mui/material';
@@ -68,7 +68,6 @@ const ChainDropdown = () => {
           size="small"
           variant="outlined"
           color="primary"
-          placeholder="Select Network"
         >
           {chains?.map((chain, i) => (
             <MenuItem key={`chain-dropdown-${i}`} value={chain.id}>

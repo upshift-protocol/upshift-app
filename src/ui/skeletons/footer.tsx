@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Image from 'next/image';
 import Link from 'next/link';
 import { styled } from '@mui/material';
-import { STYLE_VARS } from '@/utils/constants/ui';
+import { STYLE_VARS } from '@/utils/constants';
 
 const StyledLink = styled(Link)`
   display: flex;

@@ -25,9 +25,8 @@ import type {
   INormalizedNumber,
   IPoolWithUnderlying,
 } from '@augustdigital/sdk';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { useAccount, useChainId } from 'wagmi';
-import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
+import { TABLE_HEADER_FONT_WEIGHT, FALLBACK_CHAINID } from '@/utils/constants';
 import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import { sendGTMEvent } from '@next/third-parties/google';
 import LinkAtom from '../atoms/anchor-link';

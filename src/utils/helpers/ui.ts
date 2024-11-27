@@ -1,6 +1,6 @@
 import { zeroAddress } from 'viem';
 import { round } from '@augustdigital/sdk';
-import { FALLBACK_CHAINID } from '../constants/web3';
+import { FALLBACK_CHAINID } from '../constants';
 
 export function renderVariant(status: 'PENDING' | 'REDEEM' | 'STAKED') {
   switch (status) {

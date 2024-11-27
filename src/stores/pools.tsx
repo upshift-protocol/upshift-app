@@ -9,6 +9,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import useFetcher from '@/hooks/use-fetcher';
 import { useAccount } from 'wagmi';
 import { augustSdk } from '@/config/august-sdk';
+import { INSTANCE } from '@/utils/constants';
 
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
@@ -82,11 +83,36 @@ const PoolsProvider = ({ children }: IChildren) => {
     enabled: pools.isFetched,
   });
 
+  function renderPools(): any {
+    const allPools = poolWithLoans?.isFetched ? poolWithLoans : pools;
+    switch (INSTANCE) {
+      case 'lombard':
+        return {
+          ...allPools,
+          data: allPools?.data?.filter((p) => p.name.includes('Lombard')),
+        };
+      default:
+        return allPools;
+    }
+  }
+
+  function renderPositions(): any {
+    switch (INSTANCE) {
+      case 'lombard':
+        return {
+          ...positions,
+          data: positions?.data?.filter((p) => p.name.includes('Lombard')),
+        };
+      default:
+        return positions;
+    }
+  }
+
   return (
     <PoolsContext.Provider
       value={{
-        pools: poolWithLoans?.isFetched ? poolWithLoans : pools,
-        positions,
+        pools: renderPools(),
+        positions: renderPositions(),
         prices,
       }}
     >
