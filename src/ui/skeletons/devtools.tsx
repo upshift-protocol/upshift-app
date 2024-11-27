@@ -1,5 +1,5 @@
 import { queryClient } from '@/config/react-query';
-import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
+import { DEVELOPMENT_MODE } from '@/utils/constants';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import dynamic from 'next/dynamic';

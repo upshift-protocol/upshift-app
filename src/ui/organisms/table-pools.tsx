@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import { getChainNameById } from '@/utils/helpers/ui';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';

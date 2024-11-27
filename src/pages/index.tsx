@@ -4,7 +4,7 @@ import PoolsTableOrganism from '@/ui/organisms/table-pools';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
-import { REFERRALS_ENABLED } from '@/utils/constants/ui';
+import { INSTANCE } from '@/utils/constants';
 import { Collapse, Stack } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -69,7 +69,7 @@ const HomePage = () => {
               loading={+positionsLoading}
             />
           </Collapse>
-          {!REFERRALS_ENABLED ? (
+          {INSTANCE === 'default' ? (
             <PoolsTableOrganism
               title="Upshift Pools"
               data={filteredPools.upshift}

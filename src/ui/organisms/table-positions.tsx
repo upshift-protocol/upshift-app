@@ -10,7 +10,7 @@ import { getChainNameById } from '@/utils/helpers/ui';
 import type { IAddress } from '@augustdigital/sdk';
 import { round } from '@augustdigital/sdk';
 import Image from 'next/image';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Paper } from '@mui/material';
 import { useThemeMode } from '@/stores/theme';
 import TableMolecule from '../molecules/table';

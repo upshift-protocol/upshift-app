@@ -11,7 +11,7 @@ import fetchCustom from '@/utils/fetcher';
 import { useAccount } from 'wagmi';
 import { getAddress } from 'viem';
 import { generateCode } from '@/utils/helpers/string';
-import { REFERRALS_ENABLED } from '@/utils/constants/ui';
+import { REFERRALS_ENABLED } from '@/utils/constants';
 
 // interfaces
 type ICodeObj = { code: string; used: boolean; eoa: string | undefined };

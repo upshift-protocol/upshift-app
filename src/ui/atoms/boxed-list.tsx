@@ -4,7 +4,7 @@ import { Stack, styled, Typography } from '@mui/material';
 import { isAddress, zeroAddress } from 'viem';
 import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import { useChainId } from 'wagmi';
 import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import LinkAtom from './anchor-link';

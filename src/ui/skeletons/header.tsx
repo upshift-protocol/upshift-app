@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 
-import { REFERRALS_ENABLED, STYLE_VARS } from '@/utils/constants/ui';
+import { REFERRALS_ENABLED, STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
 import { Button, Drawer, IconButton, Skeleton } from '@mui/material';
 import { useState } from 'react';

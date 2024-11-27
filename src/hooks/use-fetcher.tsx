@@ -1,5 +1,5 @@
 import { augustSdk } from '@/config/august-sdk';
-import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
+import { DEVELOPMENT_MODE } from '@/utils/constants';
 import { buildQueryKey } from '@/utils/helpers/query';
 import type {
   IAddress,

@@ -1,7 +1,7 @@
 import type { ButtonProps } from '@mui/material';
 import { Button, CircularProgress } from '@mui/material';
 import { useAccount, useChainId, useChains, useSwitchChain } from 'wagmi';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Fragment, useEffect, useState } from 'react';
 import { useReferralsStore } from '@/stores/referrals';
 import ConnectWalletMolecule from '../molecules/connect-wallet';

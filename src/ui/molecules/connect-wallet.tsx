@@ -20,9 +20,8 @@ import { truncate } from '@/utils/helpers/string';
 import React from 'react';
 import { Chip, Link, Stack, Typography, useMediaQuery } from '@mui/material';
 import { mainnet } from 'wagmi/chains';
-import { LINKS } from '@/utils/constants/links';
+import { LINKS, FALLBACK_CHAINID } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import Modal from '../atoms/modal';
 
 type IConnectWallet = {

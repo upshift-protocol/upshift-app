@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import type { IChainId, IPoolWithUnderlying } from '@augustdigital/sdk';
 import useInput from '@/hooks/use-input';
 import useDeposit from '@/hooks/use-deposit';
-import { BUTTON_TEXTS } from '@/utils/constants/ui';
+import { BUTTON_TEXTS } from '@/utils/constants';
 import ModalAtom from '../atoms/modal';
 import AssetInputMolecule from '../molecules/asset-input';
 import Web3Button from '../atoms/web3-button';

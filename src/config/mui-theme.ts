@@ -1,7 +1,7 @@
 import { red, pink, yellow } from '@mui/material/colors';
 import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-import { HEADER_FONT_WEIGHT } from '@/utils/constants/ui';
+import { HEADER_FONT_WEIGHT } from '@/utils/constants';
 import FONTS from './fonts';
 
 const borderRadius = '16rem';

@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { Fragment, type ReactNode } from 'react';
 
-import { STYLE_VARS } from '@/utils/constants/ui';
+import { STYLE_VARS } from '@/utils/constants';
 import type { IBreadCumb } from '@/utils/types';
 import { Chip, Skeleton } from '@mui/material';
 import { useChains } from 'wagmi';
