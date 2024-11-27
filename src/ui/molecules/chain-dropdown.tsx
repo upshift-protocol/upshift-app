@@ -68,7 +68,6 @@ const ChainDropdown = () => {
           size="small"
           variant="outlined"
           color="primary"
-          placeholder="Select Network"
         >
           {chains?.map((chain, i) => (
             <MenuItem key={`chain-dropdown-${i}`} value={chain.id}>
