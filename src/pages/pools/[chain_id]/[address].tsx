@@ -13,7 +13,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
 import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { FALLBACK_TOKEN_IMG } from '@/utils/constants/ui';
+import { FALLBACK_TOKEN_IMG } from '@/utils/constants';
 
 import ExposureCharts from '@/ui/organisms/exposure-charts';
 import { usePoolsStore } from '@/stores/pools';

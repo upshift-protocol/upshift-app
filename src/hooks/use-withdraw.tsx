@@ -1,5 +1,5 @@
 import { queryClient } from '@/config/react-query';
-import { BUTTON_TEXTS } from '@/utils/constants/ui';
+import { BUTTON_TEXTS, DEVELOPMENT_MODE } from '@/utils/constants';
 import { TIMES } from '@/utils/constants/time';
 import type { IAddress, IChainId, INormalizedNumber } from '@augustdigital/sdk';
 import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
@@ -17,7 +17,6 @@ import {
   useSwitchChain,
   useWalletClient,
 } from 'wagmi';
-import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import ToastPromise from '@/ui/molecules/toast-promise';
 import SLACK from '@/utils/slack';
 import { sendGTMEvent } from '@next/third-parties/google';

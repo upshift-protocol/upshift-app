@@ -2,7 +2,7 @@ import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink, truncate } from '@augustdigital/sdk';
 import { Typography } from '@mui/material';
 import FONTS from '@/config/fonts';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
+import { FALLBACK_CHAINID } from '@/utils/constants';
 import LinkAtom from './anchor-link';
 
 type IToast = {
