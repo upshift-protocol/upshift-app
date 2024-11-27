@@ -21,6 +21,7 @@ import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import ToastPromise from '@/ui/molecules/toast-promise';
 import SLACK from '@/utils/slack';
 import { sendGTMEvent } from '@next/third-parties/google';
+import { logToGSheet } from '@/utils/g-logger';
 
 type IUseWithdrawProps = {
   value?: string;
@@ -166,6 +167,16 @@ export default function useWithdraw(props: IUseWithdrawProps) {
 
       // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
+      // log to google services
+      logToGSheet('request', props.chainId, {
+        symbol,
+        value: normalized,
+        asset: props.asset,
+        eoa: address,
+        hash: redeemHash,
+        poolName: props.poolName,
+        poolAddress: props.pool,
+      });
       process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
         ? sendGTMEvent({
             event: 'redeem-request',
@@ -301,6 +312,16 @@ export default function useWithdraw(props: IUseWithdrawProps) {
 
       // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
+      // log to google services
+      logToGSheet('withdraw', props.chainId, {
+        symbol,
+        value: normalized,
+        asset: props.asset,
+        eoa: address,
+        hash: withdrawHash,
+        poolName: props.poolName,
+        poolAddress: props.pool,
+      });
       process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
         ? sendGTMEvent({
             event: 'withdraw',

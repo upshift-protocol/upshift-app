@@ -1,18 +1,11 @@
-import { augustSdk } from '@/config/august-sdk';
 import { queryClient } from '@/config/react-query';
 import ToastPromise from '@/ui/molecules/toast-promise';
 import { TIMES } from '@/utils/constants/time';
 import { BUTTON_TEXTS } from '@/utils/constants/ui';
-import { DEVELOPMENT_MODE, FALLBACK_CHAINID } from '@/utils/constants/web3';
-import { getChainNameById } from '@/utils/helpers/ui';
+import { DEVELOPMENT_MODE } from '@/utils/constants/web3';
 import SLACK from '@/utils/slack';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
-import {
-  ABI_LENDING_POOLS,
-  explorerLink,
-  toNormalizedBn,
-  truncate,
-} from '@augustdigital/sdk';
+import { ABI_LENDING_POOLS, toNormalizedBn } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
 import type { Id } from 'react-toastify';
 import { toast } from 'react-toastify';
@@ -31,6 +24,7 @@ import {
   useWalletClient,
 } from 'wagmi';
 import { sendGTMEvent } from '@next/third-parties/google';
+import { logToGSheet } from '@/utils/g-logger';
 
 type IUseDepositProps = {
   value?: string;
@@ -218,32 +212,18 @@ export default function useDeposit(props: IUseDepositProps) {
         );
       }
 
-      // log to google sheet
-      const assetUsdPrice = await augustSdk.getPrice(symbol || 'usdc');
-      const formattedData = {
-        chain: getChainNameById(props.chainId || FALLBACK_CHAINID),
-        amount_native: normalized.normalized,
-        amount_usd: String(assetUsdPrice * Number(normalized.normalized)),
-        token: `=HYPERLINK("${explorerLink(props.asset, props.chainId || FALLBACK_CHAINID, 'token')}", "${symbol || truncate(props.asset)}")`,
-        pool: `=HYPERLINK("${explorerLink(props.pool, props.chainId || FALLBACK_CHAINID, 'address')}", "${props.poolName || truncate(props.pool)}")`,
-        eoa: `=HYPERLINK("${explorerLink(address, props.chainId || FALLBACK_CHAINID, 'address')}", "${truncate(address)}")`,
-        tx_id: `=HYPERLINK("${explorerLink(depositHash as IAddress, props.chainId || FALLBACK_CHAINID, 'tx')}", "${truncate(depositHash || '')}")`,
-      };
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_LAMBDA_URL}/logUpshiftDeposit`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-          body: JSON.stringify(formattedData),
-        },
-      );
-      console.log('#handleDeposit::logDeposit:', res.status, res.statusText);
-
       // Refetch queries and log to google analytics
       queryClient.invalidateQueries();
+      // log to google services
+      logToGSheet('deposit', props.chainId, {
+        symbol,
+        value: normalized,
+        asset: props.asset,
+        eoa: address,
+        hash: depositHash,
+        poolName: props.poolName,
+        poolAddress: props.pool,
+      });
       process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER
         ? sendGTMEvent({
             event: 'deposit',
