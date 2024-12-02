@@ -148,7 +148,13 @@ const columns: GridColDef<any[number]>[] = [
             exp.label !== 'eth' && String(exp.value) !== 'eth' ? (
               <span
                 key={`table-loans-${row.id}-${exp.value}-${i}`}
-                style={{ display: 'flex', alignItems: 'center' }}
+                style={{
+                  alignItems: 'center',
+                  display:
+                    renderTokenExposure(exp, row, value, i) === null
+                      ? 'none'
+                      : 'flex',
+                }}
               >
                 {renderTokenExposure(exp, row, value, i)}
               </span>
