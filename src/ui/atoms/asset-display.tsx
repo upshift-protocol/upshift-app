@@ -38,7 +38,16 @@ export default function AssetDisplay(props: IAssetDisplay) {
     }
   }
 
-  function handleError() {
+  function handleError(err: any) {
+    const passedSymbol = err?.target?.alt;
+    if (passedSymbol && passedSymbol?.includes('-')) {
+      // determine if pendle token
+      const splitString = passedSymbol.split('-');
+      if (splitString?.[1]) {
+        setImgSrc(`/img/tokens/${splitString[1].replaceAll('+', '')}.svg`);
+        return;
+      }
+    }
     setImgSrc(FALLBACK_TOKEN_IMG);
     // if(!DEVELOPMENT_MODE)
     SLACK.tokenError(props.symbol, props.address, props.chainId);
