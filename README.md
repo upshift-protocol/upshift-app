@@ -129,6 +129,8 @@ The site is currently deployed using AWS Amplify on the following links:
 - https://private.upshift.finance (`main`)
 - https://app-staging.upshift.finance (`develop`)
 - https://avax.upshift.finance
+- https://lombard.upshift.finance
+- https://treehouse.upshift.finance
 
 ## Contributions
 
