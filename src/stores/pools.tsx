@@ -97,6 +97,11 @@ const PoolsProvider = ({ children }: IChildren) => {
           ...allPools,
           data: allPools?.data?.filter((p) => p.name.includes('Treehouse')),
         };
+      case 'ethena':
+        return {
+          ...allPools,
+          data: allPools?.data?.filter((p) => p.name.includes('Ethena')),
+        };
       default:
         return allPools;
     }
@@ -113,6 +118,11 @@ const PoolsProvider = ({ children }: IChildren) => {
         return {
           ...positions,
           data: positions?.data?.filter((p) => p.name.includes('Treehouse')),
+        };
+      case 'ethena':
+        return {
+          ...positions,
+          data: positions?.data?.filter((p) => p.name.includes('Ethena')),
         };
       default:
         return positions;
