@@ -131,6 +131,7 @@ The site is currently deployed using AWS Amplify on the following links:
 - https://avax.upshift.finance
 - https://lombard.upshift.finance
 - https://treehouse.upshift.finance
+- https://ethena.upshift.finance
 
 ## Contributions
 
