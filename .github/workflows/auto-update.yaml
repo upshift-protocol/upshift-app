@@ -49,3 +49,12 @@ jobs:
           git pull
           git merge origin/develop
           git push origin treehouse
+
+      - name: Update Ethena Branch
+        run: |
+          git checkout develop
+          git fetch origin
+          git checkout ethena
+          git pull
+          git merge origin/develop
+          git push origin ethena

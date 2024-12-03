@@ -13,6 +13,7 @@ export const INSTANCE =
     | 'avax'
     | 'lombard'
     | 'treehouse'
+    | 'ethena'
     | undefined) || 'default';
 
 /**
