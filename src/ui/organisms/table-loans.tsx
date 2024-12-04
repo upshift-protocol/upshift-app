@@ -18,7 +18,7 @@ import { isAddress } from 'viem';
 import { TABLE_HEADER_FONT_WEIGHT, FALLBACK_CHAINID } from '@/utils/constants';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
-import AssetDisplay from '../atoms/asset-display';
+import AssetDisplay from '../molecules/asset-display';
 
 const renderTokenExposure = (
   exp: { value: IAddress; label: string },
@@ -36,13 +36,7 @@ const renderTokenExposure = (
     return getTokenSymbol(exp.value);
   }
   if (!exp?.label?.includes('_')) {
-    return (
-      <AssetDisplay
-        tooltip
-        symbol={exp.label}
-        img={`/img/tokens/${exp.label}.svg`}
-      />
-    );
+    return <AssetDisplay tooltip symbol={exp.label} />;
   }
   if (
     !isAddress(exp.label) &&

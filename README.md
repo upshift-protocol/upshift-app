@@ -76,7 +76,7 @@ To run the project using a diiferent network, you can either:
 
 #### Adding New Tokens Images
 
-Most of the logic to add new tokens is handled by the August SDK, however, in order to properly render a token, a token image must be added to `/public/img/tokens/` as an `.svg` with the same case-convention as the real token (`agETH.svg`). 
+In order to properly render a token, a token image must be added to `/src/ui/atoms/token-logo.tsx` as an `svg` or `Image`.
 
 ## Directory
 

@@ -1,7 +1,7 @@
 import Base from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
-import AssetDisplay from '@/ui/atoms/asset-display';
+import AssetDisplay from '@/ui/molecules/asset-display';
 import VaultInfo from '@/ui/organisms/vault-info';
 import VaultAllocation from '@/ui/organisms/table-loans';
 import Stack from '@mui/material/Stack';
@@ -13,7 +13,6 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
 import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { FALLBACK_TOKEN_IMG } from '@/utils/constants';
 
 import ExposureCharts from '@/ui/organisms/exposure-charts';
 import { usePoolsStore } from '@/stores/pools';
@@ -86,11 +85,6 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
           <Stack direction="column" alignItems={'end'} gap={2}>
             <AssetDisplay
               symbol={pool?.underlying?.symbol}
-              img={
-                pool?.underlying?.symbol
-                  ? `/img/tokens/${pool?.underlying?.symbol}.svg`
-                  : FALLBACK_TOKEN_IMG
-              }
               variant="glass"
               address={pool?.underlying?.address}
               loading={!poolFetched && !pool?.underlying?.symbol}

@@ -1,23 +1,16 @@
-import {
-  FALLBACK_TOKEN_IMG,
-  STYLE_VARS,
-  FALLBACK_CHAINID,
-} from '@/utils/constants';
+import { STYLE_VARS, FALLBACK_CHAINID } from '@/utils/constants';
 import type { IAssetDisplay } from '@/utils/types';
 import { Skeleton, Tooltip, type TypographyVariant } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import type { IChainId } from '@augustdigital/sdk';
 import { explorerLink } from '@augustdigital/sdk';
 import { useChainId } from 'wagmi';
-import SLACK from '@/utils/slack';
+import TokenLogo from '../atoms/token-logo';
 
 export default function AssetDisplay(props: IAssetDisplay) {
-  const [imgSrc, setImgSrc] = useState<string>(props?.img ?? '');
   const chainId = useChainId();
 
   function renderVariant(): {
@@ -38,25 +31,6 @@ export default function AssetDisplay(props: IAssetDisplay) {
     }
   }
 
-  function handleError(err: any) {
-    const passedSymbol = err?.target?.alt;
-    if (passedSymbol && passedSymbol?.includes('-')) {
-      // determine if pendle token
-      const splitString = passedSymbol.split('-');
-      if (splitString?.[1]) {
-        setImgSrc(`/img/tokens/${splitString[1].replaceAll('+', '')}.svg`);
-        return;
-      }
-    }
-    setImgSrc(FALLBACK_TOKEN_IMG);
-    // if(!DEVELOPMENT_MODE)
-    SLACK.tokenError(props.symbol, props.address, props.chainId);
-  }
-
-  useEffect(() => {
-    if (props.img) setImgSrc(props.img);
-  }, [props.img]);
-
   function renderInner() {
     return (
       <Box
@@ -68,14 +42,8 @@ export default function AssetDisplay(props: IAssetDisplay) {
         className={renderVariant().wrapperCss}
       >
         <Stack direction={'row'} alignItems={'center'} spacing={1}>
-          {(props.img || props.imgFallback) && !props?.loading ? (
-            <Image
-              src={imgSrc}
-              alt={props?.symbol ?? props?.address ?? ''}
-              height={props?.imgSize ?? 24}
-              width={props?.imgSize ?? 24}
-              onError={handleError}
-            />
+          {props.symbol && !props?.loading ? (
+            <TokenLogo symbol={props.symbol || ''} size={props?.imgSize} />
           ) : props?.loading ? (
             <Skeleton
               variant="circular"
@@ -113,14 +81,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
           position: 'relative',
         }}
       >
-        <Image
-          src={imgSrc}
-          alt={props?.symbol ?? props?.address ?? ''}
-          height={props?.imgSize ?? 24}
-          width={props?.imgSize ?? 24}
-          onError={handleError}
-          style={{ backgroundColor: 'white', borderRadius: '50%' }}
-        />
+        <TokenLogo symbol={props.symbol || ''} size={props?.imgSize} />
       </Tooltip>
     );
   }

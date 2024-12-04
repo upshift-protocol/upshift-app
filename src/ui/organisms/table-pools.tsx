@@ -12,7 +12,7 @@ import { getChainNameById } from '@/utils/helpers/ui';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
-import AssetDisplay from '../atoms/asset-display';
+import AssetDisplay from '../molecules/asset-display';
 import Background from '../atoms/background';
 
 const columns: readonly IColumn[] = [
@@ -81,7 +81,6 @@ const columns: readonly IColumn[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${symbol}.svg`}
                 imgSize={20}
                 symbol={symbol}
                 address={address as IAddress}
