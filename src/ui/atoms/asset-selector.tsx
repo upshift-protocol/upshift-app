@@ -3,7 +3,7 @@ import type { IAssetDisplay } from '@/utils/types';
 import Stack from '@mui/material/Stack';
 import { erc20Abi } from 'viem';
 import { useReadContract } from 'wagmi';
-import AssetDisplay from './asset-display';
+import AssetDisplay from '../molecules/asset-display';
 
 type IAssetSelector = IAssetDisplay & {
   forInput?: boolean;
@@ -35,7 +35,6 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
     >
       <AssetDisplay
         address={props.address}
-        img={props.img || `/img/tokens/${props.symbol ?? symbol}.svg`}
         symbol={props.symbol ?? symbol}
         truncate
         imgFallback

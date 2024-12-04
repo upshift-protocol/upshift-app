@@ -43,7 +43,6 @@ export type IBreadCumb = {
 
 export type IAssetDisplay = {
   symbol?: string;
-  img?: string;
   address?: IAddress;
   variant?: 'glass' | 'default';
   imgSize?: number;
