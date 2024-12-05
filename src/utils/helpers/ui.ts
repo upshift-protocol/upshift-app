@@ -118,7 +118,6 @@ export function renderBiggerApy(hardcodedApy?: string, realApy?: number) {
 
 export function renderPartnerImg(point: string) {
   const lowerPoint = point.toLowerCase();
-  console.log('lowerpoint:', lowerPoint);
   if (lowerPoint.includes('kelp')) return 'kelp-miles.svg';
   if (lowerPoint.includes('sats')) return 'ethena.svg';
   if (lowerPoint.includes('zircuit')) return 'zircuit.svg';
