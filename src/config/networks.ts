@@ -16,7 +16,8 @@ export const ACTIVE_RPC_URLS = () => {
         [base.id]: RPC_URLS[base.id],
       };
     }
-    case 'treehouse': {
+    case 'treehouse':
+    case 'ethena': {
       return {
         [mainnet.id]: RPC_URLS[mainnet.id],
       };
@@ -40,7 +41,7 @@ export const ACTIVE_NETWORKS = () => {
   if (NETWORK === 'localhost') return [mainnet, avalanche, base, localhost];
   if (INSTANCE === 'avax') return [avalanche];
   if (INSTANCE === 'lombard') return [mainnet, base];
-  if (INSTANCE === 'treehouse') return [mainnet];
+  if (INSTANCE === 'treehouse' || INSTANCE === 'ethena') return [mainnet];
   return [mainnet, avalanche, base];
 };
 

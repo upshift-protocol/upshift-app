@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 
-import { REFERRALS_ENABLED, STYLE_VARS } from '@/utils/constants';
+import { INSTANCE, REFERRALS_ENABLED, STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
 import {
   Button,
@@ -100,7 +100,7 @@ const HeaderSkeleton = () => {
                 <Logo />
               </LinkAtom>
 
-              {REFERRALS_ENABLED ? (
+              {REFERRALS_ENABLED && INSTANCE !== 'ethena' ? (
                 <Box display={{ xs: 'none', sm: 'flex' }}>
                   <MyReferralsModalMolecule />
                 </Box>
