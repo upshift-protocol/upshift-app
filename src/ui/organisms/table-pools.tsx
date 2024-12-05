@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants';
-import { getChainNameById } from '@/utils/helpers/ui';
+import { getChainNameById, renderPartnerImg } from '@/utils/helpers/ui';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
@@ -134,7 +134,7 @@ const columns: readonly IColumn[] = [
     }: {
       children: { props: { children: string[] | string } };
     }) => {
-      if (!children)
+      if (!children && children?.length === 0)
         return (
           <TableCell>
             <Skeleton variant="text" height={36} />
@@ -148,6 +148,66 @@ const columns: readonly IColumn[] = [
                 ? `${(children as string[]).join('')}`
                 : '-'}
             </AmountDisplay>
+          </Stack>
+        </TableCell>
+      );
+    },
+  },
+  {
+    id: 'rewards',
+    value: 'Rewards',
+    flex: 1,
+    component: ({
+      children,
+    }: {
+      children: {
+        type: string;
+        upshift_points: boolean;
+        additional_points: string[];
+      };
+    }) => {
+      if (!children.type)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
+      if (children?.additional_points?.length === 0) {
+        return <TableCell>-</TableCell>;
+      }
+      return (
+        <TableCell>
+          <Stack gap={0.75} direction="row">
+            {children.additional_points
+              ?.filter((p) => !p.includes('Hemi'))
+              ?.map((point, i) => (
+                <Tooltip
+                  title={point}
+                  arrow
+                  placement="top"
+                  key={`table-pools-rewards-${i}`}
+                >
+                  <Box
+                    style={{
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                      height: '22px',
+                      width: '22px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Image
+                      src={`/img/partners/${renderPartnerImg(point)}`}
+                      alt={point}
+                      height={22}
+                      width={22}
+                      style={{
+                        padding: point?.includes('Lombard') ? '4px' : '0',
+                      }}
+                    />
+                  </Box>
+                </Tooltip>
+              ))}
           </Stack>
         </TableCell>
       );
