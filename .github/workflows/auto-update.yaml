@@ -1,59 +1,59 @@
-name: Update Staging Branch
+# name: Update Staging Branch
 
-on:
-  push:
-    branches:
-      - develop
+# on:
+#   push:
+#     branches:
+#       - develop
 
-permissions:
-  contents: write
+# permissions:
+#   contents: write
 
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+# jobs:
+#   sync:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
 
-      - name: Setup Git User
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "<EMAIL>"
+#       - name: Setup Git User
+#         run: |
+#           git config user.name "GitHub Action"
+#           git config user.email "<EMAIL>"
 
-      - name: Update AVAX Branch
-        run: |
-          git checkout develop
-          git fetch origin
-          git checkout avax
-          git pull
-          git merge origin/develop
-          git push origin avax
+#       - name: Update AVAX Branch
+#         run: |
+#           git checkout develop
+#           git fetch origin
+#           git checkout avax
+#           git pull
+#           git merge origin/develop
+#           git push origin avax
 
-      - name: Update Lombard Branch
-        run: |
-          git checkout develop
-          git fetch origin
-          git checkout lombard
-          git pull
-          git merge origin/develop
-          git push origin lombard
+#       - name: Update Lombard Branch
+#         run: |
+#           git checkout develop
+#           git fetch origin
+#           git checkout lombard
+#           git pull
+#           git merge origin/develop
+#           git push origin lombard
 
-      - name: Update Treehouse Branch
-        run: |
-          git checkout develop
-          git fetch origin
-          git checkout treehouse
-          git pull
-          git merge origin/develop
-          git push origin treehouse
+#       - name: Update Treehouse Branch
+#         run: |
+#           git checkout develop
+#           git fetch origin
+#           git checkout treehouse
+#           git pull
+#           git merge origin/develop
+#           git push origin treehouse
 
-      - name: Update Ethena Branch
-        run: |
-          git checkout develop
-          git fetch origin
-          git checkout ethena
-          git pull
-          git merge origin/develop
-          git push origin ethena
+#       - name: Update Ethena Branch
+#         run: |
+#           git checkout develop
+#           git fetch origin
+#           git checkout ethena
+#           git pull
+#           git merge origin/develop
+#           git push origin ethena
