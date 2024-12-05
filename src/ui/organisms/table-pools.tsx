@@ -96,7 +96,7 @@ const columns: readonly IColumn[] = [
     id: 'totalSupply',
     value: 'TVL',
     align: 'right',
-    minWidth: 200,
+    minWidth: 150,
     format: (value: number) => value.toLocaleString('en-US'),
     component: ({
       children: {
@@ -180,34 +180,37 @@ const columns: readonly IColumn[] = [
           <Stack gap={0.75} direction="row">
             {children.additional_points
               ?.filter((p) => !p.includes('Hemi'))
-              ?.map((point, i) => (
-                <Tooltip
-                  title={point}
-                  arrow
-                  placement="top"
-                  key={`table-pools-rewards-${i}`}
-                >
-                  <Box
-                    style={{
-                      backgroundColor: 'white',
-                      borderRadius: '50%',
-                      height: '22px',
-                      width: '22px',
-                      overflow: 'hidden',
-                    }}
+              ?.map((point, i) => {
+                const imgSize = 26;
+                return (
+                  <Tooltip
+                    title={<Typography fontSize={'16px'}>{point}</Typography>}
+                    arrow
+                    placement="top"
+                    key={`table-pools-rewards-${i}`}
                   >
-                    <Image
-                      src={`/img/partners/${renderPartnerImg(point)}`}
-                      alt={point}
-                      height={22}
-                      width={22}
+                    <Box
                       style={{
-                        padding: point?.includes('Lombard') ? '4px' : '0',
+                        backgroundColor: 'white',
+                        borderRadius: '50%',
+                        height: imgSize,
+                        width: imgSize,
+                        overflow: 'hidden',
                       }}
-                    />
-                  </Box>
-                </Tooltip>
-              ))}
+                    >
+                      <Image
+                        src={`/img/partners/${renderPartnerImg(point)}`}
+                        alt={point}
+                        height={imgSize}
+                        width={imgSize}
+                        style={{
+                          padding: point?.includes('Lombard') ? '4px' : '0',
+                        }}
+                      />
+                    </Box>
+                  </Tooltip>
+                );
+              })}
           </Stack>
         </TableCell>
       );
