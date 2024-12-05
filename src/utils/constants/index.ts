@@ -9,8 +9,12 @@ export const REFERRALS_ENABLED =
   process.env.NEXT_PUBLIC_REFERRALS_ENABLED === 'true';
 
 export const INSTANCE =
-  (process.env.NEXT_PUBLIC_INSTANCE as 'avax' | 'lombard' | undefined) ||
-  'default';
+  (process.env.NEXT_PUBLIC_INSTANCE as
+    | 'avax'
+    | 'lombard'
+    | 'treehouse'
+    | 'ethena'
+    | undefined) || 'default';
 
 /**
  * User interface

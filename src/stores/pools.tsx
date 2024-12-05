@@ -83,6 +83,7 @@ const PoolsProvider = ({ children }: IChildren) => {
     enabled: pools.isFetched,
   });
 
+  // custom instance filtering
   function renderPools(): any {
     const allPools = poolWithLoans?.isFetched ? poolWithLoans : pools;
     switch (INSTANCE) {
@@ -90,6 +91,16 @@ const PoolsProvider = ({ children }: IChildren) => {
         return {
           ...allPools,
           data: allPools?.data?.filter((p) => p.name.includes('Lombard')),
+        };
+      case 'treehouse':
+        return {
+          ...allPools,
+          data: allPools?.data?.filter((p) => p.name.includes('Treehouse')),
+        };
+      case 'ethena':
+        return {
+          ...allPools,
+          data: allPools?.data?.filter((p) => p.name.includes('Ethena')),
         };
       default:
         return allPools;
@@ -102,6 +113,16 @@ const PoolsProvider = ({ children }: IChildren) => {
         return {
           ...positions,
           data: positions?.data?.filter((p) => p.name.includes('Lombard')),
+        };
+      case 'treehouse':
+        return {
+          ...positions,
+          data: positions?.data?.filter((p) => p.name.includes('Treehouse')),
+        };
+      case 'ethena':
+        return {
+          ...positions,
+          data: positions?.data?.filter((p) => p.name.includes('Ethena')),
         };
       default:
         return positions;

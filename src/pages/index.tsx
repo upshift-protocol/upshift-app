@@ -24,6 +24,9 @@ const HomePage = () => {
       'lombard lbtc',
       'upshift avalanche ausd',
       'high growth eth',
+      'treehouse autovault',
+      'the treehouse grow vault',
+      'ethena growth susde',
     ];
     if (!allPools?.length) {
       return { partners: [], upshift: [], myPositions: [] };

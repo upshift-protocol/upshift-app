@@ -76,7 +76,7 @@ To run the project using a diiferent network, you can either:
 
 #### Adding New Tokens Images
 
-Most of the logic to add new tokens is handled by the August SDK, however, in order to properly render a token, a token image must be added to `/public/img/tokens/` as an `.svg` with the same case-convention as the real token (`agETH.svg`). 
+In order to properly render a token, a token image must be added to `/src/ui/atoms/token-logo.tsx` as an `svg` or `Image`.
 
 ## Directory
 
@@ -122,13 +122,18 @@ pnpm build-prod
 
 Now, the app is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
 
+*Note: there is a github workflow that will deploy all various instances (`avax`, `lombard`, etc) when there is a push to `develop`.*
+
 ### Live
 
 The site is currently deployed using AWS Amplify on the following links:
 
 - https://private.upshift.finance (`main`)
 - https://app-staging.upshift.finance (`develop`)
-- https://avax.upshift.finance
+- https://avax.upshift.finance (`avax`)
+- https://lombard.upshift.finance (`lombard`)
+- https://treehouse.upshift.finance (`treehouse`)
+- https://ethena.upshift.finance (`ethena`)
 
 ## Contributions
 
