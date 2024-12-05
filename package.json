@@ -10,7 +10,7 @@
     "dev:referral": "NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
     "dev:lombard": "NEXT_PUBLIC_INSTANCE=lombard pnpm dev",
     "dev:treehouse": "NEXT_PUBLIC_INSTANCE=treehouse pnpm dev",
-    "dev:ethena": "NEXT_PUBLIC_INSTANCE=ethena pnpm dev",
+    "dev:ethena": "NEXT_PUBLIC_INSTANCE=ethena NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
     "dev:avax": "NEXT_PUBLIC_INSTANCE=avax NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
     "build": "next build",
     "start": "next start",
