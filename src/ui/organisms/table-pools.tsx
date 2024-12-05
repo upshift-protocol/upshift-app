@@ -154,6 +154,21 @@ const columns: readonly IColumn[] = [
     },
   },
   {
+    id: 'rewards',
+    value: 'Rewards',
+    flex: 1,
+    component: ({ children }: any) => {
+      console.log('CHILDREN:', children);
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
+      return <TableCell>-</TableCell>;
+    },
+  },
+  {
     id: 'hardcodedStrategist',
     value: 'Strategist',
     flex: 1,
