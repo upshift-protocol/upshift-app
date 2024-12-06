@@ -1,20 +1,19 @@
 import Image from 'next/image';
-import type { IAddress } from '@augustdigital/sdk';
+import { FALLBACK_CHAINID, type IAddress } from '@augustdigital/sdk';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
-import { FALLBACK_CHAINID } from '@/utils/constants/web3';
 import { getChainNameById } from '@/utils/helpers/ui';
 import type { GridColDef, GridColumnHeaderParams } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { TABLE_HEADER_FONT_WEIGHT } from '@/utils/constants';
 import AmountDisplay from '../atoms/amount-display';
-import AssetDisplay from '../atoms/asset-display';
 import Background from '../atoms/background';
 import RewardDistributorActionsMolecule from './actions-reward-distributor';
+import AssetDisplay from '../molecules/asset-display';
 
 const columns: readonly GridColDef<any[number]>[] = [
   {
@@ -106,7 +105,6 @@ const columns: readonly GridColDef<any[number]>[] = [
           <Stack alignItems="start">
             <div onClick={(e) => e.stopPropagation()}>
               <AssetDisplay
-                img={`/img/tokens/${stakingToken.symbol}.svg`}
                 imgSize={20}
                 symbol={stakingToken.symbol}
                 address={stakingToken?.address as IAddress}
