@@ -1,5 +1,7 @@
 import dynamic from 'next/dynamic';
 
+import { usePathname } from 'next/navigation';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -7,7 +9,13 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { INSTANCE, REFERRALS_ENABLED, STYLE_VARS } from '@/utils/constants';
 import { useThemeMode } from '@/stores/theme';
-import { Button, Drawer, IconButton, Skeleton } from '@mui/material';
+import {
+  Button,
+  Drawer,
+  IconButton,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import ThemeSwitch from '../atoms/theme-switch';
@@ -43,6 +51,7 @@ const HeaderSkeleton = () => {
   const { isDark, toggleTheme } = useThemeMode();
 
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -96,6 +105,63 @@ const HeaderSkeleton = () => {
                   <MyReferralsModalMolecule />
                 </Box>
               ) : null}
+            </Stack>
+
+            <Stack
+              justifyContent={'center'}
+              direction="row"
+              alignItems="center"
+              gap={{ xs: 1, md: 2 }}
+            >
+              <LinkAtom
+                href="/"
+                target="_self"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  display: 'flex',
+                  marginLeft: '5rem',
+                  borderBottom: pathname === '/' ? '2px solid #00FFB0' : 'none',
+                }}
+                noSpan
+              >
+                <Typography
+                  variant="h6"
+                  mb={{ xs: 0, md: 1 }}
+                  style={{
+                    marginBottom: '0px',
+                    lineHeight: '2em',
+                    fontSize: '1.3rem',
+                  }}
+                >
+                  Deposit
+                </Typography>
+              </LinkAtom>
+              <LinkAtom
+                href="/stake"
+                target="_self"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  display: 'flex',
+                  marginLeft: '1rem',
+                  borderBottom:
+                    pathname === '/stake/' ? '2px solid #00FFB0' : 'none',
+                }}
+                noSpan
+              >
+                <Typography
+                  variant="h6"
+                  mb={{ xs: 0, md: 1 }}
+                  style={{
+                    marginBottom: '0px',
+                    lineHeight: '2em',
+                    fontSize: '1.3rem',
+                  }}
+                >
+                  Stake
+                </Typography>
+              </LinkAtom>
             </Stack>
 
             {/* Desktop */}
