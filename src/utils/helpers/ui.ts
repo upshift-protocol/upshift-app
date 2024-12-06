@@ -115,3 +115,16 @@ export function renderBiggerApy(hardcodedApy?: string, realApy?: number) {
   if (apy > hardApy) return `${round(realApy || '0', { showing: 2 })}%`;
   return `${hardcodedApy}`;
 }
+
+export function renderPartnerImg(point: string) {
+  const lowerPoint = point.toLowerCase();
+  if (lowerPoint.includes('kelp')) return 'kelp-miles.svg';
+  if (lowerPoint.includes('sats')) return 'ethena.svg';
+  if (lowerPoint.includes('zircuit')) return 'zircuit.svg';
+  if (lowerPoint.includes('hemi')) return 'hemi.svg';
+  if (lowerPoint.includes('eigen')) return 'eigen.svg';
+  if (lowerPoint.includes('karak')) return 'karak.svg';
+  if (lowerPoint.includes('lombard')) return 'lombard.svg';
+  if (lowerPoint.includes('babylon')) return 'babylon.png';
+  return '';
+}
