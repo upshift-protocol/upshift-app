@@ -70,7 +70,10 @@ export default function VaultInfo(
                   'address',
                 )}
               >
-                {truncate(props?.hardcodedStrategist || props.loansOperator, 6)}
+                {truncate(
+                  props?.hardcodedStrategist || props.loansOperator || '',
+                  6,
+                )}
               </LinkAtom>
             )}
           </Stack>
