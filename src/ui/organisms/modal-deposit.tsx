@@ -23,7 +23,7 @@ export default function DepositModalMolecule(
       poolName: props?.name,
       chainId: props?.chainId as IChainId,
       supplyCheck: {
-        totalSupply: props?.totalSupply.raw || '0',
+        totalSupply: props?.totalSupply?.raw || '0',
         maxSupply: props?.maxSupply?.raw || undefined,
       },
     });
