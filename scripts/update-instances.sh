@@ -27,3 +27,6 @@ git checkout ethena
 git pull
 git merge origin/develop
 git push origin HEAD
+
+# Return back to develop
+git checkout develop
