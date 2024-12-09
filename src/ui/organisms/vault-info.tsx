@@ -18,7 +18,7 @@ import AmountDisplay from '../atoms/amount-display';
 export default function VaultInfo(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
-  const renderedApy = renderBiggerApy(props.hardcodedApy, props.apy);
+  const renderedApy = renderBiggerApy('', props.apy);
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>

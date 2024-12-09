@@ -102,15 +102,16 @@ export function formatUsd(value: string | number) {
   return formatted;
 }
 
+/**
+ * @deprecated
+ */
 export function renderBiggerApy(hardcodedApy?: string, realApy?: number) {
   if (!hardcodedApy)
     return realApy && Number(realApy) >= 1
       ? `${round(realApy || '0', { showing: 2 })}%`
       : '-';
   if (hardcodedApy === '-') return hardcodedApy;
-  const hardApy = Number(
-    hardcodedApy?.split('-')?.[1]?.replace('%', '') || '0',
-  );
+  const hardApy = Number(hardcodedApy?.replaceAll('%', '') || '0');
   const apy = Number(realApy || '0');
   if (apy > hardApy) return `${round(realApy || '0', { showing: 2 })}%`;
   return `${hardcodedApy}`;
