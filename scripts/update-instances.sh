@@ -27,3 +27,12 @@ git checkout ethena
 git pull
 git merge origin/develop
 git push origin HEAD
+
+# Checkout Private instance, merge develop in, and push to deploy
+git checkout main
+git pull
+git merge origin/develop
+git push origin HEAD
+
+# Return back to develop
+git checkout develop
