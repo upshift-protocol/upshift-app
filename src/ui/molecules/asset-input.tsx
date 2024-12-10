@@ -23,6 +23,7 @@ type IAssetInput = {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   loading?: number;
+  isNative?: boolean;
 };
 
 const StyledTextField = styled(TextField)({
@@ -32,10 +33,13 @@ const StyledTextField = styled(TextField)({
     borderTopLeftRadius: '4px',
     borderBottomLeftRadius: '4px',
   },
+  '& .Mui-disabled': {
+    '-webkit-text-fill-color': 'rgba(255, 255, 255, 0.8) !important',
+  },
 });
 
 export default function AssetInputMolecule(props: IAssetInput) {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
 
   const { data, isLoading } = useReadContracts({
     contracts: [
@@ -126,7 +130,16 @@ export default function AssetInputMolecule(props: IAssetInput) {
             </Box>
           </Box>
         )}
-        <AssetSelectorAtom {...props} loading={!!props?.loading} forInput />
+        {props.isNative ? (
+          <AssetSelectorAtom
+            symbol={chain?.nativeCurrency.symbol}
+            {...props}
+            loading={!!props?.loading}
+            forInput
+          />
+        ) : (
+          <AssetSelectorAtom {...props} loading={!!props?.loading} forInput />
+        )}
       </Stack>
     </Stack>
   );

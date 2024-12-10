@@ -7,7 +7,7 @@ import {
   type IPoolAction,
 } from '@augustdigital/sdk';
 import { Skeleton, Stack, Typography } from '@mui/material';
-import { useChainId, useGasPrice } from 'wagmi';
+import { useGasPrice, useChainId } from 'wagmi';
 import { Suspense } from 'react';
 import { getNativeTokenByChainId } from '@/utils/helpers/ui';
 import BoxedListAtom from '../atoms/boxed-list';
