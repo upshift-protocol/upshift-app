@@ -11,7 +11,7 @@
     "dev:lombard": "NEXT_PUBLIC_INSTANCE=lombard pnpm dev",
     "dev:treehouse": "NEXT_PUBLIC_INSTANCE=treehouse pnpm dev",
     "dev:ethena": "NEXT_PUBLIC_INSTANCE=ethena NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
-    "dev:avax": "NEXT_PUBLIC_INSTANCE=avax NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
+    "dev:avax": "NEXT_PUBLIC_INSTANCE=avax pnpm dev",
     "build": "next build",
     "start": "next start",
     "build-prod": "run-s clean build",
