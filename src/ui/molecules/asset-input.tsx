@@ -33,6 +33,9 @@ const StyledTextField = styled(TextField)({
     borderTopLeftRadius: '4px',
     borderBottomLeftRadius: '4px',
   },
+  '& .Mui-disabled': {
+    '-webkit-text-fill-color': 'rgba(255, 255, 255, 0.8) !important',
+  },
 });
 
 export default function AssetInputMolecule(props: IAssetInput) {
