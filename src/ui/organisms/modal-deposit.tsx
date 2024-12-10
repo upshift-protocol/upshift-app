@@ -22,13 +22,10 @@ export default function DepositModalMolecule(
       pool: props?.address,
       poolName: props?.name,
       chainId: props?.chainId as IChainId,
-      supplyCheck:
-        props?.symbol === 'upUSD'
-          ? {
-              totalSupply: props?.totalSupply.raw,
-              maxSupply: props?.maxSupply?.raw || undefined,
-            }
-          : undefined, // @temporary: alex requested we check for max supply
+      supplyCheck: {
+        totalSupply: props?.totalSupply?.raw || '0',
+        maxSupply: props?.maxSupply?.raw || undefined,
+      },
     });
 
   return (
@@ -66,8 +63,7 @@ export default function DepositModalMolecule(
           loading={+expected.loading}
           chainId={props?.chainId}
           pool={{
-            apy: Number(props?.apy) <= 1 ? '-' : props?.apy,
-            // || props?.hardcodedApy,
+            apy: Number(props?.apy || 0) <= 1 ? '-' : props?.apy,
             collateral: props?.collateral,
           }}
         />

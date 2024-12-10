@@ -74,14 +74,14 @@ export default function AssetDisplay(props: IAssetDisplay) {
   if (props.tooltip && props.symbol) {
     return (
       <Tooltip
-        title={props?.symbol}
+        title={props.symbol}
         placement="top"
         arrow
         sx={{
           position: 'relative',
         }}
       >
-        <TokenLogo symbol={props.symbol || ''} size={props?.imgSize} />
+        <TokenLogo symbol={props.symbol} size={props?.imgSize} />
       </Tooltip>
     );
   }

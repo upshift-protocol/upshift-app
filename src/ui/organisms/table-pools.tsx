@@ -122,7 +122,6 @@ const columns: readonly IColumn[] = [
   },
   {
     id: 'apy',
-    // id: 'hardcodedApy',
     value: 'Avg. APY',
     minWidth: 100,
     align: 'right',
