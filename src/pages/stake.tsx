@@ -8,16 +8,16 @@ import {
   useReadContract,
   useReadContracts,
 } from 'wagmi';
-import {
-  AVAX_PRICE_FEED_ADDRESS,
-  REWARD_DISTRIBUTOR_ADDRESS,
-} from '@/utils/constants/addresses';
-import { abi as RewardDistributorABI } from '@/utils/abis/reward_distributor.json';
-import { abi as ChainLinkAggregatorV3InterfaceABI } from '@/utils/abis/chainlink_v3.json';
 import { erc20Abi, zeroAddress } from 'viem';
 import RewardDistributorTableOrganism from '@/ui/organisms/table-reward-distributor';
 import type { IAddress } from '@augustdigital/sdk';
-import { toNormalizedBn } from '@augustdigital/sdk';
+import {
+  toNormalizedBn,
+  AVAX_PRICE_FEED_ADDRESS,
+  REWARD_DISTRIBUTOR_ADDRESS,
+  ABI_REWARD_DISTRIBUTOR,
+  ABI_CHAINLINK_V3,
+} from '@augustdigital/sdk';
 import MyActiveStakingOrganism from '@/ui/organisms/table-active-staking';
 import type { IActiveStakePosition } from '@/utils/types';
 
@@ -34,7 +34,7 @@ const StakePage = () => {
 
   const { data: stakingToken } = useReadContract({
     address: rewardDistributorAddress,
-    abi: RewardDistributorABI,
+    abi: ABI_REWARD_DISTRIBUTOR,
     functionName: 'stakingToken',
     chainId,
   });
@@ -77,26 +77,26 @@ const StakePage = () => {
     contracts: [
       {
         address: rewardDistributorAddress,
-        abi: RewardDistributorABI,
+        abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'rewardsPerSecond',
         chainId,
       },
       {
         address: rewardDistributorAddress,
-        abi: RewardDistributorABI,
+        abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'balanceOf',
         args: [address],
         chainId,
       },
       {
         address: avaxPriceFeedAddress,
-        abi: ChainLinkAggregatorV3InterfaceABI,
+        abi: ABI_CHAINLINK_V3,
         functionName: 'latestRoundData',
         chainId: 1,
       },
       {
         address: rewardDistributorAddress,
-        abi: RewardDistributorABI,
+        abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'earned',
         chainId,
         args: [address],
@@ -119,9 +119,10 @@ const StakePage = () => {
       const rewardsPerSecond =
         activeStaking && toNormalizedBn(activeStaking[0]?.result as bigint, 18);
 
-      const avaxPrice = activeStaking && (activeStaking[2].result as number[]);
-      const avaxPriceInUSD =
-        avaxPrice && toNormalizedBn(avaxPrice[1] as number, 8);
+      const avaxPrice = activeStaking && activeStaking[2].result;
+      const avaxPriceInUSD = avaxPrice
+        ? toNormalizedBn(avaxPrice[1], 8)
+        : toNormalizedBn(0);
 
       const rewardEarned =
         activeStaking && toNormalizedBn(activeStaking[3]?.result as bigint, 18);

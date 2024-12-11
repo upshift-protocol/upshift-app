@@ -2,13 +2,13 @@ import {
   toNormalizedBn,
   type IAddress,
   type IPoolWithUnderlying,
+  AVAX_PRICE_FEED_ADDRESS,
+  ABI_CHAINLINK_V3,
 } from '@augustdigital/sdk';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { augustSdk } from '@/config/august-sdk';
 import { useReadContract } from 'wagmi';
-import { AVAX_PRICE_FEED_ADDRESS } from '@/utils/constants/addresses';
-import { abi as ChainLinkAggregatorV3InterfaceABI } from '@/utils/abis/chainlink_v3.json';
 import { zeroAddress } from 'viem';
 import useFetcher from './use-fetcher';
 
@@ -32,7 +32,7 @@ export default function useTokens(options?: IUseToken) {
 
   const { data: avaxPrice } = useReadContract({
     address: avaxPriceFeedAddress,
-    abi: ChainLinkAggregatorV3InterfaceABI,
+    abi: ABI_CHAINLINK_V3,
     functionName: 'latestRoundData',
     chainId: 1,
   });
@@ -82,7 +82,7 @@ export default function useTokens(options?: IUseToken) {
       decimals: 18,
       price:
         Array.isArray(avaxPrice) &&
-        Number(toNormalizedBn(avaxPrice[1] as number, 8).normalized),
+        Number(toNormalizedBn(avaxPrice[1], 8).normalized),
       symbol: 'AVAX',
     } as unknown as {
       address: IAddress;

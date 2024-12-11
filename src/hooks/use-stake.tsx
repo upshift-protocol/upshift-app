@@ -3,7 +3,7 @@ import ToastPromise from '@/ui/molecules/toast-promise';
 import { TIMES } from '@/utils/constants/time';
 // import type { IDepositLogData } from '@/utils/types';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
-import { toNormalizedBn } from '@augustdigital/sdk';
+import { toNormalizedBn, ABI_REWARD_DISTRIBUTOR } from '@augustdigital/sdk';
 import { useEffect, useRef, useState } from 'react';
 import type { Id } from 'react-toastify';
 import { toast } from 'react-toastify';
@@ -19,7 +19,6 @@ import {
   useSwitchChain,
   useWalletClient,
 } from 'wagmi';
-import { abi as RewardDistributorABI } from '@/utils/abis/reward_distributor.json';
 import { BUTTON_TEXTS, DEVELOPMENT_MODE } from '@/utils/constants';
 
 type IUseStakeProps = {
@@ -139,7 +138,7 @@ export default function useStake(props: IUseStakeProps) {
       const prepareDeposit = await simulateContract(provider, {
         account: address,
         address: props.rewardDistributor as IAddress,
-        abi: RewardDistributorABI,
+        abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'stake',
         args: [BigInt(normalized.raw)],
       });
@@ -221,7 +220,7 @@ export default function useStake(props: IUseStakeProps) {
       const out = await readContract(provider, {
         account: address,
         address: props.rewardDistributor,
-        abi: RewardDistributorABI,
+        abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'stake',
         args: [BigInt(normalized.raw)],
       });
