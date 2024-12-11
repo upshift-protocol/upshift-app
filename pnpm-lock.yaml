@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@augustdigital/sdk':
-        specifier: 1.5.14
-        version: 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        specifier: 1.6.1
+        version: 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.14.0(@types/react@18.3.13)(react@18.3.1)
@@ -169,20 +169,20 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@augustdigital/abis@1.5.14':
-    resolution: {integrity: sha512-SBG6IQSuSyzfwU+wPth9vzY7/IttK6Fvkn3LijHk0rauT5pQbuMNAhRPMJJO108gqBk8oT9sj0O3ir2HMFpV6Q==}
+  '@augustdigital/abis@1.6.1':
+    resolution: {integrity: sha512-4a2MC7pYzTReouxKiG8QJXViqfuHCV+Iuch4nksjHwY9Vqv8sVP/9LfIEXbmQy16wMSlCXP7vEiqACm3dpV6oQ==}
 
-  '@augustdigital/pools@1.5.14':
-    resolution: {integrity: sha512-28ldBmoakpT/2c++8HSv1XHIr5lzmnVOHRDg8ess9mLYk6fZ2rQlod/MvlsmFL/YzEaIHGulVGfAbz0puKUNYg==}
+  '@augustdigital/pools@1.6.1':
+    resolution: {integrity: sha512-XA5FWcR6l0v7oaj97QR1UbCvaVgkCpV5Pyg6hDojFdoHqtTixZsV8zEwjU+YeYByzLyWCh4aIsfUcckiJtxovw==}
 
-  '@augustdigital/sdk@1.5.14':
-    resolution: {integrity: sha512-yMjdHK64S8MaYGhrX3hl9ZW7lxp6z9FWzvywpcothcj9peCdxGu6HTTcvYDc/SB23AsitGvvKgFZv7UDvXZXBA==}
+  '@augustdigital/sdk@1.6.1':
+    resolution: {integrity: sha512-Cc07pXivW1Z4/orGeZLMBF/4hYQZpA9H+0cCNDSx8GlJ49BAITFZ5qSa9vJ29pjQFk+QqvuCSmZ3stdD4SwYBg==}
 
-  '@augustdigital/types@1.5.14':
-    resolution: {integrity: sha512-zSmxcYgiWBHU6n/Zkd+tkr0GS1n3xU9SkUM5vFWgtR/C+AT5h/eWHuiiJXShbRUnFGxF2EpFjovz+JZm5Z7MWg==}
+  '@augustdigital/types@1.6.1':
+    resolution: {integrity: sha512-Mo/8lEsvE4NXBiBYYyFuHQ/RZ4gHT5crpv2rc4jLaXxoQ/nYmD9XOyOHQ687p/V1fypd+sWniccUMk5phOddBQ==}
 
-  '@augustdigital/utils@1.5.14':
-    resolution: {integrity: sha512-GkZOVZ2/c/k5jNI3gVotUL5/gMTMCQkiJDap53NlzNO4AKVS6zV6AuWCgVSlCvYKoV0zecrGuOHJhbW39Y6Ecg==}
+  '@augustdigital/utils@1.6.1':
+    resolution: {integrity: sha512-RYZVwzIxZIWDujZK8VH4eRODc2QPDmLKmsJhfrXs2mW2WNUMsFCNYO22UsUxzgRniiXLm/y3JjXgwCnF4PdTZg==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -4200,41 +4200,41 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@augustdigital/abis@1.5.14': {}
+  '@augustdigital/abis@1.6.1': {}
 
-  '@augustdigital/pools@1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/pools@1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/abis': 1.5.14
-      '@augustdigital/types': 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/utils': 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/abis': 1.6.1
+      '@augustdigital/types': 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethereum-block-by-date: 1.5.0
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/sdk@1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/sdk@1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/abis': 1.5.14
-      '@augustdigital/pools': 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/types': 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/utils': 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/abis': 1.6.1
+      '@augustdigital/pools': 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       upshift-earn-app: link:../../../../angellolazar/Desktop/dev/august/upshift-app
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/types@1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/types@1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/utils@1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/utils@1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/types': 1.5.14(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 1.6.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
