@@ -14,7 +14,6 @@ export default function RewardDistributorActionsMolecule({
   gap?: number;
   type: 'staking' | 'unstaking';
 }) {
-  console.log(stakingToken, 'stakingToken');
   return (
     <Stack
       direction="row"

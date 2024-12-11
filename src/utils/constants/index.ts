@@ -35,6 +35,7 @@ export const BUTTON_TEXTS = {
 
 export const LINKS = {
   home: '/',
+  stake: '/stake/',
   privacy_policy:
     'https://docs.augustdigital.io/legal/legal-notices/privacy-policy',
   terms_of_service:
@@ -44,8 +45,13 @@ export const LINKS = {
 export const NAV_ITEMS: INavItem[] = [
   {
     link: LINKS.home,
-    text: 'Home',
-    target: '_blank',
+    text: 'Deposit',
+    target: '_self',
+  },
+  {
+    link: LINKS.stake,
+    text: 'Stake',
+    target: '_self',
   },
 ];
 

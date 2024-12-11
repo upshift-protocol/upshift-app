@@ -162,7 +162,6 @@ export default function useClaimReward(props: IUseUnStakeProps) {
         return;
       }
 
-      console.log(props, 'props-claim');
       if (!(provider && props.token && props.rewardDistributor && address))
         return;
 
@@ -179,7 +178,6 @@ export default function useClaimReward(props: IUseUnStakeProps) {
         out: toNormalizedBn((out as bigint) || BigInt(0), props.decimals),
         loading: false,
       }));
-      console.log('out-claim', out);
     } catch (e) {
       setExpected((_prev) => ({
         fee: toNormalizedBn(BigInt(0), props.decimals),
@@ -200,7 +198,6 @@ export default function useClaimReward(props: IUseUnStakeProps) {
   // useEffects
   useEffect(() => {
     const val = toNormalizedBn(props.value || '0', props.decimals);
-    console.log(val, 'val-claim');
     if (BigInt(val.raw) === BigInt(0)) {
       setButton({ text: BUTTON_TEXTS.zero, disabled: true });
     } else {

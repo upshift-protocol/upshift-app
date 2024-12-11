@@ -7,15 +7,14 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 
-import { INSTANCE, REFERRALS_ENABLED, STYLE_VARS } from '@/utils/constants';
-import { useThemeMode } from '@/stores/theme';
 import {
-  Button,
-  Drawer,
-  IconButton,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+  INSTANCE,
+  REFERRALS_ENABLED,
+  STYLE_VARS,
+  NAV_ITEMS,
+} from '@/utils/constants';
+import { useThemeMode } from '@/stores/theme';
+import { Button, Drawer, IconButton, Skeleton } from '@mui/material';
 import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import ThemeSwitch from '../atoms/theme-switch';
@@ -86,7 +85,7 @@ const HeaderSkeleton = () => {
           >
             <MenuIcon />
           </IconButton> */}
-            <Stack direction="row" alignItems="center" gap={3}>
+            <Stack direction="row" alignItems="center" gap={2.5}>
               <LinkAtom
                 href="/"
                 target="_self"
@@ -94,74 +93,39 @@ const HeaderSkeleton = () => {
                   textDecoration: 'none',
                   color: 'inherit',
                   display: 'flex',
+                  marginRight: '0.5rem',
                 }}
                 noSpan
               >
                 <Logo />
               </LinkAtom>
 
+              {NAV_ITEMS.map((n, i) => (
+                <Box
+                  display={{ xs: 'none', sm: 'flex' }}
+                  key={`desktop-nav-item-${i}`}
+                >
+                  <LinkAtom href={n.link} target={n.target} noSpan>
+                    <Button
+                      variant="text"
+                      color="info"
+                      style={{
+                        color: pathname === n.link ? '#00c260' : '',
+                        borderColor: pathname === n.link ? '#00c260' : '',
+                        fontSize: '18px',
+                      }}
+                    >
+                      {n.text}
+                    </Button>
+                  </LinkAtom>
+                </Box>
+              ))}
+
               {REFERRALS_ENABLED && INSTANCE !== 'ethena' ? (
                 <Box display={{ xs: 'none', sm: 'flex' }}>
                   <MyReferralsModalMolecule />
                 </Box>
               ) : null}
-            </Stack>
-
-            <Stack
-              justifyContent={'center'}
-              direction="row"
-              alignItems="center"
-              gap={{ xs: 1, md: 2 }}
-            >
-              <LinkAtom
-                href="/"
-                target="_self"
-                style={{
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  display: 'flex',
-                  marginLeft: '5rem',
-                  borderBottom: pathname === '/' ? '2px solid #00FFB0' : 'none',
-                }}
-                noSpan
-              >
-                <Typography
-                  variant="h6"
-                  mb={{ xs: 0, md: 1 }}
-                  style={{
-                    marginBottom: '0px',
-                    lineHeight: '2em',
-                    fontSize: '1.3rem',
-                  }}
-                >
-                  Deposit
-                </Typography>
-              </LinkAtom>
-              <LinkAtom
-                href="/stake"
-                target="_self"
-                style={{
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  display: 'flex',
-                  marginLeft: '1rem',
-                  borderBottom:
-                    pathname === '/stake/' ? '2px solid #00FFB0' : 'none',
-                }}
-                noSpan
-              >
-                <Typography
-                  variant="h6"
-                  mb={{ xs: 0, md: 1 }}
-                  style={{
-                    marginBottom: '0px',
-                    lineHeight: '2em',
-                    fontSize: '1.3rem',
-                  }}
-                >
-                  Stake
-                </Typography>
-              </LinkAtom>
             </Stack>
 
             {/* Desktop */}
@@ -257,8 +221,27 @@ const HeaderSkeleton = () => {
                         </IconButton>
                       </Stack>
                       {/* Mobile navigation */}
-                      {REFERRALS_ENABLED ? (
-                        <Stack gap={1}>
+                      <Stack gap={2}>
+                        {NAV_ITEMS.map((n, i) => (
+                          <LinkAtom
+                            href={n.link}
+                            target={n.target}
+                            noSpan
+                            key={`mobile-nav-item-${i}`}
+                          >
+                            <Button
+                              size="large"
+                              variant={
+                                pathname === n.link ? 'contained' : 'outlined'
+                              }
+                              color="primary"
+                              fullWidth
+                            >
+                              {n.text}
+                            </Button>
+                          </LinkAtom>
+                        ))}
+                        {REFERRALS_ENABLED ? (
                           <MyReferralsModalMolecule
                             buttonProps={{
                               size: 'large',
@@ -267,8 +250,8 @@ const HeaderSkeleton = () => {
                               fullWidth: true,
                             }}
                           />
-                        </Stack>
-                      ) : null}
+                        ) : null}
+                      </Stack>
                     </Stack>
                     <Stack gap={2}>
                       <Grid
