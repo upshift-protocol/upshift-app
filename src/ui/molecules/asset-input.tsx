@@ -26,7 +26,7 @@ type IAssetInput = {
   isNative?: boolean;
 };
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)<any>(({ theme }) => ({
   flexGrow: 1,
   '& .MuiOutlinedInput-root': {
     borderRadius: '0px',
@@ -34,9 +34,12 @@ const StyledTextField = styled(TextField)({
     borderBottomLeftRadius: '4px',
   },
   '& .Mui-disabled': {
-    '-webkit-text-fill-color': 'rgba(255, 255, 255, 0.8) !important',
+    '-webkit-text-fill-color':
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.8) !important'
+        : 'rgba(0, 0, 0, 0.8) !important',
   },
-});
+}));
 
 export default function AssetInputMolecule(props: IAssetInput) {
   const { address, chain } = useAccount();
