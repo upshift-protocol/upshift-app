@@ -201,7 +201,7 @@ const columns: readonly GridColDef<any[number]>[] = [
       if (!rewardToken?.usd) {
         return <Skeleton variant="text" height={36} />;
       }
-
+      console.log('rewardToken:', rewardToken);
       return (
         <Stack alignItems="end">
           <AmountDisplay symbol={rewardToken?.symbol} round usd>

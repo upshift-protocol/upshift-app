@@ -10,6 +10,8 @@ import useFetcher from '@/hooks/use-fetcher';
 import { useAccount } from 'wagmi';
 import { augustSdk } from '@/config/august-sdk';
 import { INSTANCE } from '@/utils/constants';
+import { zeroAddress } from 'viem';
+import { avalanche } from 'viem/chains';
 
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
@@ -66,8 +68,8 @@ const PoolsProvider = ({ children }: IChildren) => {
 
   const prices = useQuery({
     queryKey: ['token-prices'],
-    queryFn: () =>
-      Promise.all(
+    queryFn: async () => {
+      const promises = await Promise.all(
         pools?.data?.length
           ? pools?.data?.map(async (p) => {
               const price = await augustSdk.getPrice(
@@ -79,7 +81,23 @@ const PoolsProvider = ({ children }: IChildren) => {
               };
             })
           : [],
-      ),
+      );
+      const avaxPrice = await augustSdk.getPrice('avax');
+      promises.push({
+        address: zeroAddress,
+        chain: avalanche.id,
+        decimals: 18,
+        price: avaxPrice,
+        symbol: 'AVAX',
+      } as unknown as {
+        address: IAddress;
+        chain: number;
+        decimals: number;
+        price: number;
+        symbol: string;
+      });
+      return promises;
+    },
     enabled: pools.isFetched,
   });
 
