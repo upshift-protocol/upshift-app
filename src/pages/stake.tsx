@@ -28,7 +28,7 @@ const StakePage = () => {
   const rewardDistributorAddress = REWARD_DISTRIBUTOR_ADDRESS(chainId);
   const avaxPriceFeedAddress = AVAX_PRICE_FEED_ADDRESS(1);
 
-  const [stakingPosition, setStakingPosition] = React.useState<
+  const [stakingPositions, setStakingPositions] = React.useState<
     IActiveStakePosition[]
   >([]);
 
@@ -39,35 +39,38 @@ const StakePage = () => {
     chainId,
   });
 
-  const { data: stakeTokenMeta, isLoading: tokenMetaLoading } =
-    useReadContracts({
-      contracts: [
-        {
-          address: stakingToken as `0x${string}`,
-          abi: erc20Abi,
-          functionName: 'decimals',
-          chainId,
-        },
-        {
-          address: stakingToken as `0x${string}`,
-          abi: erc20Abi,
-          functionName: 'symbol',
-          chainId,
-        },
-        {
-          address: stakingToken as `0x${string}`,
-          abi: erc20Abi,
-          functionName: 'name',
-          chainId,
-        },
-        {
-          address: stakingToken as `0x${string}`,
-          abi: erc20Abi,
-          functionName: 'totalSupply',
-          chainId,
-        },
-      ],
-    });
+  const {
+    data: stakeTokenMeta,
+    isLoading: tokenMetaLoading,
+    isPending: tokenMetaPending,
+  } = useReadContracts({
+    contracts: [
+      {
+        address: stakingToken as `0x${string}`,
+        abi: erc20Abi,
+        functionName: 'decimals',
+        chainId,
+      },
+      {
+        address: stakingToken as `0x${string}`,
+        abi: erc20Abi,
+        functionName: 'symbol',
+        chainId,
+      },
+      {
+        address: stakingToken as `0x${string}`,
+        abi: erc20Abi,
+        functionName: 'name',
+        chainId,
+      },
+      {
+        address: stakingToken as `0x${string}`,
+        abi: erc20Abi,
+        functionName: 'totalSupply',
+        chainId,
+      },
+    ],
+  });
 
   const {
     data: activeStaking,
@@ -158,9 +161,9 @@ const StakePage = () => {
         chainId,
       };
 
-      setStakingPosition([activePosition]);
+      setStakingPositions([activePosition]);
     }
-  }, [tokenMetaLoading, activeStakingLoading, activeStaking?.[1].result]);
+  }, [tokenMetaLoading, activeStakingLoading, activeStaking?.[1]?.result]);
 
   return (
     <Base>
@@ -173,25 +176,23 @@ const StakePage = () => {
           <Collapse
             in={
               address &&
-              !activeStakingLoading &&
-              !tokenMetaLoading &&
-              stakingPosition.length > 0 &&
+              stakingPositions.length > 0 &&
               Number(
-                stakingPosition[0]?.stakingToken?.totalStaked?.normalized,
+                stakingPositions?.[0]?.stakingToken?.totalStaked?.normalized,
               ) > 0
             }
           >
             <MyActiveStakingOrganism
-              title="Active Stake Position"
-              data={stakingPosition}
+              title="My Positions"
+              data={stakingPositions}
               loading={+(activeStakingLoading || tokenMetaLoading)}
               refetchActiveStaking={refetchActiveStaking}
             />
           </Collapse>
           <RewardDistributorTableOrganism
             title="Stake Upshift LP Tokens"
-            data={stakingPosition}
-            loading={+tokenMetaLoading}
+            data={stakingPositions}
+            loading={+tokenMetaLoading || +tokenMetaPending}
             pagination={false}
           />
         </Stack>

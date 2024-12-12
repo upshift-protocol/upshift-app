@@ -224,7 +224,7 @@ export default function useWithdraw(props: IUseWithdrawProps) {
     }
     // normalize input amount
     const normalized = toNormalizedBn(props.value, decimals);
-    console.log('normalized:', normalized);
+
     if (BigInt(normalized.raw) === BigInt(0)) {
       console.warn('#requestWithdraw: amount input is zero');
       return;

@@ -46,6 +46,7 @@ export default function ClainRewardModalMolecule(
           type="Out"
           chainId={props?.chainId as IChainId}
           isNative={true}
+          loading={+!props?.rewardToken?.address}
           value={props?.rewardToken?.redeemable?.normalized}
         />
         <TxFeesAtom

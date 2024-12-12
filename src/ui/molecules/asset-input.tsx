@@ -45,6 +45,9 @@ export default function AssetInputMolecule(props: IAssetInput) {
   const { address, chain } = useAccount();
 
   const { data, isLoading } = useReadContracts({
+    query: {
+      enabled: props.address !== zeroAddress,
+    },
     contracts: [
       {
         ...props,
@@ -135,9 +138,9 @@ export default function AssetInputMolecule(props: IAssetInput) {
         )}
         {props.isNative ? (
           <AssetSelectorAtom
-            symbol={chain?.nativeCurrency.symbol}
             {...props}
-            loading={!!props?.loading}
+            symbol={chain?.nativeCurrency.symbol}
+            loading={props?.loading === 1}
             forInput
           />
         ) : (

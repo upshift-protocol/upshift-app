@@ -56,9 +56,6 @@ export default function RedeemModalMolecule(props?: IPoolWithUnderlying) {
               labelId="Selected-Redemption"
               value={selectedRedemption}
               label="Selected Redemption"
-              onChange={(e) => {
-                console.log('e', e);
-              }}
             >
               {(props as any)?.availableRedemptions?.map(
                 (red: any, i: number) => (
