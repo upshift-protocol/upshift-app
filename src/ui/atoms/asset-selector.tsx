@@ -1,7 +1,7 @@
 import { useThemeMode } from '@/stores/theme';
 import type { IAssetDisplay } from '@/utils/types';
 import Stack from '@mui/material/Stack';
-import { erc20Abi } from 'viem';
+import { erc20Abi, zeroAddress } from 'viem';
 import { useReadContract } from 'wagmi';
 import AssetDisplay from '../molecules/asset-display';
 
@@ -12,7 +12,14 @@ type IAssetSelector = IAssetDisplay & {
 export default function AssetSelectorAtom(props: IAssetSelector) {
   const { isDark } = useThemeMode();
 
-  const { data: symbol, isLoading } = useReadContract({
+  const {
+    data: symbol,
+    isLoading,
+    isPending,
+  } = useReadContract({
+    query: {
+      enabled: props.address !== zeroAddress,
+    },
     address: props.address,
     abi: erc20Abi,
     functionName: 'symbol',
@@ -39,7 +46,7 @@ export default function AssetSelectorAtom(props: IAssetSelector) {
         truncate
         imgFallback
         chainId={props?.chainId}
-        loading={isLoading}
+        loading={isLoading && !isPending}
       />
     </Stack>
   );

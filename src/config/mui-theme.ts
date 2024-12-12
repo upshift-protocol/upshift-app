@@ -119,13 +119,13 @@ export const lightTheme = createTheme({
         textInfo: {
           color: 'rgba(0,0,0,0.7)',
           borderBottom: '2px solid',
-          borderColor: '#00c260',
+          borderColor: 'rgba(0,0,0,0.2)',
           borderRadius: '0',
           padding: '0rem 0.2rem',
           marginBottom: '0.25rem',
           ':hover': {
             backgroundColor: 'transparent',
-            color: '#00c260',
+            borderColor: '#00c260',
           },
         },
       },
@@ -167,7 +167,7 @@ export const darkTheme = createTheme({
         textInfo: {
           color: 'white',
           borderBottom: '2px solid',
-          borderColor: '#00FF7E',
+          borderColor: 'rgba(255,255,255,0.2)',
           borderRadius: '0',
           padding: '0rem 0.2rem',
           marginBottom: '0.25rem',

@@ -11,7 +11,7 @@
     "dev:lombard": "NEXT_PUBLIC_INSTANCE=lombard pnpm dev",
     "dev:treehouse": "NEXT_PUBLIC_INSTANCE=treehouse pnpm dev",
     "dev:ethena": "NEXT_PUBLIC_INSTANCE=ethena NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
-    "dev:avax": "NEXT_PUBLIC_INSTANCE=avax NEXT_PUBLIC_REFERRALS_ENABLED=true pnpm dev",
+    "dev:avax": "NEXT_PUBLIC_INSTANCE=avax pnpm dev",
     "build": "next build",
     "start": "next start",
     "build-prod": "run-s clean build",
@@ -26,7 +26,7 @@
     "reset": "rm -rf node_modules pnpm-lock.yaml out .next && pnpm i"
   },
   "dependencies": {
-    "@augustdigital/sdk": "1.5.14",
+    "@augustdigital/sdk": "1.6.3",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^6.1.6",

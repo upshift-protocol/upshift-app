@@ -1,3 +1,5 @@
+import Stack from '@mui/material/Stack';
+import type { GridSortDirection } from '@mui/x-data-grid';
 import type { INavItem } from '../types';
 
 export * from './time';
@@ -17,7 +19,7 @@ export const INSTANCE =
     | undefined) || 'default';
 
 /**
- * User interface
+ * UI
  */
 export const BUTTON_TEXTS = {
   zero: 'Input an Amount',
@@ -35,6 +37,7 @@ export const BUTTON_TEXTS = {
 
 export const LINKS = {
   home: '/',
+  stake: '/stake',
   privacy_policy:
     'https://docs.augustdigital.io/legal/legal-notices/privacy-policy',
   terms_of_service:
@@ -44,10 +47,70 @@ export const LINKS = {
 export const NAV_ITEMS: INavItem[] = [
   {
     link: LINKS.home,
-    text: 'Home',
-    target: '_blank',
+    text: 'Deposit',
+    target: '_self',
+  },
+  {
+    link: LINKS.stake,
+    text: 'Stake',
+    target: '_self',
   },
 ];
+
+export const DATA_TABLE_OPTIONS = ({
+  loading,
+  rows,
+  columns,
+  defaultSortKey,
+  rowHeight = 60,
+  noDataText = 'No Data Available',
+  noResultsText = 'Current filters return no results',
+  pageSize = 5,
+  sortOrder = 'desc',
+  pagination = true,
+}: {
+  loading: boolean;
+  rows: any;
+  columns: any;
+  defaultSortKey: string;
+  rowHeight?: number;
+  noDataText?: string;
+  noResultsText?: string;
+  pageSize?: number;
+  sortOrder?: GridSortDirection;
+  pagination?: boolean;
+}) => ({
+  loading,
+  rows,
+  columns,
+  rowHeight,
+  initialState: {
+    pagination: pagination
+      ? {
+          paginationModel: {
+            pageSize,
+          },
+        }
+      : undefined,
+    sorting: {
+      sortModel: [{ field: defaultSortKey, sort: sortOrder }],
+    },
+  },
+  pageSizeOptions: [pageSize],
+  disableRowSelectionOnClick: true,
+  slots: {
+    noRowsOverlay: () => (
+      <Stack height="100%" alignItems="center" justifyContent="center">
+        {noDataText}
+      </Stack>
+    ),
+    noResultsOverlay: () => (
+      <Stack height="100%" alignItems="center" justifyContent="center">
+        {noResultsText}
+      </Stack>
+    ),
+  },
+});
 
 /**
  * Styles
