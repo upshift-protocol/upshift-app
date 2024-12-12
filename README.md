@@ -122,7 +122,7 @@ pnpm build-prod
 
 Now, the app is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
 
-*Note: there is a github workflow that will deploy all various instances (`avax`, `lombard`, etc) when there is a push to `develop`.*
+*Note: there is a disabled github workflow that will deploy all various instances (`avax`, `lombard`, etc) when there is a push to `develop`. OR, you can use `sh scripts/update-instances.sh`*
 
 ### Live
 
