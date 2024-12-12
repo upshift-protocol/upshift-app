@@ -27,6 +27,7 @@ const columns: readonly GridColDef<any[number]>[] = [
         {params.colDef.headerName}
       </span>
     ),
+    minWidth: 300,
     flex: 2,
     editable: false,
     renderCell({ row }) {
@@ -65,6 +66,7 @@ const columns: readonly GridColDef<any[number]>[] = [
         {params.colDef.headerName}
       </span>
     ),
+    maxWidth: 100,
     flex: 1,
     editable: false,
     renderCell({ row }) {
@@ -150,6 +152,34 @@ const columns: readonly GridColDef<any[number]>[] = [
         <Stack alignItems="end">
           <AmountDisplay symbol={stakingToken?.symbol} round usd>
             {stakingToken?.totalStaked?.normalized || '-'}
+          </AmountDisplay>
+        </Stack>
+      );
+    },
+  },
+  {
+    field: 'apy',
+    headerName: 'APY',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+        {params.colDef.headerName}
+      </span>
+    ),
+    flex: 1,
+    editable: false,
+    headerAlign: 'right',
+    renderCell({ row }) {
+      const { apy } = row;
+      if (!apy) {
+        return <Skeleton variant="text" height={36} />;
+      }
+
+      return (
+        <Stack alignItems="end" height="100%" justifyContent={'center'}>
+          <AmountDisplay>
+            {apy && Number(apy) >= 1
+              ? `${([apy] as string[]).join('')?.toString()?.slice(0, 5)}%`
+              : '-'}
           </AmountDisplay>
         </Stack>
       );
@@ -245,6 +275,13 @@ export default function MyActiveStakingOrganism({
           noResultsText: 'Current filters return no results',
         })}
         hideFooter={!pagination}
+        slotProps={{
+          cell: {
+            style: {
+              backgroundColor: isDark ? '#121212' : '#fff',
+            },
+          },
+        }}
       />
     </Paper>
   );

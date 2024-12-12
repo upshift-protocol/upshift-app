@@ -27,6 +27,7 @@ const columns: readonly GridColDef<any[number]>[] = [
       </span>
     ),
     flex: 2,
+    minWidth: 300,
     editable: false,
     renderCell({ row }) {
       if (!row) return '-';
@@ -46,19 +47,15 @@ const columns: readonly GridColDef<any[number]>[] = [
         {params.colDef.headerName}
       </span>
     ),
-    flex: 2,
+    flex: 1,
+    maxWidth: 100,
     editable: false,
     renderCell({ row }) {
       if (!row) {
-        return (
-          // <TableCell>
-          <Skeleton variant="circular" height={36} width={36} />
-          // </TableCell>
-        );
+        return <Skeleton variant="circular" height={36} width={36} />;
       }
 
       return (
-        // <TableCell style={{ borderBottom: "0" }}>
         <Stack justifyContent={'center'} height="100%">
           <Background color="white" variant="circular">
             <Tooltip
@@ -75,7 +72,6 @@ const columns: readonly GridColDef<any[number]>[] = [
             </Tooltip>
           </Background>
         </Stack>
-        // </TableCell>
       );
     },
   },
@@ -90,19 +86,16 @@ const columns: readonly GridColDef<any[number]>[] = [
     flex: 2,
     editable: false,
     renderCell({ row }) {
-      const { stakingToken, chainId } = row;
+      const { stakingToken } = row;
       if (!row) {
         return (
-          // <TableCell>
           <Stack alignItems="center" gap={1} direction="row">
             <Skeleton variant="circular" height={24} width={24} />
             <Skeleton variant="text" height={36} width={48} />
           </Stack>
-          // </TableCell>
         );
       }
       return (
-        // <TableCell>
         <Stack
           justifyContent="center"
           height="100%"
@@ -113,35 +106,34 @@ const columns: readonly GridColDef<any[number]>[] = [
             imgSize={20}
             symbol={stakingToken.symbol}
             address={stakingToken?.address as IAddress}
-            chainId={chainId ? Number(chainId) : undefined}
+            chainId={stakingToken?.chain as number}
           />
         </Stack>
-        // </TableCell>
       );
     },
   },
   {
-    field: 'apy',
-    headerName: 'APY',
+    field: 'maxApy',
+    headerName: 'Max APY',
     renderHeader: (params: GridColumnHeaderParams) => (
       <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
         {params.colDef.headerName}
       </span>
     ),
-    flex: 2,
+    flex: 1,
     editable: false,
     headerAlign: 'right',
     renderCell({ row }) {
-      const { apy } = row;
-      if (!apy) {
+      const { maxApy } = row;
+      if (!maxApy) {
         return <Skeleton variant="text" height={36} />;
       }
 
       return (
         <Stack alignItems="end" height="100%" justifyContent={'center'}>
           <AmountDisplay>
-            {apy && Number(apy) >= 1
-              ? `${([apy] as string[]).join('')?.toString()?.slice(0, 5)}%`
+            {maxApy && Number(maxApy) >= 1
+              ? `${([maxApy] as string[]).join('')?.toString()?.slice(0, 5)}%`
               : '-'}
           </AmountDisplay>
         </Stack>
@@ -162,11 +154,7 @@ const columns: readonly GridColDef<any[number]>[] = [
     renderCell({ row }) {
       const { stakingToken } = row;
       if (!stakingToken?.usd) {
-        return (
-          // <TableCell>
-          <Skeleton variant="text" height={36} />
-          // </TableCell>
-        );
+        return <Skeleton variant="text" height={36} />;
       }
 
       return (

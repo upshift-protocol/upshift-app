@@ -96,6 +96,7 @@ export type IActiveStakePosition = {
   rewardDistributor: IAddress;
   rewardPerSecond: INormalizedNumber;
   apy?: number;
+  maxApy?: number;
   chainId: number;
   id: string;
 };

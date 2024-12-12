@@ -2,12 +2,7 @@ import Section from '@/ui/skeletons/section';
 import Base from '@/ui/skeletons/base';
 import { Collapse, Stack } from '@mui/material';
 import React, { useEffect } from 'react';
-import {
-  useAccount,
-  useChainId,
-  useReadContract,
-  useReadContracts,
-} from 'wagmi';
+import { useAccount, useReadContract, useReadContracts } from 'wagmi';
 import { erc20Abi, zeroAddress } from 'viem';
 import RewardDistributorTableOrganism from '@/ui/organisms/table-reward-distributor';
 import type { IAddress } from '@augustdigital/sdk';
@@ -20,12 +15,14 @@ import {
 } from '@augustdigital/sdk';
 import MyActiveStakingOrganism from '@/ui/organisms/table-active-staking';
 import type { IActiveStakePosition } from '@/utils/types';
+import { avalanche, mainnet } from 'viem/chains';
+
+const REWARDS_CHAIN = avalanche.id;
 
 const StakePage = () => {
-  const chainId = useChainId();
-  const { address, chain } = useAccount();
+  const { address } = useAccount();
 
-  const rewardDistributorAddress = REWARD_DISTRIBUTOR_ADDRESS(chainId);
+  const rewardDistributorAddress = REWARD_DISTRIBUTOR_ADDRESS(REWARDS_CHAIN);
   const avaxPriceFeedAddress = AVAX_PRICE_FEED_ADDRESS(1);
 
   const [stakingPositions, setStakingPositions] = React.useState<
@@ -36,7 +33,7 @@ const StakePage = () => {
     address: rewardDistributorAddress,
     abi: ABI_REWARD_DISTRIBUTOR,
     functionName: 'stakingToken',
-    chainId,
+    chainId: REWARDS_CHAIN,
   });
 
   const {
@@ -49,25 +46,25 @@ const StakePage = () => {
         address: stakingToken as `0x${string}`,
         abi: erc20Abi,
         functionName: 'decimals',
-        chainId,
+        chainId: REWARDS_CHAIN,
       },
       {
         address: stakingToken as `0x${string}`,
         abi: erc20Abi,
         functionName: 'symbol',
-        chainId,
+        chainId: REWARDS_CHAIN,
       },
       {
         address: stakingToken as `0x${string}`,
         abi: erc20Abi,
         functionName: 'name',
-        chainId,
+        chainId: REWARDS_CHAIN,
       },
       {
         address: stakingToken as `0x${string}`,
         abi: erc20Abi,
         functionName: 'totalSupply',
-        chainId,
+        chainId: REWARDS_CHAIN,
       },
     ],
   });
@@ -82,26 +79,26 @@ const StakePage = () => {
         address: rewardDistributorAddress,
         abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'rewardsPerSecond',
-        chainId,
+        chainId: REWARDS_CHAIN,
       },
       {
         address: rewardDistributorAddress,
         abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'balanceOf',
         args: [address],
-        chainId,
+        chainId: REWARDS_CHAIN,
       },
       {
         address: avaxPriceFeedAddress,
         abi: ABI_CHAINLINK_V3,
         functionName: 'latestRoundData',
-        chainId: 1,
+        chainId: mainnet.id,
       },
       {
         address: rewardDistributorAddress,
         abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'earned',
-        chainId,
+        chainId: REWARDS_CHAIN,
         args: [address],
       },
     ],
@@ -129,27 +126,28 @@ const StakePage = () => {
 
       const rewardEarned =
         activeStaking && toNormalizedBn(activeStaking[3]?.result as bigint, 18);
-
-      const APR =
+      const STAKED_APR =
         (Number(rewardsPerSecond?.normalized) * 31536000 * 100) /
         (Number(totalStaked?.normalized) * Number(avaxPriceInUSD?.normalized));
-
+      const MAX_APR =
+        (Number(rewardsPerSecond?.normalized) * 31536000 * 100) /
+        (Number(0.1) * Number(avaxPriceInUSD?.normalized));
       const activePosition: IActiveStakePosition = {
         id: '1',
         rewardToken: {
-          decimals: chain?.nativeCurrency?.decimals as number,
-          symbol: chain?.nativeCurrency?.symbol as string,
+          decimals: 18 as number,
+          symbol: 'AVAX' as string,
           address: zeroAddress,
-          chain: chainId,
+          chain: REWARDS_CHAIN,
           redeemable: rewardEarned,
           usd: avaxPriceInUSD,
-          name: chain?.nativeCurrency?.name as string,
+          name: 'Avalanche' as string,
         },
         stakingToken: {
           decimals: decimals as number,
           symbol: symbol as string,
           address: stakingToken as IAddress,
-          chain: chainId,
+          chain: REWARDS_CHAIN,
           totalStaked,
           usd: avaxPriceInUSD,
           totalSupply,
@@ -157,10 +155,10 @@ const StakePage = () => {
         },
         rewardDistributor: rewardDistributorAddress,
         rewardPerSecond: rewardsPerSecond,
-        apy: APR,
-        chainId,
+        apy: STAKED_APR,
+        maxApy: MAX_APR,
+        chainId: REWARDS_CHAIN,
       };
-
       setStakingPositions([activePosition]);
     }
   }, [tokenMetaLoading, activeStakingLoading, activeStaking?.[1]?.result]);
