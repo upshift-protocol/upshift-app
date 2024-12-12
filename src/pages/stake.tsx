@@ -8,22 +8,22 @@ import RewardDistributorTableOrganism from '@/ui/organisms/table-reward-distribu
 import type { IAddress } from '@augustdigital/sdk';
 import {
   toNormalizedBn,
-  AVAX_PRICE_FEED_ADDRESS,
   REWARD_DISTRIBUTOR_ADDRESS,
   ABI_REWARD_DISTRIBUTOR,
-  ABI_CHAINLINK_V3,
 } from '@augustdigital/sdk';
 import MyActiveStakingOrganism from '@/ui/organisms/table-active-staking';
 import type { IActiveStakePosition } from '@/utils/types';
-import { avalanche, mainnet } from 'viem/chains';
+import { avalanche } from 'viem/chains';
+import { usePoolsStore } from '@/stores/pools';
 
 const REWARDS_CHAIN = avalanche.id;
+const REWARDS_SYMBOL = avalanche.nativeCurrency.symbol;
 
 const StakePage = () => {
   const { address } = useAccount();
+  const { prices } = usePoolsStore();
 
   const rewardDistributorAddress = REWARD_DISTRIBUTOR_ADDRESS(REWARDS_CHAIN);
-  const avaxPriceFeedAddress = AVAX_PRICE_FEED_ADDRESS(1);
 
   const [stakingPositions, setStakingPositions] = React.useState<
     IActiveStakePosition[]
@@ -89,12 +89,6 @@ const StakePage = () => {
         chainId: REWARDS_CHAIN,
       },
       {
-        address: avaxPriceFeedAddress,
-        abi: ABI_CHAINLINK_V3,
-        functionName: 'latestRoundData',
-        chainId: mainnet.id,
-      },
-      {
         address: rewardDistributorAddress,
         abi: ABI_REWARD_DISTRIBUTOR,
         functionName: 'earned',
@@ -119,24 +113,27 @@ const StakePage = () => {
       const rewardsPerSecond =
         activeStaking && toNormalizedBn(activeStaking[0]?.result as bigint, 18);
 
-      const avaxPrice = activeStaking && activeStaking[2].result;
+      const avaxPrice =
+        prices?.data?.find((p) => p.symbol === REWARDS_SYMBOL)?.price || 1;
       const avaxPriceInUSD = avaxPrice
-        ? toNormalizedBn(avaxPrice[1], 8)
+        ? toNormalizedBn(String(avaxPrice))
         : toNormalizedBn(0);
 
       const rewardEarned =
-        activeStaking && toNormalizedBn(activeStaking[3]?.result as bigint, 18);
+        activeStaking && toNormalizedBn(activeStaking[2]?.result as bigint, 18);
       const STAKED_APR =
         (Number(rewardsPerSecond?.normalized) * 31536000 * 100) /
-        (Number(totalStaked?.normalized) * Number(avaxPriceInUSD?.normalized));
+        (Number(totalStaked?.normalized) * Number(avaxPriceInUSD?.normalized)) /
+        100;
       const MAX_APR =
         (Number(rewardsPerSecond?.normalized) * 31536000 * 100) /
-        (Number(0.1) * Number(avaxPriceInUSD?.normalized));
+        (Number(0.1) * Number(avaxPriceInUSD?.normalized)) /
+        100;
       const activePosition: IActiveStakePosition = {
         id: '1',
         rewardToken: {
-          decimals: 18 as number,
-          symbol: 'AVAX' as string,
+          decimals: 18,
+          symbol: REWARDS_SYMBOL,
           address: zeroAddress,
           chain: REWARDS_CHAIN,
           redeemable: rewardEarned,
