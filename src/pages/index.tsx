@@ -27,6 +27,7 @@ const HomePage = () => {
       'treehouse autovault',
       'the treehouse grow vault',
       'ethena growth susde',
+      'upshift avalanche avax',
     ];
     if (!allPools?.length) {
       return { partners: [], upshift: [], myPositions: [] };
