@@ -73,6 +73,32 @@ export type IDepositLogData = {
   tx_id: string;
 };
 
+export type IActiveStakePosition = {
+  stakingToken: {
+    decimals: number;
+    symbol: string;
+    address: IAddress;
+    chain: number;
+    totalStaked: INormalizedNumber;
+    usd: INormalizedNumber;
+    totalSupply?: INormalizedNumber;
+    name: string;
+  };
+  rewardToken: {
+    decimals: number;
+    symbol: string;
+    address: IAddress;
+    chain: number;
+    redeemable: INormalizedNumber;
+    usd: INormalizedNumber;
+    name: string;
+  };
+  rewardDistributor: IAddress;
+  rewardPerSecond: INormalizedNumber;
+  apy?: number;
+  chainId: number;
+  id: string;
+};
 export type INewReferralBody = {
   address: string;
   codeUsed: string;

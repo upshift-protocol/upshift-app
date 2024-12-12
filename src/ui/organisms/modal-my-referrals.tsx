@@ -62,6 +62,9 @@ export default function MyReferralsModalMolecule({
         variant: buttonProps?.variant || 'text',
         color: buttonProps?.color || 'info',
         disabled: buttonProps?.disabled || !referrals?.length,
+        style: {
+          fontSize: '18px',
+        },
       }}
       headerStyle={{ marginBottom: '0.5rem' }}
     >
