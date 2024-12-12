@@ -11,6 +11,7 @@ import type { IAddress, IChainId } from '@augustdigital/sdk';
 import { useAccount, useReadContracts } from 'wagmi';
 import { erc20Abi, formatUnits, zeroAddress } from 'viem';
 import { Fragment } from 'react';
+import { avalanche } from 'viem/chains';
 import AssetSelectorAtom from '../atoms/asset-selector';
 
 type IAssetInput = {
@@ -139,7 +140,11 @@ export default function AssetInputMolecule(props: IAssetInput) {
         {props.isNative ? (
           <AssetSelectorAtom
             {...props}
-            symbol={chain?.nativeCurrency.symbol}
+            symbol={
+              props.chainId === avalanche.id
+                ? 'AVAX'
+                : chain?.nativeCurrency.symbol
+            }
             loading={props?.loading === 1}
             forInput
           />

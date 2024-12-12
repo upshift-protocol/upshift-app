@@ -1,15 +1,9 @@
-import {
-  toNormalizedBn,
-  type IAddress,
-  type IPoolWithUnderlying,
-  AVAX_PRICE_FEED_ADDRESS,
-  ABI_CHAINLINK_V3,
-} from '@augustdigital/sdk';
+import { type IAddress, type IPoolWithUnderlying } from '@augustdigital/sdk';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { augustSdk } from '@/config/august-sdk';
-import { useReadContract } from 'wagmi';
 import { zeroAddress } from 'viem';
+import { avalanche } from 'viem/chains';
 import useFetcher from './use-fetcher';
 
 // interfaces
@@ -27,16 +21,10 @@ interface IUseTokenReturnValue {
 }
 
 // main hook
+/**
+ * @deprecated use usePoolsStore prices object instead
+ */
 export default function useTokens(options?: IUseToken) {
-  const avaxPriceFeedAddress = AVAX_PRICE_FEED_ADDRESS(1);
-
-  const { data: avaxPrice } = useReadContract({
-    address: avaxPriceFeedAddress,
-    abi: ABI_CHAINLINK_V3,
-    functionName: 'latestRoundData',
-    chainId: 1,
-  });
-
   const { data: allPools } = useFetcher({
     queryKey: ['lending-pools'],
   }) as UseQueryResult<IPoolWithUnderlying[]>;
@@ -76,13 +64,12 @@ export default function useTokens(options?: IUseToken) {
         : [],
     );
 
+    const avaxPrice = await augustSdk.getPrice('avax');
     promises.push({
       address: zeroAddress,
-      chain: 43114, // AVAX
+      chain: avalanche.id, // AVAX
       decimals: 18,
-      price:
-        Array.isArray(avaxPrice) &&
-        Number(toNormalizedBn(avaxPrice[1], 8).normalized),
+      price: avaxPrice,
       symbol: 'AVAX',
     } as unknown as {
       address: IAddress;
