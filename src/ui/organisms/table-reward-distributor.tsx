@@ -104,7 +104,7 @@ const columns: readonly GridColDef<any[number]>[] = [
         >
           <AssetDisplay
             imgSize={20}
-            symbol={stakingToken.symbol}
+            symbol={stakingToken?.symbol}
             address={stakingToken?.address as IAddress}
             chainId={stakingToken?.chain as number}
           />
