@@ -22,6 +22,17 @@ import LinkAtom from '../atoms/anchor-link';
 import Logo from './Logo';
 import MyReferralsModalMolecule from '../organisms/modal-my-referrals';
 
+const IS_AVAX_OR_PRIVATE = () => {
+  switch (INSTANCE) {
+    case 'ethena':
+    case 'lombard':
+    case 'treehouse':
+      return false;
+    default:
+      return true;
+  }
+};
+
 const DynamicWalletBtn = dynamic(() => import('../molecules/connect-wallet'), {
   loading: () =>
     (
@@ -100,26 +111,28 @@ const HeaderSkeleton = () => {
                 <Logo />
               </LinkAtom>
 
-              {NAV_ITEMS.map((n, i) => (
-                <Box
-                  display={{ xs: 'none', sm: 'flex' }}
-                  key={`desktop-nav-item-${i}`}
-                >
-                  <LinkAtom href={n.link} target={n.target} noSpan>
-                    <Button
-                      variant="text"
-                      color="info"
-                      style={{
-                        color: pathname === n.link ? '#00c260' : '',
-                        borderColor: pathname === n.link ? '#00c260' : '',
-                        fontSize: '18px',
-                      }}
+              {IS_AVAX_OR_PRIVATE()
+                ? NAV_ITEMS.map((n, i) => (
+                    <Box
+                      display={{ xs: 'none', sm: 'flex' }}
+                      key={`desktop-nav-item-${i}`}
                     >
-                      {n.text}
-                    </Button>
-                  </LinkAtom>
-                </Box>
-              ))}
+                      <LinkAtom href={n.link} target={n.target} noSpan>
+                        <Button
+                          variant="text"
+                          color="info"
+                          style={{
+                            color: pathname === n.link ? '#00c260' : '',
+                            borderColor: pathname === n.link ? '#00c260' : '',
+                            fontSize: '18px',
+                          }}
+                        >
+                          {n.text}
+                        </Button>
+                      </LinkAtom>
+                    </Box>
+                  ))
+                : null}
 
               {REFERRALS_ENABLED && INSTANCE !== 'ethena' ? (
                 <Box display={{ xs: 'none', sm: 'flex' }}>
@@ -222,25 +235,29 @@ const HeaderSkeleton = () => {
                       </Stack>
                       {/* Mobile navigation */}
                       <Stack gap={2}>
-                        {NAV_ITEMS.map((n, i) => (
-                          <LinkAtom
-                            href={n.link}
-                            target={n.target}
-                            noSpan
-                            key={`mobile-nav-item-${i}`}
-                          >
-                            <Button
-                              size="large"
-                              variant={
-                                pathname === n.link ? 'contained' : 'outlined'
-                              }
-                              color="primary"
-                              fullWidth
-                            >
-                              {n.text}
-                            </Button>
-                          </LinkAtom>
-                        ))}
+                        {IS_AVAX_OR_PRIVATE()
+                          ? NAV_ITEMS.map((n, i) => (
+                              <LinkAtom
+                                href={n.link}
+                                target={n.target}
+                                noSpan
+                                key={`mobile-nav-item-${i}`}
+                              >
+                                <Button
+                                  size="large"
+                                  variant={
+                                    pathname === n.link
+                                      ? 'contained'
+                                      : 'outlined'
+                                  }
+                                  color="primary"
+                                  fullWidth
+                                >
+                                  {n.text}
+                                </Button>
+                              </LinkAtom>
+                            ))
+                          : null}
                         {REFERRALS_ENABLED ? (
                           <MyReferralsModalMolecule
                             buttonProps={{
