@@ -36,6 +36,13 @@ const StakePage = () => {
     chainId: REWARDS_CHAIN,
   });
 
+  const { data: totalStakedInPool } = useReadContract({
+    address: rewardDistributorAddress,
+    abi: ABI_REWARD_DISTRIBUTOR,
+    functionName: 'totalStaked',
+    chainId: REWARDS_CHAIN,
+  });
+
   const {
     data: stakeTokenMeta,
     isLoading: tokenMetaLoading,
@@ -110,6 +117,10 @@ const StakePage = () => {
       const totalStaked =
         activeStaking &&
         toNormalizedBn(activeStaking[1]?.result as bigint, decimals);
+      const stakedInPool = toNormalizedBn(
+        totalStakedInPool as bigint,
+        decimals,
+      );
       const rewardsPerSecond =
         activeStaking && toNormalizedBn(activeStaking[0]?.result as bigint, 18);
 
@@ -122,12 +133,16 @@ const StakePage = () => {
       const rewardEarned =
         activeStaking && toNormalizedBn(activeStaking[2]?.result as bigint, 18);
       const STAKED_APR =
-        (Number(rewardsPerSecond?.normalized) * 31536000 * 100) /
-        (Number(totalStaked?.normalized) * Number(avaxPriceInUSD?.normalized)) /
+        ((Number(rewardsPerSecond?.normalized) *
+          31536000 *
+          Number(avaxPriceInUSD?.normalized)) /
+          (Number(stakedInPool?.normalized) * Number(1))) *
         100;
       const MAX_APR =
-        (Number(rewardsPerSecond?.normalized) * 31536000 * 100) /
-        (Number(0.1) * Number(avaxPriceInUSD?.normalized)) /
+        ((Number(rewardsPerSecond?.normalized) *
+          31536000 *
+          Number(avaxPriceInUSD?.normalized)) /
+          (Number(stakedInPool?.normalized) * Number(1))) *
         100;
       const activePosition: IActiveStakePosition = {
         id: '1',
