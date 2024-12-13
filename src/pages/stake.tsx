@@ -47,6 +47,7 @@ const StakePage = () => {
     data: stakeTokenMeta,
     isLoading: tokenMetaLoading,
     isPending: tokenMetaPending,
+    isFetched: tokenMetaFetched,
   } = useReadContracts({
     contracts: [
       {
@@ -80,6 +81,7 @@ const StakePage = () => {
     data: activeStaking,
     isLoading: activeStakingLoading,
     refetch: refetchActiveStaking,
+    isFetched: activeStakingFetched,
   } = useReadContracts({
     contracts: [
       {
@@ -173,7 +175,14 @@ const StakePage = () => {
       };
       setStakingPositions([activePosition]);
     }
-  }, [tokenMetaLoading, activeStakingLoading, activeStaking?.[1]?.result]);
+  }, [
+    tokenMetaLoading,
+    activeStakingLoading,
+    activeStaking?.[1]?.result,
+    activeStakingFetched,
+    tokenMetaFetched,
+    prices?.isFetched,
+  ]);
 
   return (
     <Base>
