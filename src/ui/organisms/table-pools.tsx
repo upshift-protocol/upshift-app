@@ -168,6 +168,8 @@ const columns: readonly IColumn[] = [
     ) => {
       const rowName = row.name.toLocaleLowerCase();
       const tooltipText = getTooltip(rowName);
+      const isValid = children?.length && Number(children?.[0]) >= 1;
+
       if (!children && children?.length === 0)
         return (
           <TableCell>
@@ -178,6 +180,7 @@ const columns: readonly IColumn[] = [
         <TableCell>
           <Tooltip
             title={<Typography fontSize={'16px'}>{tooltipText}</Typography>}
+            disableHoverListener={!tooltipText || !isValid}
             arrow
             placement="top"
           >
