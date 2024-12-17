@@ -1,6 +1,11 @@
 import Image from 'next/image';
 import type { IColumn } from '@/utils/types';
-import type { IPoolWithUnderlying, IAddress } from '@augustdigital/sdk';
+import type {
+  IChainId,
+  IPoolWithUnderlying,
+  IAddress,
+} from '@augustdigital/sdk';
+import { explorerLink } from '@augustdigital/sdk';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
@@ -15,6 +20,7 @@ import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AssetDisplay from '../molecules/asset-display';
 import Background from '../atoms/background';
+import LinkAtom from '../atoms/anchor-link';
 
 const columns: readonly IColumn[] = [
   {
@@ -160,7 +166,6 @@ const columns: readonly IColumn[] = [
       },
       row: IPoolWithUnderlying,
     ) => {
-      console.log(row.name, 'row');
       const rowName = row.name.toLocaleLowerCase();
       const tooltipText = getTooltip(rowName);
       if (!children && children?.length === 0)
@@ -171,7 +176,11 @@ const columns: readonly IColumn[] = [
         );
       return (
         <TableCell>
-          <Tooltip title={tooltipText} arrow placement="top">
+          <Tooltip
+            title={<Typography fontSize={'16px'}>{tooltipText}</Typography>}
+            arrow
+            placement="top"
+          >
             <Stack alignItems="end">
               <AmountDisplay>
                 {children?.length && Number(children?.[0]) >= 1
@@ -251,6 +260,37 @@ const columns: readonly IColumn[] = [
     id: 'hardcodedStrategist',
     value: 'Strategist',
     flex: 1,
+    component: (
+      {
+        children: {
+          props: { children },
+        },
+      }: any,
+      row: IPoolWithUnderlying,
+    ) => {
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack direction="row" gap={1} alignItems="center">
+            <LinkAtom
+              overflow="hidden"
+              href={explorerLink(
+                row.hardcodedStrategist as IAddress,
+                (row?.chainId as IChainId) || FALLBACK_CHAINID,
+                'address',
+              )}
+            >
+              {children}
+            </LinkAtom>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
 ];
 

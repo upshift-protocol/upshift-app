@@ -114,7 +114,7 @@ export default function VaultInfo(
               <Skeleton variant="text" width={75} />
             ) : (
               <Tooltip
-                title={tooltipText}
+                title={<Typography fontSize={'16px'}>{tooltipText}</Typography>}
                 disableHoverListener={!tooltipText}
                 placement="top"
                 arrow
