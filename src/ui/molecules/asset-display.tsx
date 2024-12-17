@@ -38,6 +38,7 @@ export default function AssetDisplay(props: IAssetDisplay) {
           padding: renderVariant().padding,
           width: 'fit-content',
           borderRadius: '4px',
+          backgroundColor: props?.background ? '#fff' : 'transparent',
         }}
         className={renderVariant().wrapperCss}
       >
@@ -81,7 +82,17 @@ export default function AssetDisplay(props: IAssetDisplay) {
           position: 'relative',
         }}
       >
-        <TokenLogo symbol={props.symbol} size={props?.imgSize} />
+        <Box
+          sx={{
+            backgroundColor: props?.background ? '#fff' : 'transparent',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '50%',
+          }}
+        >
+          <TokenLogo symbol={props.symbol} size={props?.imgSize} />
+        </Box>
       </Tooltip>
     );
   }
