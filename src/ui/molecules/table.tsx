@@ -288,7 +288,7 @@ export default function TableMolecule({
                     }
                     return (
                       <TableCell
-                        component={column?.component}
+                        component={(data) =>  column.component?.(data, row)}
                         key={column.id}
                         align={column.align}
                       >

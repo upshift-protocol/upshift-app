@@ -14,9 +14,30 @@ import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AssetDisplay from '../molecules/asset-display';
 import Background from '../atoms/background';
+import { getTooltip } from '@/utils/constants/tooltips';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 180 },
+  { id: 'name', value: 'Name', minWidth: 180,
+  component: ({
+    children: {
+      props: { children },
+    },
+  }: any) => {
+    if (!children)
+      return (
+        <TableCell>
+          <Skeleton variant="text" height={36} />
+        </TableCell>
+      );
+    return (
+      <TableCell>
+        <Stack direction="row" gap={1} alignItems="center">
+        {children}
+        </Stack>
+      </TableCell>
+    );
+  }, 
+},
   {
     id: 'chainId',
     value: 'Chain',
@@ -132,7 +153,10 @@ const columns: readonly IColumn[] = [
       },
     }: {
       children: { props: { children: string[] | string } };
-    }) => {
+    }, row : IPoolWithUnderlying) => {
+      console.log(row.name, 'row')
+      const rowName = row.name.toLocaleLowerCase();
+      const tooltipText = getTooltip(rowName);
       if (!children && children?.length === 0)
         return (
           <TableCell>
@@ -141,6 +165,10 @@ const columns: readonly IColumn[] = [
         );
       return (
         <TableCell>
+          <Tooltip
+            title={tooltipText}
+            arrow
+            placement="top">
           <Stack alignItems="end">
             <AmountDisplay>
               {children?.length && Number(children?.[0]) >= 1
@@ -148,6 +176,7 @@ const columns: readonly IColumn[] = [
                 : '-'}
             </AmountDisplay>
           </Stack>
+          </Tooltip>
         </TableCell>
       );
     },
