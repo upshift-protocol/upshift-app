@@ -1,19 +1,64 @@
 import { FALLBACK_TOKEN_IMG } from '@/utils/constants';
+import { Box } from '@mui/material';
 import Image from 'next/image';
+import { Fragment } from 'react';
 
+/**
+ * Interfaces
+ */
 interface ITokenLogo {
   symbol: string;
   size?: number;
 }
 
-export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
-  switch (symbol.toLowerCase()) {
+/**
+ * Utils
+ */
+function renderTokenLogo(symbol: string, _size: number) {
+  switch (symbol) {
+    case 'pendle': {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={_size}
+          height={_size}
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          version="1.1"
+          id="Layer_1"
+          x="0px"
+          y="0px"
+          viewBox="0 0 2800 3500"
+          xmlSpace="preserve"
+        >
+          <g id="Layer_2_1_">
+            <g id="Layer_1-2">
+              <path
+                fill="#DEDEDE"
+                d="M1400,0c773.2,0,1400,626.8,1400,1400c0,726.8-553.8,1324.2-1262.4,1393.3c4.1-50.2,3.2-100.7-2.5-150.8    c-40.7-355.6-321-636.3-676.5-677.4V110.5l-0.7-1.6C1024.6,38.8,1207.8,0,1400,0z"
+              />
+              <path
+                fill="#152E51"
+                d="M683.5,1964.9V198.5l-0.7-1.1c56.2-33.6,114.7-63.2,175-88.5l0.7,1.6v1854.6    c355.5,41.1,635.9,321.8,676.5,677.4c5.8,50.1,6.6,100.6,2.5,150.8c-45.2,4.4-91.1,6.6-137.5,6.7c-486,0-914.2-247.6-1165.2-623.6    c121.7-118,279.2-192.4,447.7-211.4H683.5z"
+              />
+              <path
+                fill="#1E4480"
+                d="M1537.6,2793.3c-29.2,359-308.6,659.2-680,701.7c-422.5,48.3-804.2-255-852.5-677.5    c-28.3-247.2,63.8-480.5,229.8-641.1c251,376,679.2,623.6,1165.2,623.6C1446.5,2799.9,1492.3,2797.7,1537.6,2793.3z"
+              />
+              <path
+                fill="#DEDEDE"
+                d="M683.5,198.5v1766.4h-1c-168.5,19-325.9,93.3-447.7,211.4C86.5,1954.1,0.1,1687.2,0.1,1400    c0-511,273.8-958.2,682.8-1202.6L683.5,198.5z"
+              />
+            </g>
+          </g>
+        </svg>
+      );
+    }
     case 'upavax': {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 1503 1504"
           fill="none"
         >
@@ -30,8 +75,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'ageth':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 128 128"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -59,8 +104,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'ausd':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="100 130 880 880"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -95,8 +140,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'cbbtc':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 64 64"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -125,8 +170,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 512 512"
         >
           <g>
@@ -160,8 +205,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'lbtc':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 64 64"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -191,8 +236,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 400.000000 400.000000"
           preserveAspectRatio="xMidYMid meet"
         >
@@ -219,8 +264,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'rseth':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 64 64"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -248,8 +293,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'steth':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 512 512"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -301,8 +346,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'susde':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 157 157"
           fill="#0E121B"
           xmlns="http://www.w3.org/2000/svg"
@@ -329,8 +374,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'upausd':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="100 130 880 880"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -365,8 +410,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'upbtc':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 1080 1080"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -391,8 +436,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'uplbtc':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 1080 1080"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -427,8 +472,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'upsusde':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 157 157"
           fill="#0E121B"
           xmlns="http://www.w3.org/2000/svg"
@@ -455,8 +500,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'upusd':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 800 800"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -485,8 +530,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'upusdc':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 1080 1080"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -513,10 +558,12 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
         </svg>
       );
     case 'usd0':
+    case 'usd0+':
+    case 'usd0++':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 37 37"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -551,8 +598,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
           xmlns="http://www.w3.org/2000/svg"
           data-name="86977684-12db-4850-8f30-233a7c267d11"
           viewBox="0 0 2000 2000"
-          height={size}
-          width={size}
+          height={_size}
+          width={_size}
         >
           <path
             d="M1000 2000c554.17 0 1000-445.83 1000-1000S1554.17 0 1000 0 0 445.83 0 1000s445.83 1000 1000 1000z"
@@ -573,8 +620,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 64.000000 64.000000"
           preserveAspectRatio="xMidYMid meet"
         >
@@ -613,8 +660,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 64.000000 64.000000"
           preserveAspectRatio="xMidYMid meet"
         >
@@ -645,8 +692,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'usdt':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 32 32"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -665,8 +712,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 109.26 109.26"
-          height={size}
-          width={size}
+          height={_size}
+          width={_size}
         >
           <defs>
             <style>
@@ -727,8 +774,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          height={size}
-          width={size}
+          height={_size}
+          width={_size}
         >
           <g
             id="weth"
@@ -792,8 +839,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'wsteth':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 512 512"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -846,8 +893,8 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
     case 'wavax':
       return (
         <svg
-          width={size}
-          height={size}
+          width={_size}
+          height={_size}
           viewBox="0 0 1503 1504"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -867,10 +914,43 @@ export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
         <Image
           src={FALLBACK_TOKEN_IMG}
           alt={symbol}
-          height={size}
-          width={size}
+          height={_size}
+          width={_size}
         />
       );
     }
   }
+}
+
+/**
+ * Main COmponent
+ */
+export default function TokenLogo({ symbol, size = 24 }: ITokenLogo) {
+  const isPendle = symbol.includes('PT-');
+
+  function extractSymbol() {
+    let extract = symbol;
+    if (isPendle) {
+      extract = symbol.split('-')?.[1] || symbol;
+    }
+    return extract.toLowerCase();
+  }
+
+  if (isPendle) {
+    return (
+      <Fragment>
+        {renderTokenLogo(extractSymbol(), size)}
+        <Box
+          sx={{
+            position: 'absolute',
+            transform: 'translate(8px,8px)',
+            display: 'flex',
+          }}
+        >
+          {renderTokenLogo('pendle', 18)}
+        </Box>
+      </Fragment>
+    );
+  }
+  return renderTokenLogo(extractSymbol(), size);
 }

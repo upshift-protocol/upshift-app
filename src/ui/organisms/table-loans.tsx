@@ -13,41 +13,49 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Tooltip } from '@mui/material';
 import { getTokenSymbol } from '@/utils/helpers/ui';
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
 import { isAddress } from 'viem';
-import { TABLE_HEADER_FONT_WEIGHT, FALLBACK_CHAINID } from '@/utils/constants';
+import {
+  TABLE_HEADER_FONT_WEIGHT,
+  FALLBACK_CHAINID,
+  DATA_TABLE_OPTIONS,
+} from '@/utils/constants';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 import AssetDisplay from '../molecules/asset-display';
 
+/**
+ * Utils
+ */
 const renderTokenExposure = (
-  exp: { value: IAddress; label: string },
+  token: { value: IAddress; label: string },
   row: any,
   value: any,
   index: number,
 ) => {
   function renderTokenLogo() {
-    if (getTokenSymbol(exp?.value)?.length > 30) {
-      if (!exp?.label?.includes('_')) {
-        return exp?.label;
+    console.log('exp', token);
+    if (getTokenSymbol(token?.value)?.length > 30) {
+      if (!token?.label?.includes('_')) {
+        return token?.label;
       }
-      return truncate(exp.value, 3);
+      return truncate(token.value, 3);
     }
-    return getTokenSymbol(exp.value);
+    return getTokenSymbol(token.value);
   }
-  if (!exp?.label?.includes('_')) {
-    return <AssetDisplay tooltip symbol={exp.label} />;
+  if (!token?.label?.includes('_')) {
+    return <AssetDisplay background tooltip symbol={token.label} />;
   }
   if (
-    !isAddress(exp.label) &&
-    isAddress(exp.value) &&
-    getTokenSymbol(exp?.value)?.length < 30
+    !isAddress(token.label) &&
+    isAddress(token.value) &&
+    getTokenSymbol(token?.value)?.length < 30
   ) {
     return (
       <Fragment>
         <LinkAtom
           href={explorerLink(
-            exp.value,
+            token.value,
             row?.chainId || FALLBACK_CHAINID,
             'address',
           )}
@@ -61,6 +69,9 @@ const renderTokenExposure = (
   return null;
 };
 
+/**
+ * Table Columns
+ */
 const columns: GridColDef<any[number]>[] = [
   {
     field: 'address',
@@ -217,20 +228,11 @@ const columns: GridColDef<any[number]>[] = [
       return `${value}%`;
     },
   },
-  // {
-  //   field: 'liquidationLTV',
-  //   headerName: 'Liquidation LTV',
-  //   flex: 1,
-  //   type: 'number',
-  //   description:
-  //     'The loan-to-value ratio at which a position in this market is eligible for liquidation.',
-  //   renderCell({ value }) {
-  //     if (!value) return '-';
-  //     return `${value}%`;
-  //   },
-  // },
 ];
 
+/**
+ * Main Component
+ */
 export default function VaultAllocation(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
@@ -241,7 +243,7 @@ export default function VaultAllocation(
 
   const loansSelector = props?.loans || loans;
 
-  const rowsFormatter = () => {
+  const formattedRows = useMemo(() => {
     const loansWithData = loansSelector?.map((l, i) => ({
       id: i,
       address: l?.address,
@@ -255,42 +257,21 @@ export default function VaultAllocation(
       exposure: l?.exposure,
       chainId: props?.chainId,
     }));
-    return loansWithData;
-  };
+    return loansWithData || [];
+  }, [JSON.stringify(loansSelector)]);
 
   return (
     <Stack gap={3} direction="column" minHeight="20rem">
       <Typography variant="h6">Vault Allocation Breakdown</Typography>
 
       <DataGrid
-        loading={props.loading || isLoading}
-        rows={rowsFormatter()}
-        rowHeight={60}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-          sorting: {
-            sortModel: [{ field: 'supply', sort: 'desc' }],
-          },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-        slots={{
-          noRowsOverlay: () => (
-            <Stack height="100%" alignItems="center" justifyContent="center">
-              No active loans available
-            </Stack>
-          ),
-          noResultsOverlay: () => (
-            <Stack height="100%" alignItems="center" justifyContent="center">
-              Current filters return no results
-            </Stack>
-          ),
-        }}
+        {...DATA_TABLE_OPTIONS({
+          loading: props.loading || isLoading,
+          rows: formattedRows,
+          columns,
+          defaultSortKey: 'supply',
+          noDataText: 'No active loans available',
+        })}
       />
     </Stack>
   );
