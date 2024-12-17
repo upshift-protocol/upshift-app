@@ -12,15 +12,15 @@ import Typography from '@mui/material/Typography';
 import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Chip, Tooltip } from '@mui/material';
 import { renderBiggerApy } from '@/utils/helpers/ui';
+import { getTooltip } from '@/utils/constants/tooltips';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
-import { getTooltip } from '@/utils/constants/tooltips';
 
 export default function VaultInfo(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
   const renderedApy = renderBiggerApy('', props.apy);
-  const tooltipText = getTooltip(props?.name?.toLocaleLowerCase())
+  const tooltipText = getTooltip(props?.name?.toLocaleLowerCase());
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>
@@ -114,12 +114,12 @@ export default function VaultInfo(
               <Skeleton variant="text" width={75} />
             ) : (
               <Tooltip
-              title={tooltipText}
-              disableHoverListener={!tooltipText}
-              placement="top"
-              arrow
-            >
-              <Typography display="flex">{renderedApy}</Typography>
+                title={tooltipText}
+                disableHoverListener={!tooltipText}
+                placement="top"
+                arrow
+              >
+                <Typography display="flex">{renderedApy}</Typography>
               </Tooltip>
             )}
           </Stack>

@@ -9,35 +9,38 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants';
 import { getChainNameById, renderPartnerImg } from '@/utils/helpers/ui';
+import { getTooltip } from '@/utils/constants/tooltips';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AssetDisplay from '../molecules/asset-display';
 import Background from '../atoms/background';
-import { getTooltip } from '@/utils/constants/tooltips';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 180,
-  component: ({
-    children: {
-      props: { children },
-    },
-  }: any) => {
-    if (!children)
+  {
+    id: 'name',
+    value: 'Name',
+    minWidth: 180,
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
       return (
         <TableCell>
-          <Skeleton variant="text" height={36} />
+          <Stack direction="row" gap={1} alignItems="center">
+            {children}
+          </Stack>
         </TableCell>
       );
-    return (
-      <TableCell>
-        <Stack direction="row" gap={1} alignItems="center">
-        {children}
-        </Stack>
-      </TableCell>
-    );
-  }, 
-},
+    },
+  },
   {
     id: 'chainId',
     value: 'Chain',
@@ -147,14 +150,17 @@ const columns: readonly IColumn[] = [
     minWidth: 100,
     align: 'right',
     format: (value: number) => value.toFixed(2),
-    component: ({
-      children: {
-        props: { children },
+    component: (
+      {
+        children: {
+          props: { children },
+        },
+      }: {
+        children: { props: { children: string[] | string } };
       },
-    }: {
-      children: { props: { children: string[] | string } };
-    }, row : IPoolWithUnderlying) => {
-      console.log(row.name, 'row')
+      row: IPoolWithUnderlying,
+    ) => {
+      console.log(row.name, 'row');
       const rowName = row.name.toLocaleLowerCase();
       const tooltipText = getTooltip(rowName);
       if (!children && children?.length === 0)
@@ -165,17 +171,14 @@ const columns: readonly IColumn[] = [
         );
       return (
         <TableCell>
-          <Tooltip
-            title={tooltipText}
-            arrow
-            placement="top">
-          <Stack alignItems="end">
-            <AmountDisplay>
-              {children?.length && Number(children?.[0]) >= 1
-                ? `${(children as string[]).join('')}`
-                : '-'}
-            </AmountDisplay>
-          </Stack>
+          <Tooltip title={tooltipText} arrow placement="top">
+            <Stack alignItems="end">
+              <AmountDisplay>
+                {children?.length && Number(children?.[0]) >= 1
+                  ? `${(children as string[]).join('')}`
+                  : '-'}
+              </AmountDisplay>
+            </Stack>
           </Tooltip>
         </TableCell>
       );
