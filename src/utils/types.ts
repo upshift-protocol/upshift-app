@@ -50,6 +50,7 @@ export type IAssetDisplay = {
   loading?: boolean;
   chainId?: number;
   tooltip?: boolean;
+  background?: boolean;
 };
 
 export type IDepositLog = {
