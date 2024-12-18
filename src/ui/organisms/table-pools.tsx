@@ -14,7 +14,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants';
 import { getChainNameById, renderPartnerImg } from '@/utils/helpers/ui';
-import { getTooltip } from '@/utils/constants/tooltips';
+import { TOOLTIP_MAPPING } from '@/utils/constants/tooltips';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
@@ -167,7 +167,7 @@ const columns: readonly IColumn[] = [
       row: IPoolWithUnderlying,
     ) => {
       const rowName = row.name.toLocaleLowerCase();
-      const tooltipText = getTooltip(rowName);
+      const tooltipText = TOOLTIP_MAPPING?.[rowName];
       const isValid = children?.length && Number(children?.[0]) >= 1;
 
       if (!children && children?.length === 0)
