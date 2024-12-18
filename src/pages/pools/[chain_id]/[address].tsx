@@ -1,4 +1,4 @@
-import Base from '@/ui/skeletons/base';
+import BaseSkeleton from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import type { IAddress, IChainId } from '@augustdigital/sdk';
 import AssetDisplay from '@/ui/molecules/asset-display';
@@ -13,7 +13,6 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { augustSdk } from '@/config/august-sdk';
 import { Collapse } from '@mui/material';
 import { useEffect, useState } from 'react';
-
 import ExposureCharts from '@/ui/organisms/exposure-charts';
 import { usePoolsStore } from '@/stores/pools';
 
@@ -70,7 +69,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
   }, [address]);
 
   return (
-    <Base>
+    <BaseSkeleton>
       <Section
         id="earn-table"
         title={pool?.name ?? ' '}
@@ -119,7 +118,7 @@ const PoolPage = (params: InferGetStaticPropsType<typeof getStaticProps>) => {
           </Stack>
         </Stack>
       </Section>
-    </Base>
+    </BaseSkeleton>
   );
 };
 
