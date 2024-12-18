@@ -1,6 +1,11 @@
 import Image from 'next/image';
 import type { IColumn } from '@/utils/types';
-import type { IPoolWithUnderlying, IAddress } from '@augustdigital/sdk';
+import type {
+  IChainId,
+  IPoolWithUnderlying,
+  IAddress,
+} from '@augustdigital/sdk';
+import { explorerLink } from '@augustdigital/sdk';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
@@ -9,14 +14,39 @@ import Skeleton from '@mui/material/Skeleton';
 import Tooltip from '@mui/material/Tooltip';
 import { FALLBACK_CHAINID } from '@/utils/constants';
 import { getChainNameById, renderPartnerImg } from '@/utils/helpers/ui';
+import { getTooltip } from '@/utils/constants/tooltips';
 import AmountDisplay from '../atoms/amount-display';
 import TableMolecule from '../molecules/table';
 import PoolActionsMolecule from './actions-pool';
 import AssetDisplay from '../molecules/asset-display';
 import Background from '../atoms/background';
+import LinkAtom from '../atoms/anchor-link';
 
 const columns: readonly IColumn[] = [
-  { id: 'name', value: 'Name', minWidth: 180 },
+  {
+    id: 'name',
+    value: 'Name',
+    minWidth: 180,
+    component: ({
+      children: {
+        props: { children },
+      },
+    }: any) => {
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack direction="row" gap={1} alignItems="center">
+            {children}
+          </Stack>
+        </TableCell>
+      );
+    },
+  },
   {
     id: 'chainId',
     value: 'Chain',
@@ -126,13 +156,20 @@ const columns: readonly IColumn[] = [
     minWidth: 100,
     align: 'right',
     format: (value: number) => value.toFixed(2),
-    component: ({
-      children: {
-        props: { children },
+    component: (
+      {
+        children: {
+          props: { children },
+        },
+      }: {
+        children: { props: { children: string[] | string } };
       },
-    }: {
-      children: { props: { children: string[] | string } };
-    }) => {
+      row: IPoolWithUnderlying,
+    ) => {
+      const rowName = row.name.toLocaleLowerCase();
+      const tooltipText = getTooltip(rowName);
+      const isValid = children?.length && Number(children?.[0]) >= 1;
+
       if (!children && children?.length === 0)
         return (
           <TableCell>
@@ -141,13 +178,20 @@ const columns: readonly IColumn[] = [
         );
       return (
         <TableCell>
-          <Stack alignItems="end">
-            <AmountDisplay>
-              {children?.length && Number(children?.[0]) >= 1
-                ? `${(children as string[]).join('')}`
-                : '-'}
-            </AmountDisplay>
-          </Stack>
+          <Tooltip
+            title={<Typography fontSize={'16px'}>{tooltipText}</Typography>}
+            disableHoverListener={!tooltipText || !isValid}
+            arrow
+            placement="top"
+          >
+            <Stack alignItems="end">
+              <AmountDisplay>
+                {children?.length && Number(children?.[0]) >= 1
+                  ? `${(children as string[]).join('')}`
+                  : '-'}
+              </AmountDisplay>
+            </Stack>
+          </Tooltip>
         </TableCell>
       );
     },
@@ -219,6 +263,37 @@ const columns: readonly IColumn[] = [
     id: 'hardcodedStrategist',
     value: 'Strategist',
     flex: 1,
+    component: (
+      {
+        children: {
+          props: { children },
+        },
+      }: any,
+      row: IPoolWithUnderlying,
+    ) => {
+      if (!children)
+        return (
+          <TableCell>
+            <Skeleton variant="text" height={36} />
+          </TableCell>
+        );
+      return (
+        <TableCell>
+          <Stack direction="row" gap={1} alignItems="center">
+            <LinkAtom
+              overflow="hidden"
+              href={explorerLink(
+                row.hardcodedStrategist as IAddress,
+                (row?.chainId as IChainId) || FALLBACK_CHAINID,
+                'address',
+              )}
+            >
+              {children}
+            </LinkAtom>
+          </Stack>
+        </TableCell>
+      );
+    },
   },
 ];
 
