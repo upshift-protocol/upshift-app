@@ -62,7 +62,7 @@ Open http://localhost:3000 in your browser to start working on the UpShift app.
 
 Or run
 ```bash
-pnpm dev:referrals
+pnpm dev:referral
 ```
 to enable the Upshift Referral Program in your development server.
 
@@ -84,6 +84,7 @@ In order to properly render a token, a token image must be added to `/src/ui/ato
 .
 ├── README.md                   # README file
 ├── next.config.js              # Next JS configuration
+├── scripts                     # Scripts to be run to assist in deployment and codebase cleanup
 ...
 ├── src
 │   ├── config                  # All configuration files
@@ -114,15 +115,11 @@ pnpm start
 
 The generated HTML and CSS files are minified (built-in feature from Next js).
 
-You can create an optimized production build with:
-
-```
-pnpm build-prod
-```
-
 Now, the app is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
 
-*Note: there is a disabled github workflow that will deploy all various instances (`avax`, `lombard`, etc) when there is a push to `develop`. OR, you can use `sh scripts/update-instances.sh`*
+Given there are 4 live instances of upshift deployed, there is a simple script that can be run once the work / new features in `develop` branch. By running `sh scripts/update-instances.sh` that will merge in `develop` and update all instances that are outlined below.
+
+*Note: there is a github workflow that will deploy all various instances (`avax`, `lombard`, etc) when there is a push to `develop`.*
 
 ### Live
 
