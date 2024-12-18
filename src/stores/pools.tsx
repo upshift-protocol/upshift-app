@@ -1,4 +1,4 @@
-import type { IChildren, ITokenPrice } from '@/utils/types';
+import type { IChildren } from '@/utils/types';
 import React, { createContext, useContext } from 'react';
 import type {
   IAddress,
@@ -10,13 +10,10 @@ import useFetcher from '@/hooks/use-fetcher';
 import { useAccount } from 'wagmi';
 import { augustSdk } from '@/config/august-sdk';
 import { INSTANCE } from '@/utils/constants';
-import { zeroAddress } from 'viem';
-import { avalanche } from 'viem/chains';
 
 interface PoolsContextValue {
   pools: UseQueryResult<IPoolWithUnderlying[], Error>;
   positions: UseQueryResult<(IPoolWithUnderlying & any)[], Error>;
-  prices: UseQueryResult<ITokenPrice[], Error>;
 }
 
 const PoolsContext = createContext<PoolsContextValue | undefined>(undefined);
@@ -63,41 +60,6 @@ const PoolsProvider = ({ children }: IChildren) => {
         pools?.data,
       ),
     initialData: [],
-    enabled: pools.isFetched,
-  });
-
-  const prices = useQuery({
-    queryKey: ['token-prices'],
-    queryFn: async () => {
-      const promises = await Promise.all(
-        pools?.data?.length
-          ? pools?.data?.map(async (p) => {
-              const price = await augustSdk.getPrice(
-                p.underlying?.symbol?.toLowerCase(),
-              );
-              return {
-                ...p.underlying,
-                price,
-              };
-            })
-          : [],
-      );
-      const avaxPrice = await augustSdk.getPrice('avax');
-      promises.push({
-        address: zeroAddress,
-        chain: avalanche.id,
-        decimals: 18,
-        price: avaxPrice,
-        symbol: 'AVAX',
-      } as unknown as {
-        address: IAddress;
-        chain: number;
-        decimals: number;
-        price: number;
-        symbol: string;
-      });
-      return promises;
-    },
     enabled: pools.isFetched,
   });
 
@@ -152,7 +114,6 @@ const PoolsProvider = ({ children }: IChildren) => {
       value={{
         pools: renderPools(),
         positions: renderPositions(),
-        prices,
       }}
     >
       {children}

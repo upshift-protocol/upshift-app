@@ -15,13 +15,10 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { PoolsProvider } from '@/stores/pools';
 import { ReferralsProvider } from '@/stores/referrals';
 import NewReferralModalMolecule from '@/ui/organisms/modal-new-referral';
+import { PricesProvider } from '@/stores/prices';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
-
-  // useEffect(() => {
-  //   (async () => augustSdk.init())().catch(console.error);
-  // }, []);
 
   return (
     <>
@@ -31,10 +28,12 @@ const MyApp = (props: AppProps) => {
             {/* START: app providers */}
             <ReferralsProvider>
               <PoolsProvider>
-                {/* START: main injection */}
-                <Component {...pageProps} />
-                <NewReferralModalMolecule />
-                {/* END: main injection */}
+                <PricesProvider>
+                  {/* START: main injection */}
+                  <Component {...pageProps} />
+                  <NewReferralModalMolecule />
+                  {/* END: main injection */}
+                </PricesProvider>
               </PoolsProvider>
             </ReferralsProvider>
             {/* END: app providers */}

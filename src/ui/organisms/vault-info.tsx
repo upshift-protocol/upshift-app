@@ -13,12 +13,12 @@ import Typography from '@mui/material/Typography';
 import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Chip, Tooltip } from '@mui/material';
 import { renderBiggerApy } from '@/utils/helpers/ui';
-import { getTooltip } from '@/utils/constants/tooltips';
+import { TOOLTIP_MAPPING } from '@/utils/constants/tooltips';
 import { getStrategyDetails } from '@/utils/constants/static';
 
 import { useChainId, useReadContract } from 'wagmi';
-import AmountDisplay from '../atoms/amount-display';
 import LinkAtom from '../atoms/anchor-link';
+import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
@@ -26,7 +26,6 @@ export default function VaultInfo(
   const chainId = useChainId();
 
   const renderedApy = renderBiggerApy('', props.apy);
-  const tooltipText = getTooltip(props?.name?.toLocaleLowerCase());
 
   const staticData = getStrategyDetails(props?.name?.toLocaleLowerCase());
 
@@ -50,6 +49,7 @@ export default function VaultInfo(
     chainId,
   });
 
+  const tooltipText = TOOLTIP_MAPPING?.[props?.name?.toLocaleLowerCase()];
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>

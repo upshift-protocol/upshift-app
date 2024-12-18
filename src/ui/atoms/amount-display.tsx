@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import { formatCompactNumber, formatUsd } from '@/utils/helpers/ui';
 import { Chip } from '@mui/material';
-import { usePoolsStore } from '@/stores/pools';
+import { usePricesStore } from '@/stores/prices';
 
 type IAmountDisplay = {
   symbol?: string;
@@ -18,7 +18,7 @@ export default function AmountDisplay({
   direction = 'column',
   ...props
 }: IAmountDisplay) {
-  const { prices } = usePoolsStore();
+  const { prices } = usePricesStore();
   const usdValue =
     prices?.data?.find((p) => p.symbol === props.symbol)?.price || 1;
 
