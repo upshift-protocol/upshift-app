@@ -1,3 +1,4 @@
+import React from 'react';
 import { truncate } from '@/utils/helpers/string';
 import { explorerLink } from '@augustdigital/sdk';
 import type {
@@ -13,170 +14,230 @@ import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Chip, Tooltip } from '@mui/material';
 import { renderBiggerApy } from '@/utils/helpers/ui';
 import { getTooltip } from '@/utils/constants/tooltips';
-import LinkAtom from '../atoms/anchor-link';
+import { getStrategyDetails } from '@/utils/constants/static';
+
+import { useChainId, useReadContract } from 'wagmi';
 import AmountDisplay from '../atoms/amount-display';
+import LinkAtom from '../atoms/anchor-link';
 
 export default function VaultInfo(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
+  const chainId = useChainId();
+
   const renderedApy = renderBiggerApy('', props.apy);
   const tooltipText = getTooltip(props?.name?.toLocaleLowerCase());
+
+  const staticData = getStrategyDetails(props?.name?.toLocaleLowerCase());
+
+  const {
+    data: managementFeePercent,
+    isLoading,
+    // isError,
+    // error,
+  } = useReadContract({
+    address: props.address,
+    abi: [
+      {
+        inputs: [],
+        name: 'managementFeePercent',
+        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ],
+    functionName: 'managementFeePercent',
+    chainId,
+  });
+
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>
-      <Grid
-        container
-        rowSpacing={2}
-        columnSpacing={{ xs: 1, sm: 3, md: 6 }}
-        columns={{ xs: 2, sm: 12 }}
-      >
-        <Grid item xs={6}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Vault Address</Typography>
-            {props?.loading ? (
-              <Skeleton variant="text" width={150} />
-            ) : (
-              <LinkAtom
-                overflow="hidden"
-                href={explorerLink(
-                  props?.address,
-                  (props?.chainId as IChainId) || FALLBACK_CHAINID,
-                  'address',
-                )}
-              >
-                {truncate(props?.address, 6)}
-              </LinkAtom>
-            )}
-          </Stack>
-        </Grid>
-        <Grid item xs={6}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Strategist</Typography>
-            {props?.loading ? (
-              <Skeleton variant="text" width={150} />
-            ) : (
-              <LinkAtom
-                overflow="hidden"
-                href={explorerLink(
-                  (props?.hardcodedStrategist ||
-                    props.loansOperator) as IAddress,
-                  (props?.chainId as IChainId) || FALLBACK_CHAINID,
-                  'address',
-                )}
-              >
-                {truncate(
-                  props?.hardcodedStrategist || props?.loansOperator || '',
-                  6,
-                )}
-              </LinkAtom>
-            )}
-          </Stack>
-        </Grid>
-        <Grid item xs={6}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>TVL</Typography>
-            {props?.loading ? (
-              <Skeleton variant="text" width={100} />
-            ) : (
-              <Stack direction="row" gap={1}>
-                <AmountDisplay
-                  symbol={props?.underlying?.symbol}
-                  round
-                  usd
-                  direction="row"
+      <Grid container spacing={2}>
+        {/* Left Column */}
+        <Grid item xs={12} md={6}>
+          <Stack gap={2}>
+            {/* Vault Address */}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Vault Address</Typography>
+              {props?.loading ? (
+                <Skeleton variant="text" width={150} />
+              ) : (
+                <LinkAtom
+                  overflow="hidden"
+                  href={explorerLink(
+                    props?.address,
+                    (props?.chainId as IChainId) || FALLBACK_CHAINID,
+                    'address',
+                  )}
                 >
-                  {props?.totalSupply?.normalized}
+                  {truncate(props?.address, 6)}
+                </LinkAtom>
+              )}
+            </Stack>
+
+            {/* TVL */}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>TVL</Typography>
+              {props?.loading ? (
+                <Skeleton variant="text" width={100} />
+              ) : (
+                <Stack direction="row" gap={1}>
+                  <AmountDisplay
+                    symbol={props?.underlying?.symbol}
+                    round
+                    usd
+                    direction="row"
+                  >
+                    {props?.totalSupply?.normalized}
+                  </AmountDisplay>
+                </Stack>
+              )}
+            </Stack>
+
+            {/* Withdrawal Fee */}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Withdrawal Fee</Typography>
+              {props?.loading ? (
+                <Skeleton variant="text" width={75} />
+              ) : (
+                <span style={{ display: 'flex' }}>
+                  {BigInt(props?.withdrawalFee?.raw || 0) === BigInt(0) ? (
+                    <Chip
+                      label={'None'}
+                      color={'success'}
+                      variant="outlined"
+                      size="small"
+                      sx={{ lineHeight: 1.2 }}
+                    />
+                  ) : (
+                    <>
+                      <AmountDisplay
+                        round
+                      >{`${(Number(props?.withdrawalFee?.normalized) / 100).toFixed(2) || `0.00`}`}</AmountDisplay>
+                      %
+                    </>
+                  )}
+                </span>
+              )}
+            </Stack>
+
+            {/* Management Fee */}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Management Fee</Typography>
+              {isLoading ? (
+                <Skeleton variant="text" width={100} />
+              ) : (
+                <AmountDisplay direction="row">
+                  {managementFeePercent ? Number(managementFeePercent) : '2%'}
                 </AmountDisplay>
-              </Stack>
-            )}
+              )}
+            </Stack>
           </Stack>
         </Grid>
-        <Grid item xs={6}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Avg. APY</Typography>
-            {props?.loading ? (
-              <Skeleton variant="text" width={75} />
-            ) : (
-              <Tooltip
-                title={<Typography fontSize={'16px'}>{tooltipText}</Typography>}
-                disableHoverListener={!tooltipText}
-                placement="top"
-                arrow
-              >
-                <Typography display="flex">{renderedApy}</Typography>
-              </Tooltip>
-            )}
+
+        {/* Right Column */}
+        <Grid item xs={12} md={6}>
+          <Stack gap={2}>
+            {/* Strategist */}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Strategist</Typography>
+              {props?.loading ? (
+                <Skeleton variant="text" width={150} />
+              ) : (
+                <LinkAtom
+                  overflow="hidden"
+                  href={explorerLink(
+                    (props?.hardcodedStrategist ||
+                      props.loansOperator) as IAddress,
+                    (props?.chainId as IChainId) || FALLBACK_CHAINID,
+                    'address',
+                  )}
+                >
+                  {truncate(
+                    props?.hardcodedStrategist || props?.loansOperator || '',
+                    6,
+                  )}
+                </LinkAtom>
+              )}
+            </Stack>
+
+            {/* Avg. APY */}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Avg. APY</Typography>
+              {props?.loading ? (
+                <Skeleton variant="text" width={75} />
+              ) : (
+                <Tooltip
+                  title={
+                    <Typography fontSize={'16px'}>{tooltipText}</Typography>
+                  }
+                  disableHoverListener={!tooltipText}
+                  placement="top"
+                  arrow
+                >
+                  <Typography display="flex">{renderedApy}</Typography>
+                </Tooltip>
+              )}
+            </Stack>
+
+            {staticData &&
+            Array.isArray(staticData.additionalFields) &&
+            staticData.additionalFields.length
+              ? staticData.additionalFields.map(({ label, value }, index) => (
+                  <React.Fragment key={index}>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Typography>{label}</Typography>
+                      {props?.loading ? (
+                        <Skeleton variant="text" width={75} />
+                      ) : (
+                        <Tooltip
+                          title={
+                            <Typography fontSize={'16px'}>
+                              {tooltipText}
+                            </Typography>
+                          }
+                          disableHoverListener={!tooltipText}
+                          placement="top"
+                          arrow
+                        >
+                          <Typography display="flex">{value}</Typography>
+                        </Tooltip>
+                      )}
+                    </Stack>
+                  </React.Fragment>
+                ))
+              : null}
           </Stack>
         </Grid>
-        <Grid item xs={6}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Withdrawal Fee</Typography>
-            {props?.loading ? (
-              <Skeleton variant="text" width={75} />
-            ) : (
-              <span style={{ display: 'flex' }}>
-                {BigInt(props?.withdrawalFee?.raw || 0) === BigInt(0) ? (
-                  <Chip
-                    label={'None'}
-                    color={'success'}
-                    variant="outlined"
-                    size="small"
-                    sx={{ lineHeight: 1.2 }}
-                  />
-                ) : (
-                  <>
-                    <AmountDisplay
-                      round
-                    >{`${(Number(props?.withdrawalFee?.normalized) / 100).toFixed(2) || `0.00`}`}</AmountDisplay>
-                    %
-                  </>
-                )}
-              </span>
-            )}
-          </Stack>
-        </Grid>
-        {/* <Grid item xs={6}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography>Available Liquidity</Typography>
-            {props?.loading ? (
-              <Skeleton variant="text" width={100} />
-            ) : (
-              <AmountDisplay
-                symbol={props?.underlying?.symbol}
-                usd
-                direction="row"
-                round
-              >
-                {Number(props?.totalAssets?.normalized) -
-                  Number(props?.globalLoansAmount?.normalized)}
-              </AmountDisplay>
-            )}
-          </Stack>
-        </Grid> */}
       </Grid>
     </Stack>
   );
