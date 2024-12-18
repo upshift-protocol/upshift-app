@@ -2,7 +2,7 @@ import { usePoolsStore } from '@/stores/pools';
 import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
 import PoolsTableOrganism from '@/ui/organisms/table-pools';
 import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
-import Base from '@/ui/skeletons/base';
+import BaseSkeleton from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import { INSTANCE } from '@/utils/constants';
 import { Collapse, Stack } from '@mui/material';
@@ -57,7 +57,7 @@ const HomePage = () => {
   }, [address]);
 
   return (
-    <Base>
+    <BaseSkeleton>
       <Section
         id="earn-table"
         description="Upshift opens access to transparent yields backed by secure risk controls. Supply, stake and access cross-chain yields. For access to other pools, please reach out."
@@ -89,7 +89,7 @@ const HomePage = () => {
           />
         </Stack>
       </Section>
-    </Base>
+    </BaseSkeleton>
   );
 };
 
