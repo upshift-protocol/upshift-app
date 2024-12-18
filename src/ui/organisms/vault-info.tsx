@@ -145,7 +145,9 @@ export default function VaultInfo(
                 <Skeleton variant="text" width={100} />
               ) : (
                 <AmountDisplay direction="row">
-                  {managementFeePercent ? Number(managementFeePercent) : '2%'}
+                  {managementFeePercent
+                    ? `${Number(managementFeePercent) / 100}%`
+                    : '2%'}
                 </AmountDisplay>
               )}
             </Stack>
