@@ -1,5 +1,4 @@
 import Section from '@/ui/skeletons/section';
-import Base from '@/ui/skeletons/base';
 import { Collapse, Stack } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useAccount, useReadContract, useReadContracts } from 'wagmi';
@@ -14,14 +13,15 @@ import {
 import MyActiveStakingOrganism from '@/ui/organisms/table-active-staking';
 import type { IActiveStakePosition } from '@/utils/types';
 import { avalanche } from 'viem/chains';
-import { usePoolsStore } from '@/stores/pools';
+import { usePricesStore } from '@/stores/prices';
+import BaseSkeleton from '@/ui/skeletons/base';
 
 const REWARDS_CHAIN = avalanche.id;
 const REWARDS_SYMBOL = avalanche.nativeCurrency.symbol;
 
 const StakePage = () => {
   const { address } = useAccount();
-  const { prices } = usePoolsStore();
+  const { prices } = usePricesStore();
 
   const rewardDistributorAddress = REWARD_DISTRIBUTOR_ADDRESS(REWARDS_CHAIN);
 
@@ -185,7 +185,7 @@ const StakePage = () => {
   ]);
 
   return (
-    <Base>
+    <BaseSkeleton>
       <Section
         id="stake-table"
         title="Stake"
@@ -216,7 +216,7 @@ const StakePage = () => {
           />
         </Stack>
       </Section>
-    </Base>
+    </BaseSkeleton>
   );
 };
 
