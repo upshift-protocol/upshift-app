@@ -75,7 +75,7 @@ const renderTokenExposure = (
 const columns: GridColDef<any[number]>[] = [
   {
     field: 'address',
-    headerName: 'Loan Address',
+    headerName: 'Capital Deployment',
     description: 'The vault address.',
     renderHeader: (params: GridColumnHeaderParams) => (
       <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
@@ -211,23 +211,23 @@ const columns: GridColDef<any[number]>[] = [
       );
     },
   },
-  {
-    field: 'currentApr',
-    headerName: 'APR',
-    renderHeader: (params: GridColumnHeaderParams) => (
-      <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
-        {params.colDef.headerName}
-      </span>
-    ),
-    flex: 1,
-    type: 'number',
-    editable: false,
-    description: 'The borrowing interest rate paid back to the pool.',
-    renderCell({ value }) {
-      if (!value) return '-';
-      return `${value}%`;
-    },
-  },
+  // {
+  //   field: 'currentApr',
+  //   headerName: 'APR',
+  //   renderHeader: (params: GridColumnHeaderParams) => (
+  //     <span style={{ fontWeight: TABLE_HEADER_FONT_WEIGHT }}>
+  //       {params.colDef.headerName}
+  //     </span>
+  //   ),
+  //   flex: 1,
+  //   type: 'number',
+  //   editable: false,
+  //   description: 'The borrowing interest rate paid back to the pool.',
+  //   renderCell({ value }) {
+  //     if (!value) return '-';
+  //     return `${value}%`;
+  //   },
+  // },
 ];
 
 /**
