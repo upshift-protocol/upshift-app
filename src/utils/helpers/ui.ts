@@ -127,5 +127,6 @@ export function renderPartnerImg(point: string) {
   if (lowerPoint.includes('karak')) return 'karak.svg';
   if (lowerPoint.includes('lombard')) return 'lombard.svg';
   if (lowerPoint.includes('babylon')) return 'babylon.png';
+  if (lowerPoint.includes('treehouse')) return 'treehouse.svg';
   return '';
 }
