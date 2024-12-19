@@ -16,15 +16,13 @@ import { renderBiggerApy } from '@/utils/helpers/ui';
 import { TOOLTIP_MAPPING } from '@/utils/constants/tooltips';
 import { getStrategyDetails } from '@/utils/constants/static';
 
-import { useChainId, useReadContract } from 'wagmi';
+import { useReadContract } from 'wagmi';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
 export default function VaultInfo(
   props: (IPoolWithUnderlying | undefined) & { loading?: boolean },
 ) {
-  const chainId = useChainId();
-
   const renderedApy = renderBiggerApy('', props.apy);
 
   const staticData = getStrategyDetails(props?.name?.toLocaleLowerCase());
@@ -46,7 +44,7 @@ export default function VaultInfo(
       },
     ],
     functionName: 'managementFeePercent',
-    chainId,
+    chainId: props?.chainId,
   });
 
   const tooltipText = TOOLTIP_MAPPING?.[props?.name?.toLocaleLowerCase()];

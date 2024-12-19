@@ -13,13 +13,6 @@ export const poolStrategies: Record<string, StrategyDetails> = {
       { label: 'Leverage', value: '3.2x' },
     ],
   },
-  // "avalanche ausd": {
-  //   additionalFields: [
-  //     { label: "Avax incentives APR", value: "Read from stake page APR" },
-  //     { label: "Total APY", value: "24% + 23% = 46%" },
-  //   ],
-  //   rewardsField: { label: "Staking APR", value: "Read from stake page APR" },
-  // },
 };
 
 export const getStrategyDetails = (
