@@ -20,6 +20,7 @@ import {
   useWalletClient,
 } from 'wagmi';
 import { BUTTON_TEXTS, DEVELOPMENT_MODE } from '@/utils/constants';
+import useRewardDistributor from './use-reward-distributor';
 
 type IUseUnStakeProps = {
   rewardDistributor: IAddress;
@@ -52,6 +53,7 @@ export default function useUnStake(props: IUseUnStakeProps) {
 
   // Meta hooks
   const provider = usePublicClient({ chainId: props?.chainId });
+  const { refetchActiveStaking } = useRewardDistributor();
   const { data: signer } = useWalletClient({ chainId: props?.chainId });
   const { address } = useAccount();
 
@@ -119,6 +121,7 @@ export default function useUnStake(props: IUseUnStakeProps) {
 
       // Refetch queries
       queryClient.refetchQueries();
+      refetchActiveStaking();
 
       // Success states
       setIsSuccess(true);
@@ -181,7 +184,7 @@ export default function useUnStake(props: IUseUnStakeProps) {
         out: toNormalizedBn((out as bigint) || BigInt(0), props.decimals),
         loading: false,
       }));
-    } catch (e) {
+    } catch (_e) {
       setExpected((_prev) => ({
         fee: toNormalizedBn(BigInt(0), props.decimals),
         out: toNormalizedBn(BigInt(0), props.decimals),
