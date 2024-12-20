@@ -206,6 +206,7 @@ export default function RewardDistributorTableOrganism({
   loading?: number;
   pagination?: boolean;
 }) {
+  console.log(loading);
   return (
     <Box>
       {title ? (

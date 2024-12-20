@@ -20,6 +20,7 @@ import {
   useWalletClient,
 } from 'wagmi';
 import { BUTTON_TEXTS, DEVELOPMENT_MODE } from '@/utils/constants';
+import useRewardDistributor from './use-reward-distributor';
 
 type IUseStakeProps = {
   rewardDistributor: IAddress;
@@ -36,6 +37,7 @@ type IUseStakeProps = {
 
 export default function useStake(props: IUseStakeProps) {
   const { switchChainAsync } = useSwitchChain();
+  const { refetchActiveStaking } = useRewardDistributor();
   // States
   const [expected, setExpected] = useState({
     fee: toNormalizedBn(0),
@@ -158,7 +160,7 @@ export default function useStake(props: IUseStakeProps) {
 
       // Refetch queries
       queryClient.refetchQueries();
-
+      refetchActiveStaking();
       // Success states
       setIsSuccess(true);
       setButton({ text: BUTTON_TEXTS.success, disabled: true });
@@ -232,7 +234,7 @@ export default function useStake(props: IUseStakeProps) {
         out: toNormalizedBn((out as bigint) || BigInt(0), props.decimals),
         loading: false,
       }));
-    } catch (e) {
+    } catch (_e) {
       setExpected((_prev) => ({
         fee: toNormalizedBn(BigInt(0), props.decimals),
         out: toNormalizedBn(BigInt(0), props.decimals),
