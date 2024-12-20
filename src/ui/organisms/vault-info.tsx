@@ -17,6 +17,7 @@ import { TOOLTIP_MAPPING } from '@/utils/constants/tooltips';
 import { getStrategyDetails } from '@/utils/constants/static';
 
 import { useReadContract } from 'wagmi';
+import { useStaking } from '@/stores/stake';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -27,12 +28,7 @@ export default function VaultInfo(
 
   const staticData = getStrategyDetails(props?.name?.toLocaleLowerCase());
 
-  const {
-    data: managementFeePercent,
-    isLoading,
-    // isError,
-    // error,
-  } = useReadContract({
+  const { data: managementFeePercent, isLoading } = useReadContract({
     address: props.address,
     abi: [
       {
@@ -48,6 +44,37 @@ export default function VaultInfo(
   });
 
   const tooltipText = TOOLTIP_MAPPING?.[props?.name?.toLocaleLowerCase()];
+
+  const { stakingPositions } = useStaking();
+
+  const stakePosition = stakingPositions.find(
+    (stake) =>
+      stake.stakingToken.name.toLocaleLowerCase() ===
+      props?.name?.toLocaleLowerCase(),
+  );
+
+  const maxApyValue =
+    stakePosition?.maxApy !== undefined
+      ? stakePosition.maxApy.toFixed(2)
+      : 'N/A';
+
+  const totalApyValue =
+    stakePosition?.maxApy !== undefined
+      ? `${(stakePosition.maxApy + Number(props?.apy)).toFixed(2)}%`
+      : 'N/A';
+
+  if (staticData?.additionalFields) {
+    staticData.additionalFields = staticData.additionalFields.map((field) => {
+      if (field.label === 'Avax incentives APR') {
+        return { ...field, value: maxApyValue };
+      }
+      if (field.label === 'Total APY') {
+        return { ...field, value: totalApyValue };
+      }
+      return field;
+    });
+  }
+
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>

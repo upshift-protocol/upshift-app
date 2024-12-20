@@ -16,6 +16,7 @@ import { PoolsProvider } from '@/stores/pools';
 import { ReferralsProvider } from '@/stores/referrals';
 import NewReferralModalMolecule from '@/ui/organisms/modal-new-referral';
 import { PricesProvider } from '@/stores/prices';
+import { StakingProvider } from '@/stores/stake';
 
 const MyApp = (props: AppProps) => {
   const { Component, pageProps } = props;
@@ -29,10 +30,12 @@ const MyApp = (props: AppProps) => {
             <ReferralsProvider>
               <PoolsProvider>
                 <PricesProvider>
-                  {/* START: main injection */}
-                  <Component {...pageProps} />
-                  <NewReferralModalMolecule />
-                  {/* END: main injection */}
+                  <StakingProvider>
+                    {/* START: main injection */}
+                    <Component {...pageProps} />
+                    <NewReferralModalMolecule />
+                    {/* END: main injection */}
+                  </StakingProvider>
                 </PricesProvider>
               </PoolsProvider>
             </ReferralsProvider>
