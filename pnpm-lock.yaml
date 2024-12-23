@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@augustdigital/sdk':
-        specifier: 1.6.5
-        version: 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        specifier: 1.6.6
+        version: 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.14.0(@types/react@18.3.13)(react@18.3.1)
@@ -104,10 +104,10 @@ importers:
         version: 8.57.1
       eslint-config-airbnb-base:
         specifier: ^15.0.0
-        version: 15.0.0(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+        version: 15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1))(eslint@8.57.1)
       eslint-config-airbnb-typescript:
         specifier: ^18.0.0
-        version: 18.0.0(@typescript-eslint/eslint-plugin@8.18.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2))(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+        version: 18.0.0(@typescript-eslint/eslint-plugin@8.18.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2))(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1))(eslint@8.57.1)
       eslint-config-next:
         specifier: ^15.0.3
         version: 15.0.3(eslint@8.57.1)(typescript@5.7.2)
@@ -169,20 +169,20 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@augustdigital/abis@1.6.5':
-    resolution: {integrity: sha512-dT0FO5oD+FWNYO3w/0ARDgy59ISjJOx0F9DKnkgyB64/7wt2waFkbVJiaXorqF6WTMp3sbAai6ueLvhbliyz1A==}
+  '@augustdigital/abis@1.6.6':
+    resolution: {integrity: sha512-vrpRHtmnkiSyV+UMgIslkS4TxYRTHB8wf4Hv9Ecl6J2pqzy/+hR9nf08Iq0SkeC2YogjirbIbOGg1DOAsVovAQ==}
 
-  '@augustdigital/pools@1.6.5':
-    resolution: {integrity: sha512-AQMSH1/wCCD05rlCIN4A6Ww1PipPz0S5ITf+/Y2VMhI2nt4zzVNBuQJiO8sa+gkh6NsSZmITYbRRHHfuLisBig==}
+  '@augustdigital/pools@1.6.6':
+    resolution: {integrity: sha512-9H2tMMZVFyORFAcIwdsbymgmBwxTlYI2SeZNc41yvFITE+J2/rhV3yksbW+2YPT9rz9zB0dRpSsnzIhgZyruFw==}
 
-  '@augustdigital/sdk@1.6.5':
-    resolution: {integrity: sha512-iCDKuUDS+DHiV0I0rlNuBXwjU8T2FKfhqNHs/w30sJvVi0oTg7KPnBSqBunZnEQ5WPqBL+GChmuFarq5MRHjjg==}
+  '@augustdigital/sdk@1.6.6':
+    resolution: {integrity: sha512-9JIeUGYC/1S+rsPkgw8r2hwGtKpHmOfG/+cHgBgp0bN9BeS0k9R2hLqAYixqwQG3sbXTrN1fonWSOuYBeEKuTg==}
 
-  '@augustdigital/types@1.6.5':
-    resolution: {integrity: sha512-rJV7tX+JlR/kyIajLe/NdOe7ZVsrwoecPDiocfnu7VOxhsQmUmx3yeu5XlPQfhTYHegwp8LQGsFEz9w1QoxUbw==}
+  '@augustdigital/types@1.6.6':
+    resolution: {integrity: sha512-AlHsfmM+0sDsqZaqciK9O4X6FD4gAcYClEVapTYHlV/9BN6rFqekCbtktQeGvSif1Isl4zALDGAhd99L/UY4TA==}
 
-  '@augustdigital/utils@1.6.5':
-    resolution: {integrity: sha512-Zv+qEhgbI1c0JgKiLsLuyvKBa0584bseK5A2tf/zV5SbEib2z/Ps2qB5FDiiLXCz1IbUikldJDt5F+vH9Kr8aQ==}
+  '@augustdigital/utils@1.6.6':
+    resolution: {integrity: sha512-xIgFrzBPNTOdIs8KroEtO+t1g91PjOgA5I/SGkPuWtmRIJuHy5Pzy9kK7mK2uvyvIHJ7jwwSgeF+J3iABb8fIw==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -4200,41 +4200,41 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@augustdigital/abis@1.6.5': {}
+  '@augustdigital/abis@1.6.6': {}
 
-  '@augustdigital/pools@1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/pools@1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/abis': 1.6.5
-      '@augustdigital/types': 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/utils': 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/abis': 1.6.6
+      '@augustdigital/types': 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethereum-block-by-date: 1.5.0
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/sdk@1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/sdk@1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/abis': 1.6.5
-      '@augustdigital/pools': 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/types': 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@augustdigital/utils': 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/abis': 1.6.6
+      '@augustdigital/pools': 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/utils': 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      upshift-earn-app: link:../../../../../angellolazar/Desktop/dev/august/upshift-app
+      upshift-earn-app: link:../../../../angellolazar/Desktop/dev/august/upshift-app
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/types@1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/types@1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@augustdigital/utils@1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@augustdigital/utils@1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
-      '@augustdigital/types': 1.6.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@augustdigital/types': 1.6.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 6.13.4(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
@@ -6436,7 +6436,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-config-airbnb-base@15.0.0(eslint-plugin-import@2.31.0)(eslint@8.57.1):
+  eslint-config-airbnb-base@15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       confusing-browser-globals: 1.0.11
       eslint: 8.57.1
@@ -6445,12 +6445,12 @@ snapshots:
       object.entries: 1.1.8
       semver: 6.3.1
 
-  eslint-config-airbnb-typescript@18.0.0(@typescript-eslint/eslint-plugin@8.18.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2))(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0)(eslint@8.57.1):
+  eslint-config-airbnb-typescript@18.0.0(@typescript-eslint/eslint-plugin@8.18.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2))(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       '@typescript-eslint/eslint-plugin': 8.18.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2)
       '@typescript-eslint/parser': 8.18.0(eslint@8.57.1)(typescript@5.7.2)
       eslint: 8.57.1
-      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1))(eslint@8.57.1)
     transitivePeerDependencies:
       - eslint-plugin-import
 
@@ -6502,7 +6502,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -6524,7 +6524,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
