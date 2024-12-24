@@ -1,3 +1,4 @@
+import useRewardDistributor from '@/hooks/use-reward-distributor';
 import { usePoolsStore } from '@/stores/pools';
 import OverviewStatsMolecule from '@/ui/molecules/overview-stats';
 import PoolsTableOrganism from '@/ui/organisms/table-pools';
@@ -5,6 +6,7 @@ import MyPositionsTableOrganism from '@/ui/organisms/table-positions';
 import BaseSkeleton from '@/ui/skeletons/base';
 import Section from '@/ui/skeletons/section';
 import { INSTANCE } from '@/utils/constants';
+import type { IPoolWithUnderlying } from '@augustdigital/sdk';
 import { Collapse, Stack } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -18,6 +20,10 @@ const HomePage = () => {
     positions: { data: positions, isLoading: positionsLoading },
   } = usePoolsStore();
 
+  const { stakingPositions } = useRewardDistributor();
+
+  console.log(stakingPositions, 'stakingPositions');
+
   const filteredPools = useMemo(() => {
     const partnerPools = [
       'kelp gain',
@@ -29,12 +35,39 @@ const HomePage = () => {
       'ethena growth susde',
       'upshift avalanche avax',
     ];
+
+    const addRewardKey = (pool: IPoolWithUnderlying) => {
+      const stakePosition = stakingPositions.find(
+        (stake) =>
+          stake?.stakingToken?.name?.toLocaleLowerCase() ===
+          pool?.name?.toLocaleLowerCase(),
+      );
+
+      console.log(stakePosition, 'stakePosition');
+
+      if (
+        ['upshift avalanche ausd', 'upshift avalanche avax'].includes(
+          pool?.name?.toLowerCase(),
+        )
+      ) {
+        return {
+          ...pool,
+          rewards: {
+            type: stakePosition?.maxApy,
+            upshift_points: true,
+            additional_points: [],
+          },
+        };
+      }
+      return pool;
+    };
     if (!allPools?.length) {
       return { partners: [], upshift: [], myPositions: [] };
     }
     return {
       partners: allPools
         ?.filter((p) => partnerPools.includes(p?.name?.toLowerCase()))
+        ?.map((p) => addRewardKey(p))
         .sort((a, b) => {
           return BigInt(a.totalSupply.raw) < BigInt(b.totalSupply.raw) ? 1 : -1;
         }),
@@ -50,6 +83,8 @@ const HomePage = () => {
       ),
     };
   }, [JSON.stringify(allPools), JSON.stringify(positions)]);
+
+  console.log(filteredPools, 'filteredPools');
 
   useEffect(() => {
     if (address) setWalletConnected(true);

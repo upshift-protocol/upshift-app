@@ -216,7 +216,13 @@ const columns: readonly IColumn[] = [
           </TableCell>
         );
       if (children?.additional_points?.length === 0) {
-        return <TableCell>-</TableCell>;
+        return (
+          <TableCell>
+            <AmountDisplay round direction="row">
+              {Number(children?.type) ? children?.type : '-'}
+            </AmountDisplay>
+          </TableCell>
+        );
       }
       return (
         <TableCell>

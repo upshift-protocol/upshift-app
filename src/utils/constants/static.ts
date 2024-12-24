@@ -8,8 +8,9 @@ type StrategyDetails = {
 export const poolStrategies: Record<string, StrategyDetails> = {
   ethena: {
     additionalFields: [
-      { label: 'sUSDe APY', value: '21%' },
-      { label: 'Leverage Loop APR', value: '17.5%' },
+      { label: 'avg APY', value: '14%' },
+      { label: 'sUSDe APY', value: '12%' },
+      { label: 'Leverage Loop APR', value: '2%' },
       { label: 'Leverage', value: '3.2x' },
     ],
   },
