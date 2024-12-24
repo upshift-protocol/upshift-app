@@ -12,11 +12,12 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { FALLBACK_CHAINID } from '@/utils/constants';
 import { Chip, Tooltip } from '@mui/material';
-import { renderBiggerApy } from '@/utils/helpers/ui';
 import { TOOLTIP_MAPPING } from '@/utils/constants/tooltips';
 import { getStrategyDetails } from '@/utils/constants/static';
 
 import { useReadContract } from 'wagmi';
+import useRewardDistributor from '@/hooks/use-reward-distributor';
+import { renderBiggerApy } from '@/utils/helpers/ui';
 import LinkAtom from '../atoms/anchor-link';
 import AmountDisplay from '../atoms/amount-display';
 
@@ -27,12 +28,7 @@ export default function VaultInfo(
 
   const staticData = getStrategyDetails(props?.name?.toLocaleLowerCase());
 
-  const {
-    data: managementFeePercent,
-    isLoading,
-    // isError,
-    // error,
-  } = useReadContract({
+  const { data: managementFeePercent, isFetched } = useReadContract({
     address: props.address,
     abi: [
       {
@@ -48,6 +44,37 @@ export default function VaultInfo(
   });
 
   const tooltipText = TOOLTIP_MAPPING?.[props?.name?.toLocaleLowerCase()];
+
+  const { stakingPositions } = useRewardDistributor();
+
+  const stakePosition = stakingPositions.find(
+    (stake) =>
+      stake?.stakingToken?.name?.toLocaleLowerCase() ===
+      props?.name?.toLocaleLowerCase(),
+  );
+
+  const maxApyValue =
+    stakePosition?.maxApy !== undefined
+      ? stakePosition.maxApy.toFixed(2)
+      : 'N/A';
+
+  const totalApyValue =
+    stakePosition?.maxApy !== undefined
+      ? `${(stakePosition.maxApy + Number(props?.apy)).toFixed(2)}%`
+      : 'N/A';
+
+  if (staticData?.additionalFields) {
+    staticData.additionalFields = staticData.additionalFields.map((field) => {
+      if (field.label === 'Avax incentives APR') {
+        return { ...field, value: maxApyValue };
+      }
+      if (field.label === 'Total APY') {
+        return { ...field, value: totalApyValue };
+      }
+      return field;
+    });
+  }
+
   return (
     <Stack gap={2} direction="column">
       <Typography variant="h6">Vault Info</Typography>
@@ -139,7 +166,7 @@ export default function VaultInfo(
               alignItems="center"
             >
               <Typography>Management Fee</Typography>
-              {isLoading ? (
+              {!isFetched ? (
                 <Skeleton variant="text" width={100} />
               ) : (
                 <AmountDisplay direction="row">
@@ -183,27 +210,31 @@ export default function VaultInfo(
             </Stack>
 
             {/* Avg. APY */}
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography>Avg. APY</Typography>
-              {props?.loading ? (
-                <Skeleton variant="text" width={75} />
-              ) : (
-                <Tooltip
-                  title={
-                    <Typography fontSize={'16px'}>{tooltipText}</Typography>
-                  }
-                  disableHoverListener={!tooltipText}
-                  placement="top"
-                  arrow
-                >
-                  <Typography display="flex">{renderedApy}</Typography>
-                </Tooltip>
-              )}
-            </Stack>
+            {staticData?.additionalFields?.find(
+              (field) => field.label === 'avg APY',
+            )?.value ? null : (
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography>Avg. APY</Typography>
+                {props?.loading ? (
+                  <Skeleton variant="text" width={75} />
+                ) : (
+                  <Tooltip
+                    title={
+                      <Typography fontSize={'16px'}>{tooltipText}</Typography>
+                    }
+                    disableHoverListener={!tooltipText}
+                    placement="top"
+                    arrow
+                  >
+                    <Typography display="flex">{renderedApy}</Typography>
+                  </Tooltip>
+                )}
+              </Stack>
+            )}
 
             {staticData &&
             Array.isArray(staticData.additionalFields) &&

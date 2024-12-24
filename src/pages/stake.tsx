@@ -15,6 +15,7 @@ const StakePage = () => {
   const { stakingPositions, isLoading, isActivePositions } =
     useRewardDistributor();
 
+  console.log(stakingPositions, 'stakingPositions');
   return (
     <BaseSkeleton>
       <Section
