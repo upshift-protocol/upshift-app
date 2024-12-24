@@ -22,8 +22,6 @@ const HomePage = () => {
 
   const { stakingPositions } = useRewardDistributor();
 
-  console.log(stakingPositions, 'stakingPositions');
-
   const filteredPools = useMemo(() => {
     const partnerPools = [
       'kelp gain',
