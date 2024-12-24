@@ -194,18 +194,33 @@ export default function useRewardDistributor() {
           ? toNormalizedBn(String(avaxPrice))
           : toNormalizedBn(0);
 
-        const STAKED_APR =
-          ((Number(rewardsPerSecond?.normalized) *
-            31536000 *
-            Number(avaxPriceInUSD?.normalized)) /
-            (Number(totalStakedInPool?.normalized) * Number(1))) *
-          100;
-        const MAX_APR =
-          ((Number(rewardsPerSecond?.normalized) *
-            31536000 *
-            Number(avaxPriceInUSD?.normalized)) /
-            (Number(totalStakedInPool?.normalized) * Number(1))) *
-          100;
+        let STAKED_APR = 0;
+
+        let MAX_APR = 0;
+
+        if (symbol === 'upAUSD') {
+          STAKED_APR =
+            ((Number(rewardsPerSecond?.normalized) *
+              31536000 *
+              Number(avaxPriceInUSD?.normalized)) /
+              (Number(totalStakedInPool?.normalized) * Number(1))) *
+            100;
+          MAX_APR =
+            ((Number(rewardsPerSecond?.normalized) *
+              31536000 *
+              Number(avaxPriceInUSD?.normalized)) /
+              (Number(totalStakedInPool?.normalized) * Number(1))) *
+            100;
+        } else if (symbol === 'upAVAX') {
+          STAKED_APR =
+            ((Number(rewardsPerSecond?.normalized) * 31536000) /
+              (Number(totalStakedInPool?.normalized) * Number(1))) *
+            100;
+          MAX_APR =
+            ((Number(rewardsPerSecond?.normalized) * 31536000) /
+              (Number(totalStakedInPool?.normalized) * Number(1))) *
+            100;
+        }
 
         const activePosition: IActiveStakePosition = {
           id: index.toString(),
